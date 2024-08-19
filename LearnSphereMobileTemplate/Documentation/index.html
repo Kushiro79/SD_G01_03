@@ -1,0 +1,775 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>Sociogram - DOCUMENTATIONS</title>
+<link rel="stylesheet" href="css/prism.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/custom.css" />
+<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="js/jquery.easing.js"></script>
+<script src="js/jquery.scrollTo.js"></script>
+<script src="js/prism.js"></script>
+<script src="js/clipboard.min.js"></script>
+<script src="js/perfectscroll.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/mm.js"></script>
+<style>
+         h7 {
+         background: none repeat scroll 0 0 #d8d8d8;
+         border-radius: 8px;
+         color: #019cf5;
+         font-size: 10px;
+         font-style: italic;
+         font-weight: 700;
+         margin: 18px 0;
+         padding: 5px 15px;
+         }
+         a {
+         color: #019cf5;
+         }
+      </style>
+</head>
+<body>
+<div class="wrapper-left">
+<div class="logo">
+<img src="img/logo.png" alt="logo" class="img-fluid" width="100" />
+</div>
+<div class="nav-wrapper">
+<nav>
+<ul>
+<li><a href="#app-intro">Introduction</a></li>
+<li>
+<a href="#intro">Prerequisite Tools & Setup</a>
+<ul class="sub-menu">
+<li><a href="#intro">Introduction to Flutter</a></li>
+<li><a href="#tools">Tools & Setup</a></li>
+<li><a href="#setup-window">Android Studio – Windows</a></li>
+<li><a href="#setup-mac">Android Studio – macOS</a></li>
+<li><a href="#setup-linux">Android Studio – Linux</a></li>
+</ul>
+</li>
+<li><a href="#build-run">Getting Started (Build & Run) </a></li>
+<li>
+<a href="#config-android">Configuration</a>
+<ul class="sub-menu">
+<li><a href="#config-android">Android Configuration</a></li>
+<li><a href="#config-ios">iOS Configuration</a></li>
+<li><a href="#config-flutter">Flutter Configuration </a></li>
+</ul>
+</li>
+<li>
+<a href="#error1">Common errors </a>
+<ul class="sub-menu">
+<li><a href="#error1">No matching client found for package name</a></li>
+<li><a href="#error2">Flutter SDK Not Available </a></li>
+<li><a href="#error4">Authorization header not found</a></li>
+<li><a href="#error5">Expired token</a></li>
+<li><a href="#error6">Unsupported gradle version 7.*.*</a></li>
+</ul>
+</li>
+<li><a href="#mm-support">Help & Support</a></li>
+<li>
+<a href="#mm-changelog">Change Log</a>
+<ul class="sub-menu">
+<li><a href="#changelog-Sociogram">Sociogram</a></li>
+</ul>
+</li>
+<li><a href="#thank-you">Thank You</a></li>
+</ul>
+</nav>
+</div>
+<footer>
+Copyright &copy;<a target="_blank" href=""> Zozo Studio</a> 2023
+</footer>
+</div>
+<div class="wrapper-right">
+<section id="app-intro">
+<h3><b>Introduction to Sociogram</b></h3>
+<hr>
+<p>This is a well-documented and coded UI kit for Sociogram App or you can use it for Sociogram Application, that is ready to use. Current color and typography are designed for beautiful and attractive Sociogram apps. This UI Kit is built on Flutter, which is an open-source mobile application development framework created by Google. It is used to develop applications for Android and iOS.</p>
+<p>
+Sociogram App makes an easy job for developers to have the modern look and feel in the mobile application. It saves lots of hustle and time to develop a nicely designed Sociogram App UI for modern mobile applications. Sociogram App is ready to use and can be easily integrated into any flutter project. The code organization is easy to understand any part can be taken out and added into flutter application.</p>
+
+<p>It comes with 50+ screen application pages. It works great with both android and iOS.</p>
+
+<p>The same code is used for iOS and Android</p>
+<h5>Prerequisite</h5>
+<div class="version">
+<p><b>Android Studio: <span style="color: #FF0000;">4.1.2</span></b></p>
+<p><b>Flutter: <span style="color: #FF0000;">2.10.4</span></b> </p>
+<p><b>Dart version: <span style="color: #FF0000;">2.16.2</span></b> </p>
+</div>
+<br>
+
+</section>
+
+<section id="intro">
+<h3><b>Introduction to Flutter</b></h3>
+<hr>
+<p>Flutter is Google’s UI toolkit for building beautiful, natively compiled
+applications for <a href="https://flutter.dev/docs">mobile</a>, <a href="https://flutter.dev/web">web</a>, and <a href="https://flutter.dev/desktop">desktop</a> from a
+single codebase. It is
+very
+easy to learn and currently it is getting more and more popular. With this blog
+post, you will learn some basic stuff about Flutter and after reading it, you
+will be able to create a simple application using this technology.
+</p>
+<p><a href="https://flutter.dev/">Click here</a> to check out more details about
+flutter.
+</p>
+</section>
+
+<section id="tools">
+<h3><b>Tools & Setup</b></h3>
+<hr>
+<p><strong>Prerequisite</strong></p>
+<div>
+<ul>
+<li>Flutter &amp; Dart <a href="https://flutter.dev/docs/get-started/install" target="_blank" rel="noreferrer noopener">SDK</a></li>
+<li>Anyone IDE <a href="https://developer.android.com/studio" target="_blank" rel="noreferrer noopener">Android Studio</a>
+(Recommended), <a href="https://code.visualstudio.com/" target="_blank" rel="noreferrer noopener">Visual Studio Code</a> or <a href="https://www.jetbrains.com/idea/" target="_blank" rel="noreferrer noopener">IntelliJ
+IDEA</a>
+</li>
+</ul>
+</div>
+<ul>
+<li>To edit this project you must have Flutter and Dart installed and configured
+successfully on your computer.
+</li>
+<li>Set up your editor - Install the<a href="https://flutter.dev/docs/get-started/editor?tab=androidstudio">
+Flutter and Dart plugins</a>.
+</li>
+<li>
+If you have got Android SDK installed and configured, to install Flutter you
+only need to:
+<ul>
+<li>Download Flutter SDK from official website and extract it.</li>
+<li>Add path to previously extracted SDK to your PATH variable</li>
+<li>Run flutter doctor tool to check if everything is configured
+correctly.
+</li>
+<li>All above steps are mentioned here: <a href="https://flutter.dev/docs/get-started/install/">https://flutter.dev/docs/get-started/install/</a>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+
+<section id="setup-window">
+<h3>Android Studio – Windows​</h3>
+<hr>
+<ul>
+<li>Download Android Studio - <a href="https://developer.android.com/studio/" target="_blank" rel="noopener">https://developer.android.com/studio/</a>
+</li>
+<li>Get the Flutter SDK - <a href="https://flutter.dev/docs/get-started/install" target="_blank" rel="noopener">https://flutter.dev/docs/get-started/install</a></li>
+<li>Learn more about Android Studio - <a href="https://developer.android.com/studio/intro/" target="_blank" rel="noopener">https://developer.android.com/studio/intro/</a></li>
+</ul>
+<p><strong>Step 1 : Get the Flutter SDK</strong></p>
+<p> 1 Download the following installation bundle to get the latest stable release of
+the Flutter SDK:
+</p>
+<p> 2 Extract the zip file and place the contained flutter in the desired
+installation location for the Flutter SDK (for example, C:\src\flutter; do not
+install Flutter in a directory like C:\Program Files\ that requires elevated
+privileges).
+</p>
+<p><strong>Step 2 : Update your path</strong><br></p>
+<p>If you wish to run Flutter commands in the regular Windows console, take these
+steps to add Flutter to the PATH environment variable:
+From the Start search bar, enter ‘env’ and select <b>Edit environment variables
+for your account.</b>
+Under <b>User variables </b>check if there is an entry called <b>Path:</b>
+</p>
+<ul>
+<li>If the entry exists, append the full path to <b>flutter\bin </b>using ; as a
+separator from existing values.
+</li>
+<li>If the entry doesn’t exist, create a new user variable named Path with the
+full path to <b>flutter\bin</b> as its value.
+</li>
+</ul>
+<div class="info">
+<ul>
+<li>
+<i class="fa fa-info-circle infoText"></i><b class="infoText">Info</b>
+</li>
+<li>Note that you have to close and reopen any existing console windows for these
+changes to take effect.
+</li>
+</ul>
+</div>
+<b>You are now ready to run Flutter commands in the Flutter Console!</b>
+<p><strong>Step 3 : Run flutter doctor</strong><br></p>
+<p>From a console window that has the Flutter directory in the path (see above), run
+the following command to see if there are any platform dependencies you need to
+complete the setup:
+</p>
+
+<p>
+<pre class="lang-cpp"><code>c:\src\flutter>flutter doctor</code></pre>
+</p>
+<b>If you find any issue during environment setup, please go online <a href="https://flutter.dev/docs/get-started/install/windows" target="_blank" rel="noopener">Click
+here</a></b>
+</section>
+
+<section id="setup-mac">
+<h3><b>Android Studio – macOS​</b>
+</h3>
+<hr>
+<ul>
+<li>Download Android Studio - <a href="https://developer.android.com/studio/" target="_blank" rel="noopener">https://developer.android.com/studio/</a>
+</li>
+<li>Download Xcode - <a href="https://apps.apple.com/us/app/xcode/id497799835?mt=12" target="_blank" rel="noopener">https://apps.apple.com/us/app/xcode/id497799835?mt=12</a>
+</li>
+<li>Get the Flutter SDK - <a href="https://flutter.dev/docs/get-started/install" target="_blank" rel="noopener">https://flutter.dev/docs/get-started/install</a></li>
+<li>Learn more about Android Studio - <a href="https://developer.android.com/studio/intro/" target="_blank" rel="noopener">https://developer.android.com/studio/intro/</a></li>
+</ul>
+<br>
+<p><strong>Step 1 : Get the Flutter SDK</strong></p>
+<ul>
+<li>Download the following installation bundle to get the latest stable release
+of the Flutter SDK:
+</li>
+<li>Download SDK and extract downloaded file, just double click on that. and
+just copy extracted folder and paste it to your desired location (for
+example, Documents\flutter).
+</li>
+</ul>
+<br>
+<p><strong>Step 2 : Update your path</strong></p>
+<div class="warning">
+<ul>
+<li>
+<i class="fa fa-bullhorn warningText"></i><b class="warningText">Warning</b>
+</li>
+<li>Path variable needs to be updated to access “flutter” command from terminal. you
+can just update path variable for current terminal window only. and if you want
+to access flutter commands from anywhere in terminal, we need to update SDK path
+permanently.
+</li>
+</ul>
+</div>
+<p> To update PATH variable, we need to open terminal.
+</p>
+<p>To update PATH variable for current terminal window only, then enter this command
+<b>"export PATH="$PATH:`pwd`/flutter/bin"" </b>and hit enter key.
+</p>
+<p>To update PATH variable permanently, then Open or create <b>.bash_profile</b>
+file. to open or create that file, then enter <b>"sudo open -e
+$HOME/.bash_profile"</b> and hit enter key.
+</p>
+Append below line to bash_profile file at bottom of all other content. <b>"export
+PATH="$PATH:[PATH_TO_FLUTTER_GIT_DIRECTORY]/flutter/bin""</b> as
+[PATH_TO_FLUTTER_GIT_DIRECTORY] is actual path of SDK folder.
+<p></p>
+<p>Run this command on terminal <b>"source $HOME/.bash_profile"</b> to refresh PATH
+variables.
+</p>
+<p>Then check whether our SDK is successfully installed or not.
+</p>
+<p><b>You are now ready to run Flutter commands in the Flutter Console!</b>
+</p>
+<p>
+Run <b>"flutter doctor"</b> into terminal, If you are getting check list of
+flutter sdk requirements, it means SDK is successfully installed on your
+machine. and you can start building flutter apps on your machine.
+</p>
+<p><b>If you find any issue during environment setup in macos, please go online <a href="https://flutter.dev/docs/get-started/install/macos" target="_blank" rel="noopener">Click
+here</a></b>
+</p>
+</section>
+
+<section id="setup-linux">
+<h3><b>Android Studio – Linux​​</b></h3>
+<hr>
+<ul>
+<li>Download Android Studio - <a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a>
+</li>
+<li>Get the Flutter SDK - <a href="https://flutter.dev/docs/get-started/install/linux" target="_blank" rel="noopener">https://flutter.dev/docs/get-started/install/linux</a>
+</li>
+<li>Learn more about Android Studio - <a href="https://developer.android.com/studio/intro/" target="_blank" rel="noopener">https://developer.android.com/studio/intro/</a></li>
+</ul>
+<p><strong>Step 1 : Get the Flutter SDK</strong></p>
+<ul>
+<li>Download the following installation bundle to get the latest stable release
+of the Flutter SDK:
+</li>
+<li>Download SDK and extract downloaded file, just double click on that. and
+just copy extracted folder and paste it to your desired location (for
+example, Documents\flutter).
+</li>
+</ul>
+<p><strong>Step 2 : Update your path</strong></p>
+<div class="warning">
+<ul>
+<li>
+<i class="fa fa-bullhorn warningText"></i><b class="warningText">Warning</b>
+</li>
+<li>Path variable needs to be updated to access “flutter” command from terminal. you
+can just update path variable for current terminal window only. and if you want
+to access flutter commands from anywhere in terminal, we need to update SDK path
+permanently.
+</li>
+</ul>
+</div>
+<p>You’ll <code>probably</code> want to update this variable permanently, so you can
+run flutter commands in any terminal session. To update PATH variable, we need
+to open terminal.
+</p>
+
+<p>
+<pre class="lang-cpp"><code>export PATH="$PATH:[PATH_TO_FLUTTER_GIT_DIRECTORY]/flutter/bin"</code></pre>
+</p>
+<ol>
+<li>Run <code class="language-plaintext highlighter-rouge">source $HOME/.</code>
+to refresh the current window, or open a new terminal window to
+automatically source the file.
+</li>
+<li>Verify that the <code class="language-plaintext highlighter-rouge">flutter/bin</code>
+directory is now in your PATH by running:
+</li>
+</ol>
+
+<p>
+<pre class="lang-cpp"><code>echo $PATH</code></pre>
+</p>
+<p>Verify that the <code class="language-plaintext highlighter-rouge">flutter</code>
+command is available by running:
+</p>
+
+<p>
+<pre class="lang-cpp"><code>which flutter</code></pre>
+</p>
+<b>You are now ready to run Flutter commands in the Flutter Console!</b>
+</section>
+
+<section id="build-run">
+<h2 class="sub-title">Getting Started (Build & Run)
+</h2>
+<p></p>
+<p><strong>Important</strong></p>
+<p>All below steps are must be followed to build and run application
+</p>
+<p><strong>Download Project
+</strong>
+</p>
+<p>Download and find the your project folder, use your preferred IDE
+<strong>(Android Studio / Visual Studio Code / IntelliJ IDEA)</strong> to run
+the project.
+</p>
+<img src="img/build_img1.png" alt="logo" width="100%">
+<hr>
+<p><strong>Get Dependencies
+</strong>
+</p>
+<p>After you loaded project successfully, run the following command in the terminal
+to install all the dependencies listed in the <a style="background-color: #ffffff;" href="https://dart.dev/tools/pub/pubspec"><code style="font-size: 14px;">pubspec.yaml</code></a>
+file in the project's
+root directory or just click on <span style="font-weight: bold;">Pub get
+</span>in pubspec.yaml file<span style="font-weight: bold;"> </span>if you don't
+want to use command.
+</p>
+<pre class="lang-cpp"><code> flutter pub get </code></pre>
+<p><strong>Important</strong></p>
+<p>All below steps are must be followed to build and run application</p>
+<img src="img/build_img2.png" alt="logo" width="100%">
+<p><strong>Build and Run App
+</strong>
+</p>
+<div class="steps-panel">
+<ol class="ordered-list">
+<li>Locate the main Android Studio toolbar.</li>
+ <li>In the <span style="font-weight: bolder; color: #4a4a4a;">target
+selector</span><span style="color: #4a4a4a;">, select an Android
+device for running the app. If none are listed as available, select
+</span><span style="font-weight: bolder; color: #4a4a4a;">Tools >
+Android > AVD Manager</span><span style="color: #4a4a4a;"> and
+create one there. For details, see </span><a style="color: #1389fd; background-color: #ffffff;" href="https://developer.android.com/studio/run/managing-avds">Managing
+AVDs</a><span style="color: #4a4a4a;">.</span>
+</li>
+<li>Click the run icon in the toolbar, or invoke the menu item <span style="font-weight: bolder; color: #4a4a4a;">Run > Run. </span>
+</li>
+</ol>
+</div>
+<img src="img/build_img3.png" alt="logo" width="100%">
+<p>After the app build completes, you’ll see the app on your device.</p>
+<p>If you don’t use Android Studio or IntelliJ you can use the command line to run
+your application using the following command
+</p>
+<p><strong>Important</strong></p>
+<p>Below step requires flutter path to be set in your Environment variables. See
+https://flutter.dev/docs/get-started/install/windows
+</p>
+<pre class="lang-cpp"><code>flutter run</code></pre>
+<p>You will see below like screen after you have build your app successfully
+</p>
+<img src="img/build_img4.png" alt="logo" width="100%">
+<p><strong>Try hot reload</strong></p>
+<p>Flutter offers a fast development cycle with Stateful Hot Reload, the ability to
+reload the code of a live running app without restarting or losing app state.
+Make a change to app source, tell your IDE or command-line tool that you want to
+hot reload, and see the change in your simulator, emulator, or device.
+</p>
+<p><strong>Important</strong></p>
+<p>Do not stop your app. let your app run.</p>
+</section>
+
+
+<section id="config-android">
+<h2 id="cutomization" class="sub-title">Configuration & Customization
+</h2>
+<h3><b>Android Configuration</b></h3>
+<div class="danger">
+<ul>
+<li>
+<i class="fa fa-exclamation-triangle dangerText"></i><b class="dangerText">Important</b>
+</li>
+<li>Don't open/change android code inside flutter because flutter doesn't compile android files.
+</li>
+<li>If you want add/change android code, click on <br>
+<b>Tools->Flutter->Open Android module in Android Studio </b>Or<b> File->Open ->open android
+module inside your project</b>
+</li>
+</ul>
+</div>
+<div class="danger">
+<ul>
+<li>
+<i class="fa fa-exclamation-triangle dangerText"></i><b class="dangerText">Important</b>
+</li>
+<li>Don't change package name inside <b>android/app/src/main/AndroidManifest.xml</b> file</li>
+</ul>
+</div>
+
+<ul>
+<li>Open Android Studio.</li>
+<li>Select Open an existing Android Studio Project.
+</li>
+<li>Open the android directory within your app.
+</li>
+<li>Wait until the project has been synced successfully. (This happens
+automatically once you open the project, but if it doesn’t, select Sync
+Project with Gradle Files from the File menu).
+</li>
+<li>Now, click on Run button.</li>
+</ul>
+<p><strong>Change Application Name
+</strong>
+</p>
+<ul>
+<li>You must want to change your application name. This is how you can do.
+Follow the below step.
+</li>
+<li>Open /android/app/src/main/AndroidManifest.xml and specify your application
+name.
+</li>
+<pre class="lang-cpp"><code>
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example"&gt;
+                    
+&lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /&gt;
+                    
+&lt;application
+    android:name="io.flutter.app.FlutterApplication"
+    android:label="YOUR_APPLICATION_NAME"
+    android:icon="@mipmap/ic_launcher"&gt;
+&lt;activity&gt;
+                        </code>
+                        </pre>
+</ul>
+
+<p><strong>Change Application Icon
+</strong>
+</p>
+<ul>
+<p>See How to generate an application icon?
+</li>
+<li><a href="https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html">Browse your image</a> and click on Download icon. After successfully generated,
+replace all icons in respective folders:
+</li>
+</ul>
+<ul>
+<li>/mipmap-hdpi in /android/app/src/main/res/ folder</li>
+<li>/mipmap-mdpi in /android/app/src/main/res/ folder</li>
+<li>/mipmap-xhdpi in /android/app/src/main/res/ folderr</li>
+<li>/mipmap-xxhdpi in /android/app/src/main/res/ folder</li>
+<li>/mipmap-xxxhdpi in /android/app/src/main/res/ folder</li>
+</ul>
+<div class="warning">
+<ul>
+<li>
+<i class="fa fa-bullhorn warningText"></i><b class="warningText">Warning</b>
+</li>
+<li>Application icon name must be ic_launcher</li>
+</ul>
+</div>
+<p><strong>Change Application ID
+</strong>
+</p>
+<ul>
+<li>Follow the below steps to change you Application ID.
+</li>
+<li>Open /android/app/build.gradle
+</li>
+<div class="row">
+<div class="col-md-12">
+<pre class="lang-cpp"><code>
+defaultConfig {
+   applicationId "YOUR_APPLICATION_ID"
+   minSdkVersion 21
+   targetSdkVersion 31
+   versionCode 1
+   versionName "1.0.0"
+   testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+}
+            </code>
+            </pre>
+</div>
+</div>
+
+<p><strong>Generate Signed APK</strong></p>
+<ul>
+<li>Go to in your project & then Tools -> Flutter -> Open for Editing in Android Studio as shown below </li>
+<br>
+<img src="img/apk_step1.png" alt="logo" width="100%"><br><br>
+<li>If your 1st step option is not available then select File -> open -> Select main folder -> android.</li>
+<li>Open Project it in New Window</li>
+<li>Wait for while until project synchronization. After that Go to Build -> GenerateSigned Bundle/APK...</li>
+<br>
+<img src="img/apk_step2.png" alt="logo" width="100%"><br><br>
+<li>Select Android App Bundle or APK Option as per your need. (Android App Bundle is best solution) and click Next button.</li>
+<br>
+<img src="img/apk_step3.png" alt="logo" width="100%"><br><br>
+<li>Select Create new.. option to generate new Signed key (When you release your app First Time) and Fill all options. <a href="https://developer.android.com/studio/publish/app-signing#generate-key">Refer this link </a></li>
+<br>
+<img src="img/apk_step4.png" alt="logo" width="100%"><br><br>
+<li>Click Next button and you will get following screen...</li>
+<br>
+<img src="img/apk_step5.png" alt="logo" width="100%"><br>
+<p>Select Build variants - release and Signature versions both V1 and V2 respectively as shown above screen shot and click Finish button.</p>
+<li>Wait for a while until Gradle Build Running process complete.and finally you will get the Generate Signed APK : (APKs) generated successfully . from that click on Locate option to get Location of your Generate Signed APK Key.</li>
+</ul>
+</ul>
+
+</section>
+
+<section id="config-ios">
+<h3 class="block-title"><b>iOS Configuration</b>
+</h3>
+<hr>
+<p><strong>Open Project in Android Studio
+</strong>
+</p>
+<ul>
+<li>Open android studio in your project.</li>
+<li>Open terminal in android studio.</li>
+<li>Pub get.</li>
+<li>Open terminal cd ios.</li>
+<li>pod install.</li>
+<li>run project in xcode.</li>
+</li>
+</ul>
+<p><strong>Open Project in Xcode
+</strong>
+</p>
+<ul>
+<li>
+Open Xcode.
+</li>
+<li>Select Open another Project.</li>
+<li>Open the iOS directory within your app.</li>
+<li>Now, click on Done button.</li>
+</li>
+</ul>
+<p><strong>Change Bundle Name
+</strong>
+</p>
+<ul>
+<li>
+Select your project file icon in Group and files panel.
+</li>
+<li>Then Select Target -> Info Tab.</li>
+<li>At last change Bundle Name.</li>
+</li>
+</ul>
+<img src="img/ios_config_img1.png" alt="logo" width="100%">
+
+<p><strong>Change Bundle Identifier.
+</strong>
+</p>
+<p>Bundle Id is a unique Identifier of your of app on iOS and MacOS. iOS and MacOS
+use it to recognise updates to your app. The identifier must be unique for your
+app.
+</p>
+<ul>
+<li>
+Select your project file icon in Group and files panel.
+</li>
+<li>Select General Tab.</li>
+<li>After Select General tab you can see the details of your application.</li>
+<li>In Identity section, rename your Bundle identifier.</li>
+</li>
+</ul>
+<img src="img/ios_config_img2.png" alt="logo" width="100%">
+<p><strong>Change App Icons</strong></p>
+<ul>
+<li>see How to Generate App Icons?
+</li>
+<li>In Group and files panel find “Assets.xcassets” folder.
+</li>
+<li>In Assets.xcassets folder replace AppIcon.
+</li>
+</ul>
+
+</section>
+
+<section id="config-flutter">
+<h2>Flutter Configuration</h2>
+<div class="content">
+<h5>Manually Change App Name</h5>
+<p>In main directory Go to lib -> utils -> constants.dart </p>
+<p>Change YOUR_APP_NAME to your app name </p>
+<pre class="lang-cpp"><code>const appName = "YOUR_APP_NAME";
+                </code></pre>
+
+</section>
+
+
+
+
+<section id="error1">
+<h2>No matching client found for package name </h2>
+<div class="content">
+<ul>
+<li>The error is "package_name" in google-services.json is not matching with your "applicationId" in
+app gradle.
+</li>
+<li>Just make sure the package_name and applicationId both are same.</li>
+</ul>
+</div>
+</section>
+<section id="error2">
+<h2>Flutter SDK Not Available </h2>
+<div class="content">
+<p>Download the SDK and point the SDK folder path in your future projects.</p>
+<p> There are different sources you can try</p>
+<ul>
+<li>You can clone it from the <a href="https://github.com/flutter/flutter">Github Repository</a>
+</li>
+<li>
+<a href="https://flutter.dev/docs/get-started/install/macos#get-the-flutter-sdk">
+Download SDK
+zip file + extract it after downloading
+</li>
+<li>You can also Download any <a href="https://flutter.dev/docs/development/tools/sdk/releases?tab=macos">version(including
+older)</a> from here (For Mac, Windows, Linux)</li>
+</ul>
+</div>
+</section>
+<section id="error4">
+<h2>
+Authorization header not found
+</h2>
+<div class="content">
+<p>Message: Authorization header not found
+</p>
+<p><b>Note: </b>If you faced this error during development then this error due to header not set on your
+admin panel
+</p>
+<p>Solution: Just check <a href="#basic-Wordpress">Enable JWT Authentication</a> section wordpress document to resolve this issue</p>
+</div>
+</section>
+<section id="error5">
+<h3 class="block-title">
+<b>
+Expired token
+</b>
+</h3>
+<hr>
+<div class="section-block">
+<h4>Message: Expired token</h4>
+This error occurs due to the Expired user token.
+<h5>Solution: Logout and re-login to your flutter app</h5>
+</div>
+</section>
+<section id="error6">
+<h3 class="block-title">
+<b>
+Unsupported gradle version 7.*.*
+</b>
+</h3>
+<hr>
+<div class="section-block">
+<h4>Message: Unsupported gradle version 7.*.*</h4>
+<h6>Solution:</h6>
+<p>1. Open project_root_directory/android in Android Studio</p>
+<p>2. Wait for indexing</p>
+<p>3. Now run your application from android module</p>
+</div>
+</section>
+
+
+<section id="mm-support">
+<h2>Help & Support </h2>
+<div class="content">
+<p>We like to hear you out when you get stuck or encounter difficulty with our products. As soon as you buy one of our products – you can open a support ticket and share your concern right away.
+Skype<a href=""> Zozo Studio</a> or email: technicaleliteworld@gmail.com
+</p>
+<br>
+<b>Support Policy:</b>
+<p>
+It is recommended that before submitting a ticket you take a close look at product documentation (Docs folder in the
+archive you have downloaded from Themeforest/Codecanyon). To get technical support and assistance,
+you need to have a valid purchase code. You will find this when you SignIn your Codecanyon/Themeforest “Download” page.
+Click on the product’s download link.
+</p>
+<h5 style="color: red;">Please Note:</h5>
+<p>
+Free support policy includes troubleshooting, technical assistance with the product only.
+It does not include any customization, additional features integration or concerns about third-party plugins compatibility.
+But, support is applied to plugin(s) we have developed and integrated ourselves. We appreciate your understanding!</b>
+</p>
+<p>
+You can expect answer within 24-48 hours, usually as soon as possible in the order they were received.
+</p>
+
+<p>
+All support requests are being processed on business days (Monday to Friday) from 10:00 to 18:00 (GMT +05.30). We are in GMT+5:30 time zone.
+We address all the support queries 5 days weekly on the first-come, first-solve basis (Saturday, Sundays off).
+</p>
+<p>
+We like getting positive feedback from our customers, and this is why we do our best to earn it! Write a review: <a href="https://codecanyon.net/downloads">https://codecanyon.net/downloads</a>
+</p>
+</div>
+</section>
+
+
+<section id="changelog-Sociogram">
+<h2>Change Log</h2>
+<div class="content">
+<strong>Version 1.0 - 04 August 2023</strong>
+<ul>
+<li>Initial Release</li>
+</ul>
+</div>
+</section>
+
+
+<section id="thank-you">
+<h2>Thank you for purchasing our application</h2>
+<div class="document-content">
+<p>
+Thank you for purchasing our application! We're glad that you found what you were looking for. It is our goal that you are always happy with what you bought from us, so please let us know if your buying experience was anything short of excellent. We look forward to seeing you again.
+</p>
+<img src="https://i.ibb.co/m696czT/skype-contact.jpg" alt="skype-contact" border="0">
+</div>
+</section>
+
+</div>
+</div>
+</body>
+
+</html>

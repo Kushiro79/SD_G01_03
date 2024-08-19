@@ -1,0 +1,77 @@
+.social-list li {
+    font-size: 1.125rem;
+    background: #ecf6fb;
+    width: 34px;
+    height: 34px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 50%;
+    padding: 4px;
+    list-style: none;
+    margin: auto;
+    margin-right: 16px;
+}
+
+li {
+    list-style: none;
+}
+
+.warning {
+    border-color: #EEBF41;
+    background: #fdf6e5;
+    padding: 0.6rem;
+    border-left: 3px solid #EEBF41;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
+
+.warningText {
+    color: #d09c13;
+    margin-right: 4px;
+}
+
+.danger {
+    border-color: #fd3131;
+    background: #fbf3f2;
+    padding: 0.6rem;
+    border-left: 3px solid #fd3131;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
+
+.dangerText {
+    color: #d60d0d;
+    margin-left: 4px;
+}
+
+.info {
+    border-color: #5b99ea;
+    background: #f0f7ff;
+    padding: 0.6rem;
+    border-left: 3px solid #5b99ea;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
+
+.infoText {
+    color: #1c6fdc;
+    margin-left: 4px;
+}
+
+.success {
+    border-color: #5cb377;
+    background: #e7f4eb;
+    padding: 0.6rem;
+    border-left: 3px solid #5cb377;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
+
+.successText {
+    color: #3e8554;
+    margin-left: 4px;
+}
