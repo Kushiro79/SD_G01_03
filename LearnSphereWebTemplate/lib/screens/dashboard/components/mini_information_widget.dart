@@ -52,7 +52,7 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 child: DropdownButton(
                   icon: Icon(Icons.more_vert, size: 18),
                   underline: SizedBox(),
-                  style: Theme.of(context).textTheme.button,
+                  style: Theme.of(context).textTheme.labelLarge,
                   value: _value,
                   items: [
                     DropdownMenuItem(
@@ -110,14 +110,14 @@ class _MiniInformationWidgetState extends State<MiniInformationWidget> {
                 "${widget.dailyData.volumeData}",
                 style: Theme.of(context)
                     .textTheme
-                    .caption!
+                    .bodySmall!
                     .copyWith(color: Colors.white70),
               ),
               Text(
                 widget.dailyData.totalStorage!,
                 style: Theme.of(context)
                     .textTheme
-                    .caption!
+                    .bodySmall!
                     .copyWith(color: Colors.white),
               ),
             ],

@@ -23,7 +23,7 @@ class RecentUsers extends StatelessWidget {
         children: [
           Text(
             "Recent Users",
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           SingleChildScrollView(
             //scrollDirection: Axis.horizontal,
@@ -109,7 +109,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
           children: [
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue.withOpacity(0.5),
+                backgroundColor: Colors.blue.withOpacity(0.5),
               ),
               icon: Icon(
                 Icons.edit,
@@ -124,7 +124,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
             ),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                primary: Colors.green.withOpacity(0.5),
+                backgroundColor: Colors.green.withOpacity(0.5),
               ),
               icon: Icon(
                 Icons.visibility,
@@ -139,7 +139,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
             ),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red.withOpacity(0.5),
+                backgroundColor: Colors.red.withOpacity(0.5),
               ),
               icon: Icon(Icons.delete),
               onPressed: () {
@@ -169,7 +169,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
                                           size: 14,
                                         ),
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.grey),
+                                            backgroundColor: Colors.grey),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -183,7 +183,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
                                           size: 14,
                                         ),
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.red),
+                                            backgroundColor: Colors.red),
                                         onPressed: () {},
                                         label: Text("Delete"))
                                   ],

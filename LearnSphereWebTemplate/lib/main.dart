@@ -11,14 +11,24 @@ void main() {
 
 Widget build(BuildContext context) {
   return MultiProvider(
-      providers: [...ApplicationProvider.instance.dependItems],
-      child: FutureBuilder(
-        builder: (context, snapshot) {
+    providers: [...ApplicationProvider.instance.dependItems],
+    child: FutureBuilder(
+      future: null, // Provide a valid Future
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // Handle errors
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          // Once the Future completes, display the main app
           return MyApp();
-        },
-      ));
+        }
+      },
+    ),
+  );
 }
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -31,8 +41,12 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: bgColor,
         primaryColor: greenColor,
         dialogBackgroundColor: secondaryColor,
-        buttonColor: greenColor,
-        textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme)
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: greenColor, // Set the button background color
+            foregroundColor: Colors.white, // Set the button text color
+          ),
+        ),        textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: Colors.white),
         canvasColor: secondaryColor,
       ),

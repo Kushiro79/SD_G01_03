@@ -70,19 +70,19 @@ class InputWidget extends StatelessWidget {
                 errorStyle: TextStyle(height: 0, color: Colors.transparent),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Theme.of(context).errorColor,
+                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   //gapPaddings: 16,
                   borderSide: BorderSide(
-                    color: Theme.of(context).errorColor,
+                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 hintText: this.hintText,
                 hintStyle: Theme.of(context)
                     .textTheme
-                    .bodyText1!
+                    .bodyLarge!
                     .copyWith(color: Colors.white54),
                 errorText: this.errorText),
           ),

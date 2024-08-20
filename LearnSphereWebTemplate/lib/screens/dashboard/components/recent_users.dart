@@ -22,7 +22,7 @@ class RecentUsers extends StatelessWidget {
         children: [
           Text(
             "Recent Candidates",
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           SingleChildScrollView(
             //scrollDirection: Axis.horizontal,
@@ -149,7 +149,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
                                           size: 14,
                                         ),
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.grey),
+                                            backgroundColor: Colors.grey),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -163,7 +163,7 @@ DataRow recentUserDataRow(RecentUser userInfo, BuildContext context) {
                                           size: 14,
                                         ),
                                         style: ElevatedButton.styleFrom(
-                                            primary: Colors.red),
+                                            backgroundColor: Colors.red),
                                         onPressed: () {},
                                         label: Text("Delete"))
                                   ],

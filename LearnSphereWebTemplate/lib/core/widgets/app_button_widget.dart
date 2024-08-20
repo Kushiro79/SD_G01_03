@@ -32,7 +32,7 @@ class AppButton extends StatelessWidget {
           child: Text(this.text!,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle1!
+                  .titleMedium!
                   .copyWith(color: getTextColor(context, type!))),
         ),
       ),
@@ -43,7 +43,7 @@ class AppButton extends StatelessWidget {
 Color getButtonColor(context, ButtonType type) {
   switch (type) {
     case ButtonType.PRIMARY:
-      return Theme.of(context).buttonColor;
+      return Theme.of(context).colorScheme.primary;
     case ButtonType.PLAIN:
       return Colors.white;
     default:
@@ -58,6 +58,6 @@ Color getTextColor(context, ButtonType type) {
     case ButtonType.PRIMARY:
       return Colors.white;
     default:
-      return Theme.of(context).buttonColor;
+      return Theme.of(context).colorScheme.primary;
   }
 }

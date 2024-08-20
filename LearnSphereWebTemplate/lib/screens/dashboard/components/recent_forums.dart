@@ -21,7 +21,7 @@ class RecentDiscussions extends StatelessWidget {
         children: [
           Text(
             "Recent Open Positions",
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(
             width: double.infinity,

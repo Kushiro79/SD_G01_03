@@ -60,7 +60,7 @@ class CalendarItem extends StatelessWidget {
                       calendarItemData.position,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle2!
+                          .titleSmall!
                           .copyWith(fontSize: 12),
                     ),
                   )
