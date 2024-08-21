@@ -2,6 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Flutter Web",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+              "--web-renderer",
+              "html"
+            ],
+            "webServer": {
+        "port": 8000
+      }
+        }
+        
+      
+        {
             "name": "Dashboard (Debug)",
             "request": "launch",
             "type": "dart",
