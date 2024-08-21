@@ -9,39 +9,6 @@
 
 part of 'app_router.dart';
 
-abstract class _$AppRouter extends RootStackRouter {
-  // ignore: unused_element
-  _$AppRouter({super.navigatorKey});
-
-  @override
-  final Map<String, PageFactory> pagesMap = {
-    ContentManagementRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ContentManagementPage(),
-      );
-    },
-    DashboardRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const DashboardPage(),
-      );
-    },
-    MainRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const MainPage(),
-      );
-    },
-    UserLoyaltyAndRewardsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const UserLoyaltyAndRewardsPage(),
-      );
-    },
-  };
-}
-
 /// generated route for
 /// [ContentManagementPage]
 class ContentManagementRoute extends PageRouteInfo<void> {
@@ -53,7 +20,12 @@ class ContentManagementRoute extends PageRouteInfo<void> {
 
   static const String name = 'ContentManagementRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ContentManagementPage();
+    },
+  );
 }
 
 /// generated route for
@@ -67,7 +39,12 @@ class DashboardRoute extends PageRouteInfo<void> {
 
   static const String name = 'DashboardRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DashboardPage();
+    },
+  );
 }
 
 /// generated route for
@@ -81,7 +58,12 @@ class MainRoute extends PageRouteInfo<void> {
 
   static const String name = 'MainRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MainPage();
+    },
+  );
 }
 
 /// generated route for
@@ -95,5 +77,10 @@ class UserLoyaltyAndRewardsRoute extends PageRouteInfo<void> {
 
   static const String name = 'UserLoyaltyAndRewardsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UserLoyaltyAndRewardsPage();
+    },
+  );
 }
