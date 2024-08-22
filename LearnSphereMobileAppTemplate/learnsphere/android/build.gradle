@@ -7,7 +7,7 @@ allprojects {
 
 rootProject.buildDir = '../build'
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.buildDir = "C:/Project/Flutter/SD_G01_03/LearnSphereMobileAppTemplate/learnsphere/build"
 }
 subprojects {
     project.evaluationDependsOn(':app')
@@ -15,4 +15,9 @@ subprojects {
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
+}
+
+plugins {
+    id "com.android.application" version "8.8.0"
+    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
 }
