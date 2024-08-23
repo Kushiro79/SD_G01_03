@@ -9,22 +9,22 @@ environment:
   sdk: ">=3.2.6 <4.0.0"
 
 dependencies:
+  auto_route: ^9.2.2
+  fl_chart: ^0.68.0
   flutter:
     sdk: flutter
-
   flutter_svg: 2.0.10+1
+  get: ^4.6.6
   intl: 0.19.0
-  fl_chart: ^0.68.0
   syncfusion_flutter_charts: ^26.2.10
-  auto_route: ^9.2.2
 
 dev_dependencies:
+  auto_route: ^9.2.2
+  auto_route_generator: ^9.0.0
+  flutter_gen_runner: ^5.6.0
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^4.0.0
-  auto_route_generator: ^9.0.0
-  flutter_gen_runner: ^5.6.0   
 
 flutter_gen:
   output: lib/presentation/theme/gen/
@@ -47,15 +47,17 @@ flutter_gen:
   colors:
     enabled: false
 
+  get: any
+
 flutter:
   uses-material-design: true
 
-  assets: 
+  assets:
     - assets/icons/
-  
+
   fonts:
     - family: MyriadPro
-      fonts: 
+      fonts:
         - asset: assets/fonts/MyriadPro/MyriadPro-Black.ttf
           weight: 900
         - asset: assets/fonts/MyriadPro/MyriadPro-Bold.ttf
@@ -63,6 +65,6 @@ flutter:
         - asset: assets/fonts/MyriadPro/MyriadPro-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/MyriadPro/MyriadPro-Regular.ttf
-          weight: 400  
+          weight: 400
         - asset: assets/fonts/MyriadPro/MyriadPro-Light.ttf
           weight: 300

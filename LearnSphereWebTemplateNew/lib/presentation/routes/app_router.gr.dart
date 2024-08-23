@@ -48,22 +48,38 @@ class DashboardRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [MainPage]
-class MainRoute extends PageRouteInfo<void> {
-  const MainRoute({List<PageRouteInfo>? children})
-      : super(
-          MainRoute.name,
+/// [LoginScreenView]
+class LoginRouteView extends PageRouteInfo<LoginRouteViewArgs> {
+  LoginRouteView({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LoginRouteView.name,
+          args: LoginRouteViewArgs(key: key),
           initialChildren: children,
         );
 
-  static const String name = 'MainRoute';
+  static const String name = 'LoginRouteView';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const MainPage();
+      final args = data.argsAs<LoginRouteViewArgs>(
+          orElse: () => const LoginRouteViewArgs());
+      return LoginScreenView(key: args.key);
     },
   );
+}
+
+class LoginRouteViewArgs {
+  const LoginRouteViewArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'LoginRouteViewArgs{key: $key}';
+  }
 }
 
 /// generated route for
