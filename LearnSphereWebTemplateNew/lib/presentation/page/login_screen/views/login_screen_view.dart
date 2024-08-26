@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/web_dashboard_app.dart';
+import '../../../routes/app_router.dart';
+import '../../dashboard_page/page.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_contents.dart';
 import '../../../config/common_textfield.dart';
@@ -93,7 +94,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   Padding(padding: const EdgeInsets.only(bottom: 16, top: 16),
                     child: Center(
                       child: elevated(text: 'Sign In',onPress: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const WebDashboardApp()),);
+                         context.router.push(const DashboardRoute());
                       },),
                     ),
                   ),

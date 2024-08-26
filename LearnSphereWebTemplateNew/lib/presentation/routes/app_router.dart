@@ -14,21 +14,21 @@ class AppRouter  extends RootStackRouter  {
   List<AutoRoute> get routes => <AutoRoute>[
  
             CustomRoute(
-              path: 'dashboard',
+              path: '/dashboard',
               page: DashboardRoute.page,
               durationInMilliseconds: 0,
               reverseDurationInMilliseconds: 1,
               transitionsBuilder: TransitionsBuilders.noTransition,
             ),
             CustomRoute(
-              path: 'content-management',
+              path: '/content-management',
               page: ContentManagementRoute.page,
               durationInMilliseconds: 0,
               reverseDurationInMilliseconds: 1,
               transitionsBuilder: TransitionsBuilders.noTransition,
             ),
             CustomRoute(
-              path: 'user-loyalty-and-rewards',
+              path: '/user-loyalty-and-rewards',
               page: UserLoyaltyAndRewardsRoute.page,
               durationInMilliseconds: 0,
               reverseDurationInMilliseconds: 1,
@@ -36,7 +36,7 @@ class AppRouter  extends RootStackRouter  {
             ),
             CustomRoute(
               initial: true,
-              path: 'login-view',
+              path: '/login-view',
               page: LoginRouteView.page,
               durationInMilliseconds: 0,
               reverseDurationInMilliseconds: 1,
