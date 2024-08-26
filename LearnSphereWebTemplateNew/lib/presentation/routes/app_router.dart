@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../page/content_management_page/page.dart';
 import '../page/dashboard_page/page.dart';
+import '../page/forgot_screen/views/forgot_screen_view.dart';
 import '../page/login_screen/views/login_screen_view.dart';
 import '../page/user_loyalty_and_rewards_page/user_loyalty_and_rewards_page.dart';
 
@@ -42,6 +43,13 @@ class AppRouter  extends RootStackRouter  {
               reverseDurationInMilliseconds: 1,
               transitionsBuilder: TransitionsBuilders.noTransition,
             ),
+            CustomRoute(
+              path:'/forgotPassword',
+              page: ForgotRouteView.page,
+              durationInMilliseconds: 0,
+              reverseDurationInMilliseconds: 1,
+              transitionsBuilder: TransitionsBuilders.noTransition,
+            )
           ];
         
 }

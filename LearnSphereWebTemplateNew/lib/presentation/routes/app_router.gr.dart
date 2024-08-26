@@ -48,6 +48,41 @@ class DashboardRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ForgotScreenView]
+class ForgotRouteView extends PageRouteInfo<ForgotRouteViewArgs> {
+  ForgotRouteView({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ForgotRouteView.name,
+          args: ForgotRouteViewArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ForgotRouteView';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ForgotRouteViewArgs>(
+          orElse: () => const ForgotRouteViewArgs());
+      return ForgotScreenView(key: args.key);
+    },
+  );
+}
+
+class ForgotRouteViewArgs {
+  const ForgotRouteViewArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ForgotRouteViewArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [LoginScreenView]
 class LoginRouteView extends PageRouteInfo<LoginRouteViewArgs> {
   LoginRouteView({

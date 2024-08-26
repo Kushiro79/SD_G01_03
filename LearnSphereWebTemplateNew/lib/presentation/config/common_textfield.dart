@@ -5,8 +5,11 @@ Widget textfield(
     IconData? icon,
      IconData? subicon,
     IconData? subicone,
-    required String text1}) {
+    required String text1,
+    TextEditingController? controller
+    }) {
   return TextField(
+    controller: controller,
     decoration: InputDecoration(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         labelText: text1,

@@ -2,19 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_router.dart';
-import '../../dashboard_page/page.dart';
 import '../../../config/app_color.dart';
 import '../../../config/app_contents.dart';
 import '../../../config/common_textfield.dart';
 
+
 import '../../../config/common_button.dart';
 import '../controllers/login_screen_controller.dart';
 
-// ignore: must_be_immutable
 @RoutePage()
+// ignore: must_be_immutable
 class LoginScreenView extends GetView<LoginScreenController> {
-  LoginScreenView({Key? key}) : super(key: key);
-    LoginScreenController loginScreenController = Get.put(LoginScreenController());
+   LoginScreenView({super.key});
+      LoginScreenController loginScreenController = Get.put(LoginScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   ),
 
                   Padding(padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 10),
-                    child: textfield(text: 'Enter your username', text1: 'Username or Email'),
+                    child: textfield(text : 'Enter your username', text1: 'Username or Email'),
                   ),
 
                   Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -85,7 +85,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
 
                   Padding(padding: const EdgeInsets.only(left: 210),
                     child: TextButton(onPressed: () {
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotScreenView()),); // forgot screen has not been implemented yet
+                      context.router.push( ForgotRouteView());
                     },
                       child: const Text('Forgot Password?', style: TextStyle(fontSize: 14, color: AppColor.purple, fontFamily: 'Urbanist-semibold'), overflow: TextOverflow.ellipsis),
                     ),
@@ -98,7 +98,6 @@ class LoginScreenView extends GetView<LoginScreenController> {
                       },),
                     ),
                   ),
-
                   const Row(
                     children: [
                       Expanded(
