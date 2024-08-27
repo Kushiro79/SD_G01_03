@@ -26,7 +26,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
   
   Future passwordReset(BuildContext context) async {
     try {
-      final signInmethods = await FirebaseAuth.instance.Sign(email: _email.text.trim());
+      final signInmethods = await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
       
       showModalBottomSheet(
         shape: const RoundedRectangleBorder(
