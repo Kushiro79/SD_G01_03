@@ -37,7 +37,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 10, top: 20),
-                    child: Text('Wellcome Back!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600, fontFamily: 'Urbanist-bold'), textAlign: TextAlign.start, overflow: TextOverflow.ellipsis),
+                    child: Text('Welcome Back!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600, fontFamily: 'Urbanist-bold'), textAlign: TextAlign.start, overflow: TextOverflow.ellipsis),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(10),
@@ -94,7 +94,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   Padding(padding: const EdgeInsets.only(bottom: 16, top: 16),
                     child: Center(
                       child: elevated(text: 'Sign In',onPress: () {
-                         context.router.push(const DashboardRoute());
+                         context.router.push(const MainRoute());
                       },),
                     ),
                   ),

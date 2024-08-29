@@ -46,6 +46,7 @@ class $AssetsIconsGen {
   /// File path: assets/icons/white_logo.svg
   SvgGenImage get whiteLogo => const SvgGenImage('assets/icons/white_logo.svg');
 
+
   /// List of all assets
   List<SvgGenImage> get values => [
         bell,

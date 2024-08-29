@@ -11,6 +11,7 @@ import '../../utils/color_extension.dart';
 part 'components/appbar.dart';
 part 'components/navigation_menu.dart';
 
+@RoutePage()
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
 

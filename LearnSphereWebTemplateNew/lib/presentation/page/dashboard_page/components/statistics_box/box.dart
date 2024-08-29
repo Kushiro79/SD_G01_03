@@ -93,7 +93,9 @@ class _StatisticsTabsState extends State<_StatisticsTabs>
 
   @override
   Widget build(BuildContext context) {
-    return TabBar(
+    return Material(
+      color: Colors.white,
+      child:  TabBar(
       padding: const EdgeInsets.only(left: 20),
       tabAlignment: TabAlignment.start,
       isScrollable: true,
@@ -114,6 +116,7 @@ class _StatisticsTabsState extends State<_StatisticsTabs>
           text: 'Interests',
         ),
       ],
+    )
     );
   }
 }
