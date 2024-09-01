@@ -46,35 +46,27 @@ class _NavigationMenuState extends State<_NavigationMenu> {
         _MenuItem(
           iconPath: ProjectAssets.icons.home.path,
           isSelected: currentUrl == '/dashboard',
-          onTap: () {
-            context.router.push(const DashboardRoute());
-          },
+          onTap:() => _onTabTap(const DashboardRoute()),
           text: 'Dashboard',
         ),
         _MenuItem(
           iconPath: ProjectAssets.icons.stack.path,
           isSelected: currentUrl == '/content-management',
-          onTap: () {
-            context.router.push(const ContentManagementRoute());
-          },
+          onTap:() => _onTabTap(const ContentManagementRoute()),
           text: 'Content Management',
         ),
         _MenuItem(
-          iconPath: 'assets/setting.png',
+          iconPath: ProjectAssets.icons.cup.path,
           isSelected: currentUrl == '/user-loyalty-and-rewards',
-          onTap: () {
-            context.router.push(const UserLoyaltyAndRewardsRoute());
-          },
+          onTap:() => _onTabTap(const UserLoyaltyAndRewardsRoute()),
           text: 'User Loyalty & Rewards',
         ),
         _MenuItem(
-            iconPath: ProjectAssets.setting.path,
+            iconPath: ProjectAssets.icons.setting2.path,
             text: 'Settings',
             isSelected: currentUrl == '/settings',
-            onTap: () {
-              context.router.push(const SettingsRoute());
-            }),
-    
+            onTap:() => _onTabTap(const SettingsRoute()),
+        )
       ],
     );
   }

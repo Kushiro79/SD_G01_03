@@ -6,6 +6,7 @@ import '../page/dashboard_page/page.dart';
 import '../page/forgot_screen/views/forgot_screen_view.dart';
 import '../page/login_screen/views/login_screen_view.dart';
 import '../page/main_page/page.dart';
+import '../page/register/views/register_view.dart';
 import '../page/settings_page/page.dart';
 import '../page/user_loyalty_and_rewards_page/user_loyalty_and_rewards_page.dart';
 
@@ -39,6 +40,10 @@ class AppRouter extends RootStackRouter {
               page: SettingsRoute.page, 
               path: 'settings',
             ),
+            AutoRoute(
+            page: ForgotRouteView.page,
+             path: 'forgotPassword'
+            ),
           ],
         ),
         CustomRoute(
@@ -56,5 +61,12 @@ class AppRouter extends RootStackRouter {
           reverseDurationInMilliseconds: 1,
           transitionsBuilder: TransitionsBuilders.noTransition,
         ),
+        CustomRoute(
+          path: '/register-view',
+          page: RegisterViewRoute.page,
+          durationInMilliseconds: 0,
+          reverseDurationInMilliseconds: 1,
+          transitionsBuilder: TransitionsBuilders.noTransition,
+          )
       ];
 }

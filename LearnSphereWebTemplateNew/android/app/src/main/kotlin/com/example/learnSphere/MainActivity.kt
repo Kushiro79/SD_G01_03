@@ -1,4 +1,4 @@
-package com.example.flutter_web_dashboard
+package com.example.learnSphere
 
 import io.flutter.embedding.android.FlutterActivity
 

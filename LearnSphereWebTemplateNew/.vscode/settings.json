@@ -1,5 +1,5 @@
 {
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
 }

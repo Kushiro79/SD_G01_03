@@ -13,21 +13,22 @@ class LoginScreenController extends GetxController {
     bool validEmail = isEmail(value);
     print('email: $value, valid: $validEmail'); //debug test
     isValidEmail.value = validEmail;
+    update();
   }
 
 
   void updatePassword(String value){
     password.value = value;
-    isValidPassword.value = isPassValid(value);
+    update();
   }
 
-  bool isPassValid(String password){
+  /*bool isPassValid(String password){
     return password.length >= 8 &&
     RegExp(r'[a-z]').hasMatch(password) &&
     RegExp(r'[A-Z]').hasMatch(password) &&
     RegExp(r'[0-9]').hasMatch(password) &&
     RegExp(r'[!@#$&*]').hasMatch(password);
-  }
+  }*/
 
    bool isEmail(String email){
     final emailRegex = RegExp(
@@ -53,4 +54,6 @@ class LoginScreenController extends GetxController {
     updatePassword(password.value);
     return isValidEmail.value && isValidPassword.value;
   }
+
+  
 }

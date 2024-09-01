@@ -19,14 +19,11 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
   ForgotScreenView({super.key});
   final _email = TextEditingController();
 
-  @override
-  void dispose() {
-    _email.dispose();
-  }
+
   
   Future passwordReset(BuildContext context) async {
     try {
-      final signInmethods = await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
+       await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
       
       showModalBottomSheet(
         shape: const RoundedRectangleBorder(
@@ -60,7 +57,6 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
         },
       );
     } on FirebaseAuthException catch(e) {
-      print(e);
       showDialog(
         context: context,
         builder: (BuildContext context){
@@ -108,37 +104,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                   child: Center(
                     child: elevated(text: 'Reset Password',onPress: () {
                       passwordReset(context);
-                      /*showModalBottomSheet(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20),
-                          ),
-                        ),
-                        context: context,
-                        builder: (context) {
-                          return SizedBox(
-                            height: 374,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  height: 120,
-                                  width: 120,
-                                  child: Image.asset(Appcontent.password),
-                                ),
-                                const Text('Recovery password Successfully', style: TextStyle(color: Colors.black, fontSize: 18, fontFamily: 'Urbanist-semibold')),
-                                const Text('Please login again to get started.', style: TextStyle(color: Colors.grey, fontSize: 14, fontFamily: 'Urbanist-regular')),
-
-                                Padding(padding: const EdgeInsets.only(left: 8,bottom: 16, top: 30),
-                                  child: elevated(text: 'Sign In',onPress: () {
-                                    context.router.push( LoginRouteView());
-                                  },),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );*/
+                      
                     },),
                   ),
                 ),
