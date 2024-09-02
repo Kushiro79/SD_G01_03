@@ -1,169 +1,308 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_router.dart';
+
 import '../../../config/app_color.dart';
-import '../../../config/app_contents.dart';
-import '../../../config/common_textfield.dart';
-
-
-import '../../../config/common_button.dart';
 import '../controllers/login_screen_controller.dart';
 
-@RoutePage()
-// ignore: must_be_immutable
 class LoginScreenView extends GetView<LoginScreenController> {
-   LoginScreenView({super.key});
-      LoginScreenController loginScreenController = Get.put(LoginScreenController());
+  LoginScreenView({super.key});
+  final LoginScreenController loginScreenController = Get.put(LoginScreenController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: GestureDetector(
-                      onTap: () {Navigator.pop(context);},
-                        child: Image.asset(Appcontent.back, height: 24,)),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10, top: 20),
-                    child: Text('Wellcome Back!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600, fontFamily: 'Urbanist-bold'), textAlign: TextAlign.start, overflow: TextOverflow.ellipsis),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Please sign in with your account.', style: TextStyle(fontSize: 14, color: Colors.grey, fontFamily: 'Urbanist-medium'), overflow: TextOverflow.ellipsis),
-                  ),
+      backgroundColor: Color(0xFFf5f5f5),
+      body: ListView(
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width / 8),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    _menuItem(title: 'Home'),
+                    _menuItem(title: 'About us'),
+                    _menuItem(title: 'Contact us'),
+                    _menuItem(title: 'Help'),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _menuItem(title: 'Sign In', isActive: true),
+                    _registerButton(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          _body(context),
+        ],
+      ),
+    );
+  }
 
-                  Padding(padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 10),
-                    child: textfield(text : 'Enter your username', text1: 'Username or Email'),
-                  ),
-
-                  Padding(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: GetBuilder<LoginScreenController>(
-                        builder: (context) {
-                          return TextField(
-                            obscureText: loginScreenController.showPassword,
-                            decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                hintText: 'Min. 8 characters...',
-                                labelText: 'Password',
-
-                                suffixIcon: InkWell(
-                                  onTap: () {
-                                    loginScreenController.changePasswordhideAndShow();
-                                  },
-                                  child: SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: Center(
-                                      child: loginScreenController.showPassword ? Image.asset('assets/eye-slash.png', height: 24, width: 24,) : const Icon(Icons.visibility_outlined, color: Color(0xff94A3B8),),
-                                    ),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(35),
-                                  borderSide: BorderSide(color: Colors.grey.shade200),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(35),
-                                  borderSide: BorderSide(color: Colors.grey.shade200),
-                                )),
-                          );
-                        }
-                    ),
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(left: 210),
-                    child: TextButton(onPressed: () {
-                      context.router.push( ForgotRouteView());
-                    },
-                      child: const Text('Forgot Password?', style: TextStyle(fontSize: 14, color: AppColor.purple, fontFamily: 'Urbanist-semibold'), overflow: TextOverflow.ellipsis),
-                    ),
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(bottom: 16, top: 16),
-                    child: Center(
-                      child: elevated(text: 'Sign In',onPress: () {
-                         context.router.push(const DashboardRoute());
-                      },),
-                    ),
-                  ),
-                  const Row(
-                    children: [
-                      Expanded(
-                        flex: 4,
-                        child: Divider(thickness: 1, color: Color(0xffE2E8F0),),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(child: Text('Or', style: TextStyle(fontSize: 14, fontFamily: 'Urbanist', color: Colors.grey))),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Divider(thickness: 1, color: Color(0xffE2E8F0)),
-                      ),
-                    ],
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    child: Center(
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(fixedSize: const Size(327, 56), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
-                        onPressed: () {},
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: Image(image: AssetImage(Appcontent.google)),
-                            ),
-                            SizedBox(width: 10),
-                            Text('Sign In With Google', style: TextStyle(fontSize: 16,color: Colors.black, fontFamily: 'Urbanist-semibold'), overflow: TextOverflow.ellipsis),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    child: Center(
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(fixedSize: const Size(327, 56), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
-                        onPressed: () {},
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: Image(image: AssetImage(Appcontent.apple)),
-                            ),
-                            SizedBox(width: 10),
-                            Text('Sign In With Apple', style: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'Urbanist-semibold'), overflow: TextOverflow.ellipsis),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-                
-                  const Expanded(child: SizedBox(height: 20,)),
-                ],
+  Widget _menuItem({String title = 'Title Menu', bool isActive = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 75),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isActive ? Colors.deepPurple : Colors.grey,
               ),
             ),
-          );
-        },
+            SizedBox(height: 6),
+            isActive
+                ? Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  )
+                : SizedBox(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _registerButton() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[200]!,
+            spreadRadius: 10,
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Text(
+        'Register',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.black54,
+        ),
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 390,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome to \nLearnSphere',
+                style: TextStyle(
+                  fontSize: 65,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              
+              Image.asset(
+                'login_ui2.png',
+                width: 450,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.height / 6),
+          child: Container(
+            width: 320,
+            child: _formLogin(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _formLogin() {
+    return Column(
+      children: [
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Enter username or email',
+            filled: true,
+            fillColor: Colors.blueGrey[50],
+            labelStyle: TextStyle(fontSize: 12),
+            contentPadding: EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueGrey[50]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueGrey[50]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+        GetBuilder<LoginScreenController>(
+          builder: (context) {
+            return TextField(
+              obscureText: loginScreenController.showPassword,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                suffixIcon: InkWell(
+                  onTap: () {
+                    loginScreenController.changePasswordhideAndShow();
+                  },
+                  child: Icon(
+                    loginScreenController.showPassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    color: Colors.grey,
+                  ),
+                ),
+                filled: true,
+                fillColor: Colors.blueGrey[50],
+                labelStyle: TextStyle(fontSize: 12),
+                contentPadding: EdgeInsets.only(left: 30),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueGrey[50]!),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueGrey[50]!),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            );
+          },
+        ),
+        SizedBox(height: 40),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.deepPurple[100]!,
+                spreadRadius: 10,
+                blurRadius: 20,
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle sign in action
+            },
+            child: Container(
+                width: double.infinity,
+                height: 50,
+                child: Center(child: Text('Sign In'))),
+            style: ElevatedButton.styleFrom(
+             
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 30),
+              Text(
+                "If you don't have an account",
+                style: TextStyle(
+                    color: Colors.black54, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                
+                    'You can',
+                    style: TextStyle(
+                        color: Colors.black54, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 15),
+                  GestureDetector(
+                    onTap: () {
+                      // Handle register action
+                    },
+                    child: Text(
+                      'Register here!',
+                      style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+        SizedBox(height: 40),
+        Row(children: [
+          Expanded(
+            child: Divider(
+              color: Colors.grey[300],
+              height: 50,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text('Or continue with'),
+          ),
+          Expanded(
+            child: Divider(
+              color: Colors.grey[400],
+              height: 50,
+            ),
+          ),
+        ]),
+        SizedBox(height: 40),
+
+        Row(
+       mainAxisAlignment: MainAxisAlignment.center, // Centers the button horizontally
+        children: [
+        _loginWithButton(image: 'assets/google.png'),
+      ],
+      ),
+
+      ],
+    );
+  }
+
+  Widget _loginWithButton({required String image, bool isActive = false}) {
+    return Container(
+      width: 90,
+      height: 70,
+      decoration: isActive
+          ? BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[300]!,
+                  spreadRadius: 10,
+                  blurRadius: 30,
+                )
+              ],
+              borderRadius: BorderRadius.circular(15),
+            )
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.grey[400]!),
+            ),
+      child: Center(
+        child: Image.asset(
+          image,
+          width: 35,
+        ),
       ),
     );
   }
