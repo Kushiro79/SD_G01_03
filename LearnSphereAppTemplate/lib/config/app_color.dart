@@ -6,4 +6,6 @@ class AppColor{
   static const Color Secondary = Color(0xff668395);
   // ignore: constant_identifier_names
   static const Color Greyscale = Color(0xffE2E8F0);
+
+  
 }

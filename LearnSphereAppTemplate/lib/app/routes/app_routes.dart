@@ -30,6 +30,7 @@ abstract class Routes {
   static const POSTDETAIL_SCREEN = _Paths.POSTDETAIL_SCREEN;
   static const ACTIVITY_SCREEN = _Paths.ACTIVITY_SCREEN;
   static const LIVE_SCREEN = _Paths.LIVE_SCREEN;
+
 }
 
 abstract class _Paths {
@@ -59,4 +60,5 @@ abstract class _Paths {
   static const POSTDETAIL_SCREEN = '/postdetail-screen';
   static const ACTIVITY_SCREEN = '/activity-screen';
   static const LIVE_SCREEN = '/live-screen';
+
 }
