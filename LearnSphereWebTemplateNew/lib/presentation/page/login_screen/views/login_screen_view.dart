@@ -122,7 +122,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               ),
               Image.asset(
                 'assets/login_ui2.png',
-                width: 400,
+                width: 500,
               ),
             ],
           ),
@@ -210,7 +210,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               child: Text(
                 'Forgot Password?',
                 style: TextStyle(
-                  color: Colors.blueAccent,
+                  color: Colors.deepPurple,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -246,13 +246,13 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ),
           ),
         ),
-        SizedBox(height: 30),
-        SizedBox(height: 10),
+      
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Don't have an account? Join",
+              "Don't have an account? Join us",
               style:
                   TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
             ),
@@ -269,7 +269,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 15),
         Row(children: [
           Expanded(
             child: Divider(
