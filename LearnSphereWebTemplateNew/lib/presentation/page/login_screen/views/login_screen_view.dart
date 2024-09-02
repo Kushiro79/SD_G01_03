@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../config/app_color.dart';
+import '../../../routes/app_router.dart';
 import '../controllers/login_screen_controller.dart';
 
 class LoginScreenView extends GetView<LoginScreenController> {
@@ -32,7 +34,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 Row(
                   children: [
                     _menuItem(title: 'Sign In', isActive: true),
-                    _registerButton(),
+                    _registerButton(context),
                   ],
                 ),
               ],
@@ -74,28 +76,32 @@ class LoginScreenView extends GetView<LoginScreenController> {
     );
   }
 
-  Widget _registerButton() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[200]!,
-            spreadRadius: 10,
-            blurRadius: 12,
+  Widget _registerButton(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          context.router.push(RegisterViewRoute());
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey[200]!,
+                spreadRadius: 10,
+                blurRadius: 12,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Text(
-        'Register',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.black54,
-        ),
-      ),
-    );
+          child: Text(
+            'Register',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
+          ),
+        ));
   }
 
   Widget _body(BuildContext context) {
@@ -126,19 +132,22 @@ class LoginScreenView extends GetView<LoginScreenController> {
               vertical: MediaQuery.of(context).size.height / 6),
           child: Container(
             width: 320,
-            child: _formLogin(),
+            child: _formLogin(context),
           ),
         ),
       ],
     );
   }
 
-  Widget _formLogin() {
+  Widget _formLogin(BuildContext context) {
     return Column(
       children: [
         TextField(
+          onChanged: (value) {
+            loginScreenController.updateEmail(value);
+          },
           decoration: InputDecoration(
-            hintText: 'Enter email or Phone number',
+            hintText: 'Enter email ',
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: TextStyle(fontSize: 12),
@@ -157,6 +166,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
         GetBuilder<LoginScreenController>(
           builder: (context) {
             return TextField(
+              onChanged: (value) {
+                loginScreenController.updatePassword(value);
+              },
               obscureText: loginScreenController.showPassword,
               decoration: InputDecoration(
                 hintText: 'Password',
@@ -187,6 +199,24 @@ class LoginScreenView extends GetView<LoginScreenController> {
             );
           },
         ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.router.push(ForgotRouteView());
+              },
+              child: Text(
+                'Forgot Password?',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
         SizedBox(height: 40),
         Container(
           decoration: BoxDecoration(
@@ -202,7 +232,8 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ),
           child: ElevatedButton(
             onPressed: () {
-              // Handle sign in action
+              loginScreenController.SigninWithEmailandPassword();
+              context.router.push(MainRoute());
             },
             child: Container(
                 width: double.infinity,
@@ -214,7 +245,6 @@ class LoginScreenView extends GetView<LoginScreenController> {
               ),
             ),
           ),
-
         ),
         SizedBox(height: 30),
         SizedBox(height: 10),
@@ -226,10 +256,10 @@ class LoginScreenView extends GetView<LoginScreenController> {
               style:
                   TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 15),
+            SizedBox(width: 5),
             GestureDetector(
               onTap: () {
-                // Handle register action
+                context.router.push(RegisterViewRoute());
               },
               child: Text(
                 'here!',
