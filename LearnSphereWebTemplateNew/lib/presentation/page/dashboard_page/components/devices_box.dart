@@ -56,56 +56,58 @@ class _DevicesBoxElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(text, style: TextStyles.myriadProSemiBold22DarkBlue),
-            if (buttonText != null)
-              InkWell(
-                onTap: () {},
-                child: Text(
-                  buttonText!,
-                  style: TextStyles.myriadProSemiBold16LightBlue,
+    return Material(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(text, style: TextStyles.myriadProSemiBold22DarkBlue),
+              if (buttonText != null)
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    buttonText!,
+                    style: TextStyles.myriadProSemiBold16LightBlue,
+                  ),
                 ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 12,
+            width: double.infinity,
+            child: CustomPaint(
+              painter: _BarPainter(
+                backgroundColor: Palette.mediumBlue,
+                valuesColor: colors,
+                values: percents,
               ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        SizedBox(
-          height: 12,
-          width: double.infinity,
-          child: CustomPaint(
-            painter: _BarPainter(
-              backgroundColor: Palette.mediumBlue,
-              valuesColor: colors,
-              values: percents,
             ),
           ),
-        ),
-        const SizedBox(height: 24),
-        Wrap(
-          spacing: 36,
-          runSpacing: 10,
-          children: <Widget>[
-            ...List<Widget>.generate(colors.length + 1, (int index) {
-              if (index == colors.length) {
-                return const NameAndColorRow(
-                  color: Palette.mediumBlue,
-                  text: 'Others',
+          const SizedBox(height: 24),
+          Wrap(
+            spacing: 36,
+            runSpacing: 10,
+            children: <Widget>[
+              ...List<Widget>.generate(colors.length + 1, (int index) {
+                if (index == colors.length) {
+                  return const NameAndColorRow(
+                    color: Palette.mediumBlue,
+                    text: 'Others',
+                  );
+                }
+                return NameAndColorRow(
+                  color: colors[index],
+                  text: markersName[index],
                 );
-              }
-              return NameAndColorRow(
-                color: colors[index],
-                text: markersName[index],
-              );
-            }),
-          ],
-        ),
-      ],
+              }),
+            ],
+          ),
+        ],
+      )
     );
   }
 }

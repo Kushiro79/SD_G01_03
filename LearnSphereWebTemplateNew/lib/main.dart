@@ -1,18 +1,21 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'presentation/routes/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-      options:const  FirebaseOptions(
+      options: const FirebaseOptions(
           apiKey: 'AIzaSyCFhSWMK41QR4Q7ocf-BMuETakSgKJUVws',
-          authDomain: 'learnsphere-e6563.firebaseapp.com',
-          projectId: 'learnsphere-e6563',
-          storageBucket: 'learnsphere-e6563.appspot.com',
+          appId: '1:603404130009:android:7a23f50163cbe61b6010c8',
           messagingSenderId: '603404130009',
-          appId: '1:603404130009:web:5fd562b20af226586010c8'));
+          projectId: 'learnsphere-e6563'
+          )
+      );
+
   runApp(MyApp());
 }
 

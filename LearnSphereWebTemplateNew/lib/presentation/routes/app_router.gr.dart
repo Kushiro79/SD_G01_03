@@ -118,6 +118,79 @@ class LoginRouteViewArgs {
 }
 
 /// generated route for
+/// [MainPage]
+class MainRoute extends PageRouteInfo<void> {
+  const MainRoute({List<PageRouteInfo>? children})
+      : super(
+          MainRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MainRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MainPage();
+    },
+  );
+}
+
+/// generated route for
+/// [RegisterView]
+class RegisterViewRoute extends PageRouteInfo<RegisterViewArgs> {
+  RegisterViewRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          RegisterViewRoute.name,
+          args: RegisterViewArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'RegisterView';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args =
+          data.argsAs<RegisterViewArgs>(orElse: () => const RegisterViewArgs());
+      return RegisterView(key: args.key);
+    },
+  );
+}
+
+class RegisterViewArgs {
+  const RegisterViewArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'RegisterViewArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [SettingsPage]
+class SettingsRoute extends PageRouteInfo<void> {
+  const SettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          SettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SettingsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [UserLoyaltyAndRewardsPage]
 class UserLoyaltyAndRewardsRoute extends PageRouteInfo<void> {
   const UserLoyaltyAndRewardsRoute({List<PageRouteInfo>? children})

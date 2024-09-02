@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../config/app_color.dart';
 import '../controllers/login_screen_controller.dart';
 
 class LoginScreenView extends GetView<LoginScreenController> {
   LoginScreenView({super.key});
-  final LoginScreenController loginScreenController = Get.put(LoginScreenController());
+  final LoginScreenController loginScreenController =
+      Get.put(LoginScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -103,21 +103,20 @@ class LoginScreenView extends GetView<LoginScreenController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: 390,
+          width: 490,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome to \nLearnSphere',
+                'Welcome to LearnSphere, Buddy!',
                 style: TextStyle(
-                  fontSize: 65,
+                  fontSize: 50,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
               Image.asset(
-                'login_ui2.png',
-                width: 450,
+                'assets/login_ui2.png',
+                width: 400,
               ),
             ],
           ),
@@ -139,7 +138,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
       children: [
         TextField(
           decoration: InputDecoration(
-            hintText: 'Enter username or email',
+            hintText: 'Enter email or Phone number',
             filled: true,
             fillColor: Colors.blueGrey[50],
             labelStyle: TextStyle(fontSize: 12),
@@ -210,43 +209,37 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 height: 50,
                 child: Center(child: Text('Sign In'))),
             style: ElevatedButton.styleFrom(
-             
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
           ),
+
         ),
         SizedBox(height: 30),
-              Text(
-                "If you don't have an account",
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Don't have an account? Join",
+              style:
+                  TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 15),
+            GestureDetector(
+              onTap: () {
+                // Handle register action
+              },
+              child: Text(
+                'here!',
                 style: TextStyle(
-                    color: Colors.black54, fontWeight: FontWeight.bold),
+                    color: Colors.deepPurple, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(
-                
-                    'You can',
-                    style: TextStyle(
-                        color: Colors.black54, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 15),
-                  GestureDetector(
-                    onTap: () {
-                      // Handle register action
-                    },
-                    child: Text(
-                      'Register here!',
-                      style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-        SizedBox(height: 40),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
         Row(children: [
           Expanded(
             child: Divider(
@@ -265,15 +258,13 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ),
           ),
         ]),
-        SizedBox(height: 40),
-
+        SizedBox(height: 15),
         Row(
-       mainAxisAlignment: MainAxisAlignment.center, // Centers the button horizontally
-        children: [
-        _loginWithButton(image: 'assets/google.png'),
-      ],
-      ),
-
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _loginWithButton(image: 'assets/google.png'),
+          ],
+        ),
       ],
     );
   }
