@@ -3,20 +3,18 @@ import 'package:flutter/material.dart';
 import 'presentation/routes/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import '../firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: 'AIzaSyCFhSWMK41QR4Q7ocf-BMuETakSgKJUVws',
-          appId: '1:603404130009:android:7a23f50163cbe61b6010c8',
-          messagingSenderId: '603404130009',
-          projectId: 'learnsphere-e6563'
-          )
-      );
-
-  runApp(MyApp());
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    runApp(MyApp());
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+  }
 }
 
 class MyApp extends StatefulWidget {

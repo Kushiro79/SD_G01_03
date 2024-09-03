@@ -5,10 +5,16 @@ import '../../../config/app_color.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/login_screen_controller.dart';
 
+@RoutePage()
 class LoginScreenView extends GetView<LoginScreenController> {
   LoginScreenView({super.key});
   final LoginScreenController loginScreenController =
       Get.put(LoginScreenController());
+
+  void dispose() {
+    loginScreenController.dispose();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +85,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget _registerButton(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          context.router.push(RegisterViewRoute());
+          context.router.push(RegisterRouteView());
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
@@ -232,8 +238,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ),
           child: ElevatedButton(
             onPressed: () {
-              loginScreenController.SigninWithEmailandPassword();
-              context.router.push(MainRoute());
+              loginScreenController.SigninWithEmailandPassword(context);
             },
             child: Container(
                 width: double.infinity,
@@ -259,7 +264,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
             SizedBox(width: 5),
             GestureDetector(
               onTap: () {
-                context.router.push(RegisterViewRoute());
+                context.router.push(RegisterRouteView());
               },
               child: Text(
                 'here!',

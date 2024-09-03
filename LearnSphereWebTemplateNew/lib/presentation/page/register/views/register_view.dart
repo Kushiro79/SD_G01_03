@@ -11,8 +11,8 @@ import '../controllers/register_controller.dart';
 
 @RoutePage()
 // ignore: must_be_immutable
-class RegisterView extends GetView<RegisterController> {
-  RegisterView({Key? key}) : super(key: key);
+class RegisterScreenView extends GetView<RegisterController> {
+  RegisterScreenView({Key? key}) : super(key: key);
   RegisterController registerController = Get.put(RegisterController());
   
   @override

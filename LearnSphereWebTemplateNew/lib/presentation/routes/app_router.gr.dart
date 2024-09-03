@@ -137,37 +137,72 @@ class MainRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [RegisterView]
-class RegisterViewRoute extends PageRouteInfo<RegisterViewArgs> {
-  RegisterViewRoute({
+/// [MyHomePage]
+class MyHomeRoute extends PageRouteInfo<MyHomeRouteArgs> {
+  MyHomeRoute({
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          RegisterViewRoute.name,
-          args: RegisterViewArgs(key: key),
+          MyHomeRoute.name,
+          args: MyHomeRouteArgs(key: key),
           initialChildren: children,
         );
 
-  static const String name = 'RegisterView';
+  static const String name = 'MyHomeRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
       final args =
-          data.argsAs<RegisterViewArgs>(orElse: () => const RegisterViewArgs());
-      return RegisterView(key: args.key);
+          data.argsAs<MyHomeRouteArgs>(orElse: () => const MyHomeRouteArgs());
+      return MyHomePage(key: args.key);
     },
   );
 }
 
-class RegisterViewArgs {
-  const RegisterViewArgs({this.key});
+class MyHomeRouteArgs {
+  const MyHomeRouteArgs({this.key});
 
   final Key? key;
 
   @override
   String toString() {
-    return 'RegisterViewArgs{key: $key}';
+    return 'MyHomeRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [RegisterScreenView]
+class RegisterRouteView extends PageRouteInfo<RegisterRouteViewArgs> {
+  RegisterRouteView({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          RegisterRouteView.name,
+          args: RegisterRouteViewArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'RegisterRouteView';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<RegisterRouteViewArgs>(
+          orElse: () => const RegisterRouteViewArgs());
+      return RegisterScreenView(key: args.key);
+    },
+  );
+}
+
+class RegisterRouteViewArgs {
+  const RegisterRouteViewArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'RegisterRouteViewArgs{key: $key}';
   }
 }
 
@@ -205,6 +240,25 @@ class UserLoyaltyAndRewardsRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const UserLoyaltyAndRewardsPage();
+    },
+  );
+}
+
+/// generated route for
+/// [UserSettingScreenView]
+class UserSettingRouteView extends PageRouteInfo<void> {
+  const UserSettingRouteView({List<PageRouteInfo>? children})
+      : super(
+          UserSettingRouteView.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserSettingRouteView';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UserSettingScreenView();
     },
   );
 }

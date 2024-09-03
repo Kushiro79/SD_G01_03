@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../routes/app_router.dart';
@@ -57,27 +59,45 @@ class LoginScreenController extends GetxController {
 
   bool validateCredentials() {
     updateEmail(_emailController.text);
-    updatePassword(_emailController.text);
+    updatePassword(_passwordController.text);
     return isValidEmail.value && isValidPassword.value;
   }
 
-  void dispose() {
+  void disposeController() {
     _emailController.dispose();
     _passwordController.dispose();
   }
 
-  SigninWithEmailandPassword() async {
+  SigninWithEmailandPassword(BuildContext context) async {
     if (validateCredentials()) {
       print('Email: ${_emailController.text}'); // Add this
       print('Password: ${_passwordController.text}'); // Add this
 
       try {
-        await _firebaseAuth.signInWithEmailAndPassword(
+         UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
         print('Signed in successfully');
         
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')  // Ensure this matches your Firestore collection name
+          .doc(userCredential.user!.uid)
+          .get();
+
+      String role = userDoc.get('role');  // Assumes the role is stored under 'role'
+
+        if(context.mounted){
+          if (role == 'user') {
+          context.router.push(MyHomeRoute());  // Navigate to the Home Page
+        } else if (role == 'admin' || role == 'staff') {
+          context.router.push(const MainRoute());  // Navigate to the Admin/Staff Dashboard
+        } else {
+          // Handle any unexpected roles
+          print('Unexpected role: $role');
+        }
+        }
+
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           updateEmailErrorText('No user found for that email.');
