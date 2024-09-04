@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../routes/app_router.dart';
-import '../settings_page/page.dart';
-import '../settings_page/user_settings.dart';
+import '../settings_page/admin_settings.dart';
+import '../settings_page/edit_profile.dart';
 @RoutePage()
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});

@@ -199,7 +199,8 @@ class RegisterScreenView extends GetView<RegisterController> {
                       onPress: () {
                         registerController.createUserwithEmailandPassword(
                             registerController.email,
-                            registerController.password
+                            registerController.password,
+                            context
                             );
                         print('Username : ' + registerController.username);
                         print('Email : ' + registerController.email);

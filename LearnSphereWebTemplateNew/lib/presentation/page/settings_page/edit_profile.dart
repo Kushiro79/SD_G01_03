@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../config/common_textfield.dart';
-import 'user_setting_controller.dart';
+import 'edit_profile_controller.dart';
 
 @RoutePage()
-class UserSettingScreenView extends GetView<ActivityScreenController> {
-  const UserSettingScreenView({super.key});
+class EditProfilePage extends GetView<ActivityScreenController> {
+  const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {

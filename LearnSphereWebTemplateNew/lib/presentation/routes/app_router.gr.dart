@@ -10,6 +10,41 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [ChangePasswordPage]
+class ChangePasswordRoute extends PageRouteInfo<ChangePasswordRouteArgs> {
+  ChangePasswordRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChangePasswordRoute.name,
+          args: ChangePasswordRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChangePasswordRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ChangePasswordRouteArgs>(
+          orElse: () => const ChangePasswordRouteArgs());
+      return ChangePasswordPage(key: args.key);
+    },
+  );
+}
+
+class ChangePasswordRouteArgs {
+  const ChangePasswordRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ChangePasswordRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [ContentManagementPage]
 class ContentManagementRoute extends PageRouteInfo<void> {
   const ContentManagementRoute({List<PageRouteInfo>? children})
@@ -43,6 +78,25 @@ class DashboardRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const DashboardPage();
+    },
+  );
+}
+
+/// generated route for
+/// [EditProfilePage]
+class EditProfileRoute extends PageRouteInfo<void> {
+  const EditProfileRoute({List<PageRouteInfo>? children})
+      : super(
+          EditProfileRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'EditProfileRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const EditProfilePage();
     },
   );
 }
@@ -245,20 +299,20 @@ class UserLoyaltyAndRewardsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [UserSettingScreenView]
-class UserSettingRouteView extends PageRouteInfo<void> {
-  const UserSettingRouteView({List<PageRouteInfo>? children})
+/// [VerificationScreenView]
+class VerificationRouteView extends PageRouteInfo<void> {
+  const VerificationRouteView({List<PageRouteInfo>? children})
       : super(
-          UserSettingRouteView.name,
+          VerificationRouteView.name,
           initialChildren: children,
         );
 
-  static const String name = 'UserSettingRouteView';
+  static const String name = 'VerificationRouteView';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const UserSettingScreenView();
+      return const VerificationScreenView();
     },
   );
 }

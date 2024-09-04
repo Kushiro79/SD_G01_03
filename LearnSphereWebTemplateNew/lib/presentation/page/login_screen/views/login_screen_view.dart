@@ -27,16 +27,8 @@ class LoginScreenView extends GetView<LoginScreenController> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    _menuItem(title: 'Home'),
-                    _menuItem(title: 'About us'),
-                    _menuItem(title: 'Contact us'),
-                    _menuItem(title: 'Help'),
-                  ],
-                ),
                 Row(
                   children: [
                     _menuItem(title: 'Sign In', isActive: true),
@@ -111,39 +103,77 @@ class LoginScreenView extends GetView<LoginScreenController> {
   }
 
   Widget _body(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: 490,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      // Check the available width and adjust the layout accordingly
+      if (constraints.maxWidth > 800) {
+        // Wide layout
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 490,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome to LearnSphere, Buddy!',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/login_ui2.png',
+                    width: 500,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height / 6),
+              child: Container(
+                width: 320,
+                child: _formLogin(context),
+              ),
+            ),
+          ],
+        );
+      } else {
+        // Narrow layout (e.g., mobile devices)
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Text(
                 'Welcome to LearnSphere, Buddy!',
                 style: TextStyle(
-                  fontSize: 50,
+                  fontSize: 30, // Reduce font size for narrow layout
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center, // Center the text
               ),
-              Image.asset(
-                'assets/login_ui2.png',
-                width: 500,
+            ),
+            Image.asset(
+              'assets/login_ui2.png',
+              width: constraints.maxWidth * 0.7, // Reduce image width to 70% of available width
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height / 10),
+              child: Container(
+                width: constraints.maxWidth * 0.9, // Adjust form width
+                child: _formLogin(context),
               ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.height / 6),
-          child: Container(
-            width: 320,
-            child: _formLogin(context),
-          ),
-        ),
-      ],
-    );
-  }
+            ),
+          ],
+        );
+      }
+    },
+  );
+}
+
 
   Widget _formLogin(BuildContext context) {
     return Column(

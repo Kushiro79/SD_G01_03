@@ -1,13 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:sociogram/app/modules/interest_screen/views/interest_screen_view.dart';
-import 'package:sociogram/config/app_contents.dart';
-import '../../../../config/app_color.dart';
-import '../../../../config/common_button.dart';
+import '../../../config/app_contents.dart';
+import '../../../config/app_color.dart';
+import '../../../config/common_button.dart';
 import '../controllers/verification_screen_controller.dart';
 
+@RoutePage()
 class VerificationScreenView extends GetView<VerificationScreenController> {
   const VerificationScreenView({Key? key}) : super(key: key);
 
@@ -63,7 +64,7 @@ class VerificationScreenView extends GetView<VerificationScreenController> {
                     textFieldAlignment: MainAxisAlignment.spaceEvenly,
                     onCompleted: (pin) {
                       // Handle OTP verification here
-                      controller.checkEmailVerified();
+                      controller.checkEmailVerified(context);
                     },
                   ),
                 ),
@@ -88,7 +89,7 @@ class VerificationScreenView extends GetView<VerificationScreenController> {
                     child: elevated(
                       text: 'Verify',
                       onPress: () {
-                        controller.checkEmailVerified();
+                        controller.checkEmailVerified(context);
                       },
                     ),
                   ),

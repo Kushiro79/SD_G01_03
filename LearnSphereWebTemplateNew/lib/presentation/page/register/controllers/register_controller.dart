@@ -1,7 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../routes/app_router.dart';
+import '../../verification_screen/controllers/verification_screen_controller.dart';
 
 class RegisterController extends GetxController {
   final count = 0.obs;
@@ -42,7 +46,7 @@ class RegisterController extends GetxController {
     _passwordController.dispose();
   }
 
-  Future<void> createUserwithEmailandPassword(String email, String password ) async{
+  Future<void> createUserwithEmailandPassword(String email, String password , BuildContext context) async{
     try {
       UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: this.email, password: this.password);
       User? user = result.user;
@@ -50,6 +54,11 @@ class RegisterController extends GetxController {
       if (user != null) {
       // Create a new user document in Firestore
       await _createUserDocument(user);
+      
+      user.sendEmailVerification();
+      Get.put(VerificationScreenController());
+      context.router.push(VerificationRouteView());
+      
       } else {
       print('Error creating user: user is null');
       }
@@ -70,6 +79,7 @@ class RegisterController extends GetxController {
     };
 
     await userCollection.doc(user.uid).set(userData);
+
   }
 
 

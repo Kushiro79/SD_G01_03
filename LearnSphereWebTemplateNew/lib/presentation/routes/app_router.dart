@@ -2,15 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../page/Home_page/home_screen.dart';
+import '../page/change_password/change_password_view.dart';
 import '../page/content_management_page/page.dart';
 import '../page/dashboard_page/page.dart';
 import '../page/forgot_screen/views/forgot_screen_view.dart';
 import '../page/login_screen/views/login_screen_view.dart';
 import '../page/main_page/page.dart';
 import '../page/register/views/register_view.dart';
-import '../page/settings_page/page.dart';
-import '../page/settings_page/user_settings.dart';
+import '../page/settings_page/admin_settings.dart';
+import '../page/settings_page/edit_profile.dart';
 import '../page/user_loyalty_and_rewards_page/user_loyalty_and_rewards_page.dart';
+import '../page/verification_screen/views/verification_screen_view.dart';
 
 part 'app_router.gr.dart';
 
@@ -42,13 +44,19 @@ class AppRouter extends RootStackRouter {
               page: SettingsRoute.page, 
               path: 'settings',
             ),
-            AutoRoute(
-            page: ForgotRouteView.page,
-             path: 'forgotPassword'
-            ),
+            CustomRoute(
+            path: 'change-password',
+            page: ChangePasswordRoute.page,
+            durationInMilliseconds: 0,
+            reverseDurationInMilliseconds: 1,
+            transitionsBuilder: TransitionsBuilders.noTransition
+            )
           ],
         ),
-
+        AutoRoute(
+            page: ForgotRouteView.page,
+             path: '/forgot-Password'
+            ),
         CustomRoute(
           path: '/forgotPassword',
           page: ForgotRouteView.page,
@@ -80,11 +88,19 @@ class AppRouter extends RootStackRouter {
             transitionsBuilder: TransitionsBuilders.noTransition,
           ),
           CustomRoute(
-            path: '/user-settings',
-            page: UserSettingRouteView.page,
+            path: '/edit-profile',
+            page: EditProfileRoute.page,
             durationInMilliseconds: 0,
             reverseDurationInMilliseconds: 1,
             transitionsBuilder: TransitionsBuilders.noTransition
-          )
+          ),
+          CustomRoute(
+            path: '/verfication-screen-view',
+            page: VerificationRouteView.page,
+            durationInMilliseconds: 0,
+            reverseDurationInMilliseconds: 1,
+            transitionsBuilder: TransitionsBuilders.noTransition
+          ),
+          
       ];
 }
