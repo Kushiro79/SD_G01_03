@@ -226,6 +226,41 @@ class MyHomeRouteArgs {
 }
 
 /// generated route for
+/// [ProfileScreenPage]
+class ProfileRouteRoute extends PageRouteInfo<ProfileRouteRouteArgs> {
+  ProfileRouteRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfileRouteRoute.name,
+          args: ProfileRouteRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileRouteRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ProfileRouteRouteArgs>(
+          orElse: () => const ProfileRouteRouteArgs());
+      return ProfileScreenPage(key: args.key);
+    },
+  );
+}
+
+class ProfileRouteRouteArgs {
+  const ProfileRouteRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileRouteRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [RegisterScreenView]
 class RegisterRouteView extends PageRouteInfo<RegisterRouteViewArgs> {
   RegisterRouteView({

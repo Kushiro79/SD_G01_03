@@ -8,9 +8,10 @@ import '../page/dashboard_page/page.dart';
 import '../page/forgot_screen/views/forgot_screen_view.dart';
 import '../page/login_screen/views/login_screen_view.dart';
 import '../page/main_page/page.dart';
+import '../page/profile_page/views/profile_screen_view.dart';
 import '../page/register/views/register_view.dart';
 import '../page/settings_page/admin_settings.dart';
-import '../page/settings_page/edit_profile.dart';
+import '../page/profile_page/edit_profile.dart';
 import '../page/view_and_user_management_page/view/view_and_user_management.dart';
 import '../page/verification_screen/views/verification_screen_view.dart';
 
@@ -97,6 +98,13 @@ class AppRouter extends RootStackRouter {
           CustomRoute(
             path: '/verfication-screen-view',
             page: VerificationRouteView.page,
+            durationInMilliseconds: 0,
+            reverseDurationInMilliseconds: 1,
+            transitionsBuilder: TransitionsBuilders.noTransition
+          ),
+          CustomRoute(
+            path: '/view-profile',
+            page: ProfileRouteRoute.page,
             durationInMilliseconds: 0,
             reverseDurationInMilliseconds: 1,
             transitionsBuilder: TransitionsBuilders.noTransition
