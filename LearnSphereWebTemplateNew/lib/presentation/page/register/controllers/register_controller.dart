@@ -76,6 +76,7 @@ class RegisterController extends GetxController {
     'username': username, // You can get the username from the user input
     'role': 'user',
     'uid': user.uid,
+    'email': user.email,
     };
 
     await userCollection.doc(user.uid).set(userData);

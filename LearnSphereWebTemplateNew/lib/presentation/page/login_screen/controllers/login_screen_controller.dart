@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/custom_toast.dart';
 import '../../../routes/app_router.dart';
-import '../../change_password/change_password_controller.dart';
 
 
 class LoginScreenController extends GetxController {
@@ -13,7 +13,6 @@ class LoginScreenController extends GetxController {
   var isValidEmail = true.obs;
   var isValidPassword = true.obs;
 
-  ChangePasswordController toastcontroller = Get.put(ChangePasswordController());
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
@@ -103,7 +102,7 @@ class LoginScreenController extends GetxController {
         }
 
       } on FirebaseAuthException catch (e) {
-        toastcontroller.showCustomToast(context,e.message.toString());
+        showCustomToast(context,e.message.toString());
         
       }
     }

@@ -280,25 +280,6 @@ class SettingsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [UserLoyaltyAndRewardsPage]
-class UserLoyaltyAndRewardsRoute extends PageRouteInfo<void> {
-  const UserLoyaltyAndRewardsRoute({List<PageRouteInfo>? children})
-      : super(
-          UserLoyaltyAndRewardsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'UserLoyaltyAndRewardsRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const UserLoyaltyAndRewardsPage();
-    },
-  );
-}
-
-/// generated route for
 /// [VerificationScreenView]
 class VerificationRouteView extends PageRouteInfo<void> {
   const VerificationRouteView({List<PageRouteInfo>? children})
@@ -313,6 +294,25 @@ class VerificationRouteView extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const VerificationScreenView();
+    },
+  );
+}
+
+/// generated route for
+/// [ViewAndManageUsersPage]
+class ViewAndManageUsersRoute extends PageRouteInfo<void> {
+  const ViewAndManageUsersRoute({List<PageRouteInfo>? children})
+      : super(
+          ViewAndManageUsersRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewAndManageUsersRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ViewAndManageUsersPage();
     },
   );
 }

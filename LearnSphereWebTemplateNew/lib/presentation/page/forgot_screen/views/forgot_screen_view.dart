@@ -149,22 +149,26 @@ Widget _body(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 490,
+              width: MediaQuery.of(context).size.width * 0.4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
                     'forgot_ui.png',
-                    width: 500,
+                    width: MediaQuery.of(context).size.width * 0.3,
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 10),
+                          Padding(
+                padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width * 0.1, // Set your desired right padding
+                  top: MediaQuery.of(context).size.height / 6, // Keep the vertical padding
+                  bottom: MediaQuery.of(context).size.height /6, // Keep the vertical padding
+                ),
               child: Container(
-                width: 320,
+                width: MediaQuery.of(context).size.width * 0.2,
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: _formForgot(context),
               ),
             ),
@@ -196,7 +200,7 @@ Widget _body(BuildContext context) {
 
   Widget _formForgot(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),

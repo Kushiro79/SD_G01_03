@@ -5,8 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import '../../routes/app_router.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../theme/palette.dart';
+import '../../config/app_color.dart';
 import '../../theme/text_styles.dart';
 import '../../utils/color_extension.dart';
+import '../view_and_user_management_page/view/view_and_user_management.dart';
 
 part 'components/appbar.dart';
 part 'components/navigation_menu.dart';
@@ -26,7 +28,7 @@ class MainPage extends StatelessWidget {
                 width: 220,
                 height: double.infinity,
                 child: ColoredBox(
-                  color: Palette.darkBlue,
+                  color: AppColor.purple,
                   child: _NavigationMenu(),
                 ),
               ),

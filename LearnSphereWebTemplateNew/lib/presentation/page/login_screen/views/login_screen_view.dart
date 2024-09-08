@@ -13,7 +13,6 @@ class LoginScreenView extends GetView<LoginScreenController> {
 
   void dispose() {
     loginScreenController.dispose();
-
   }
 
   @override
@@ -103,77 +102,87 @@ class LoginScreenView extends GetView<LoginScreenController> {
   }
 
   Widget _body(BuildContext context) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      // Check the available width and adjust the layout accordingly
-      if (constraints.maxWidth > 800) {
-        // Wide layout
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 490,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome to LearnSphere, Buddy!',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Check the available width and adjust the layout accordingly
+        if (constraints.maxWidth > 800) {
+          // Wide layout
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.45,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: AlignmentDirectional.center,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: Text(
+                        'Welcome to LearnSphere, Buddy!',
+                        style: TextStyle(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                  Image.asset(
-                    'assets/login_ui2.png',
-                    width: 500,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 6),
-              child: Container(
-                width: 320,
-                child: _formLogin(context),
-              ),
-            ),
-          ],
-        );
-      } else {
-        // Narrow layout (e.g., mobile devices)
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0),
-              child: Text(
-                'Welcome to LearnSphere, Buddy!',
-                style: TextStyle(
-                  fontSize: 30, // Reduce font size for narrow layout
-                  fontWeight: FontWeight.bold,
+                    Image.asset(
+                      'assets/login_ui2.png',
+                      width: MediaQuery.of(context).size.width * 0.3,
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center, // Center the text
               ),
-            ),
-            Image.asset(
-              'assets/login_ui2.png',
-              width: constraints.maxWidth * 0.7, // Reduce image width to 70% of available width
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 10),
-              child: Container(
-                width: constraints.maxWidth * 0.9, // Adjust form width
-                child: _formLogin(context),
+              Padding(
+                padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width *
+                      0.1, // Set your desired right padding
+                  top: MediaQuery.of(context).size.height /
+                      6, // Keep the vertical padding
+                  bottom: MediaQuery.of(context).size.height /
+                      6, // Keep the vertical padding
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: _formLogin(context),
+                ),
               ),
-            ),
-          ],
-        );
-      }
-    },
-  );
-}
-
+            ],
+          );
+        } else {
+          // Narrow layout (e.g., mobile devices)
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                child: Text(
+                  'Welcome to LearnSphere, Buddy!',
+                  style: TextStyle(
+                    fontSize: 30, // Reduce font size for narrow layout
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center, // Center the text
+                ),
+              ),
+              Image.asset(
+                'assets/login_ui2.png',
+                width: constraints.maxWidth *
+                    0.7, // Reduce image width to 70% of available width
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height / 10),
+                child: Container(
+                  width: constraints.maxWidth * 0.9, // Adjust form width
+                  child: _formLogin(context),
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
 
   Widget _formLogin(BuildContext context) {
     return Column(
@@ -271,7 +280,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               loginScreenController.SigninWithEmailandPassword(context);
             },
             child: Container(
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width * 0.5,
                 height: 50,
                 child: Center(child: Text('Sign In'))),
             style: ElevatedButton.styleFrom(
@@ -281,7 +290,6 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ),
           ),
         ),
-      
         SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

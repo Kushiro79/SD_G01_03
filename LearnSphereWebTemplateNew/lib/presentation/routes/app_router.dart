@@ -11,7 +11,7 @@ import '../page/main_page/page.dart';
 import '../page/register/views/register_view.dart';
 import '../page/settings_page/admin_settings.dart';
 import '../page/settings_page/edit_profile.dart';
-import '../page/user_loyalty_and_rewards_page/user_loyalty_and_rewards_page.dart';
+import '../page/view_and_user_management_page/view/view_and_user_management.dart';
 import '../page/verification_screen/views/verification_screen_view.dart';
 
 part 'app_router.gr.dart';
@@ -37,8 +37,8 @@ class AppRouter extends RootStackRouter {
               page: ContentManagementRoute.page,
             ),
             AutoRoute(
-              path: 'user-loyalty-and-rewards',
-              page: UserLoyaltyAndRewardsRoute.page,
+              path: 'user-management',
+              page: ViewAndManageUsersRoute.page,
             ),
             AutoRoute(
               page: SettingsRoute.page, 
