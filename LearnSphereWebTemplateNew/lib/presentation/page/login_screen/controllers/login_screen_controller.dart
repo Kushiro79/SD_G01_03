@@ -1,13 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/custom_toast.dart';
 import '../../../routes/app_router.dart';
+
 
 class LoginScreenController extends GetxController {
   //observable
   var isValidEmail = true.obs;
   var isValidPassword = true.obs;
+
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
@@ -57,35 +62,48 @@ class LoginScreenController extends GetxController {
 
   bool validateCredentials() {
     updateEmail(_emailController.text);
-    updatePassword(_emailController.text);
+    updatePassword(_passwordController.text);
     return isValidEmail.value && isValidPassword.value;
   }
 
-  void dispose() {
+  void disposeController() {
     _emailController.dispose();
     _passwordController.dispose();
   }
 
-  SigninWithEmailandPassword() async {
+  SigninWithEmailandPassword(BuildContext context) async {
     if (validateCredentials()) {
       print('Email: ${_emailController.text}'); // Add this
       print('Password: ${_passwordController.text}'); // Add this
 
       try {
-        await _firebaseAuth.signInWithEmailAndPassword(
+         UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
         print('Signed in successfully');
         
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          updateEmailErrorText('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          updatePasswordErrorText('Wrong password provided for that user.');
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')  // Ensure this matches your Firestore collection name
+          .doc(userCredential.user!.uid)
+          .get();
+
+      String role = userDoc.get('role');  // Assumes the role is stored under 'role'
+
+        if(context.mounted){
+          if (role == 'user') {
+          context.router.push(MyHomeRoute());  // Navigate to the Home Page
+        } else if (role == 'admin' || role == 'staff') {
+          context.router.push(const MainRoute());  // Navigate to the Admin/Staff Dashboard
         } else {
-          updateEmailErrorText('An unknown error occurred.');
+          // Handle any unexpected roles
+          print('Unexpected role: $role');
         }
+        }
+
+      } on FirebaseAuthException catch (e) {
+        showCustomToast(context,e.message.toString());
+        
       }
     }
   }

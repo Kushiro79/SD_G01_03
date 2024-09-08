@@ -28,7 +28,10 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
         context: context,
         builder: (context) {
           return SizedBox(
-            height: 374,
+            height: MediaQuery.of(context).size.height * 0.4,
+            width: MediaQuery.of(context).size.width * 0.8,
+             child: Padding(
+              padding: MediaQuery.of(context).padding + const EdgeInsets.only(top: 25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -69,6 +72,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                 ),
               ],
             ),
+          ),
           );
         },
       );
@@ -98,16 +102,6 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             padding: const EdgeInsets.symmetric(vertical: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              Row(
-                  children: [
-                    _menuItem(title: 'Home'),
-                    _menuItem(title: 'About us'),
-                    _menuItem(title: 'Contact us'),
-                    _menuItem(title: 'Help'),
-                  ],
-                ),
-              ]  
             ),
           ),
           _body(context),
@@ -146,37 +140,67 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
     );
   }
 
-  Widget _body(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: 490,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               Image.asset(
-                'forgot_ui.png',
-                width: 500,
+Widget _body(BuildContext context) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      if (constraints.maxWidth > 800) {
+        // Wide layout
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'forgot_ui.png',
+                    width: MediaQuery.of(context).size.width * 0.3,
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),//
-        Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.height / 10),
-          child: Container(
-            width: 320,
-            child: _formForgot(context),
-          ),
-        ),
-      ],
-    );
-  }
+            ),
+                          Padding(
+                padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width * 0.1, // Set your desired right padding
+                  top: MediaQuery.of(context).size.height / 6, // Keep the vertical padding
+                  bottom: MediaQuery.of(context).size.height /6, // Keep the vertical padding
+                ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.2,
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: _formForgot(context),
+              ),
+            ),
+          ],
+        );
+      } else {
+        // Narrow layout (e.g., mobile devices)
+        return Column(
+          children: [
+            Image.asset(
+              'forgot_ui.png',
+              width: constraints.maxWidth * 0.7, // Reduce image width to 70% of available width
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height / 10),
+              child: Container(
+                width: constraints.maxWidth * 0.9, // Adjust form width
+                child: _formForgot(context),
+              ),
+            ),
+          ],
+        );
+      }
+    },
+  );
+}
+
 
   Widget _formForgot(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),

@@ -56,10 +56,10 @@ class _NavigationMenuState extends State<_NavigationMenu> {
           text: 'Content Management',
         ),
         _MenuItem(
-          iconPath: ProjectAssets.icons.cup.path,
-          isSelected: currentUrl == '/user-loyalty-and-rewards',
-          onTap:() => _onTabTap(const UserLoyaltyAndRewardsRoute()),
-          text: 'User Loyalty & Rewards',
+          iconPath: ProjectAssets.tagUser1.path,
+          isSelected: currentUrl == '/user-management',
+          onTap:() => _onTabTap(const ViewAndManageUsersRoute()),
+          text: 'User & Staff Management',
         ),
         _MenuItem(
             iconPath: ProjectAssets.icons.setting2.path,
@@ -110,13 +110,20 @@ class _MenuItem extends StatelessWidget {
             padding: const EdgeInsets.only(left: 43.0),
             child: Row(
               children: <Widget>[
-                SvgPicture.asset(
-                  iconPath,
-                  width: 16,
-                  height: 16,
-                  colorFilter:
-                      isSelected ? Palette.dirtyWhite.toColorFilter : null,
-                ),
+                iconPath.endsWith('.svg')
+                  ? SvgPicture.asset(
+                      iconPath,
+                      width: 16,
+                      height: 16,
+                      colorFilter:
+                          Palette.dirtyWhite.toColorFilter,
+                    )
+                  : Image.asset(
+                    iconPath, 
+                    width: 16, 
+                    height: 16,
+                    color: Palette.dirtyWhite 
+                    ),
                 const SizedBox(width: 8),
                 Text(
                   text,

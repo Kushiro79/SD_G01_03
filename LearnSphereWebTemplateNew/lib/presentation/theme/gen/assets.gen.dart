@@ -202,6 +202,7 @@ class ProjectAssets {
   static const AssetGenImage football2 = AssetGenImage('assets/football2.png');
   static const AssetGenImage football3 = AssetGenImage('assets/football3.png');
   static const AssetGenImage forgot = AssetGenImage('assets/forgot.png');
+  static const AssetGenImage forgotUi = AssetGenImage('assets/forgot_ui.png');
   static const AssetGenImage formatSquare =
       AssetGenImage('assets/format-square.png');
   static const AssetGenImage gallarry = AssetGenImage('assets/gallarry.png');
@@ -259,6 +260,8 @@ class ProjectAssets {
       AssetGenImage('assets/lock-circle.png');
   static const AssetGenImage lock = AssetGenImage('assets/lock.png');
   static const AssetGenImage login = AssetGenImage('assets/login.png');
+  static const AssetGenImage loginUi = AssetGenImage('assets/login_ui.png');
+  static const AssetGenImage loginUi2 = AssetGenImage('assets/login_ui2.png');
   static const AssetGenImage maximize3 = AssetGenImage('assets/maximize-3.png');
   static const AssetGenImage message = AssetGenImage('assets/message.png');
   static const AssetGenImage messages = AssetGenImage('assets/messages.png');
@@ -470,6 +473,7 @@ class ProjectAssets {
         football2,
         football3,
         forgot,
+        forgotUi,
         formatSquare,
         gallarry,
         galleryAdd,
@@ -514,6 +518,8 @@ class ProjectAssets {
         lockCircle,
         lock,
         login,
+        loginUi,
+        loginUi2,
         maximize3,
         message,
         messages,

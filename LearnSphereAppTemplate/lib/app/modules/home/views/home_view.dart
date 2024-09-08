@@ -5,6 +5,7 @@ import 'package:sociogram/app/modules/addpost_screen/views/addpost_screen_view.d
 import 'package:sociogram/app/modules/home/views/showimage_view.dart';
 import 'package:sociogram/app/modules/home/views/store_view.dart';
 import 'package:sociogram/app/modules/message_screen/Message_screen.dart';
+import 'package:sociogram/app/modules/setting_page_user/setting_page.dart';
 import 'package:sociogram/config/app_color.dart';
 import 'package:story_view/story_view.dart';
 
@@ -163,6 +164,22 @@ class HomeView extends GetView<HomeController> {
                                   child: SizedBox(
                                     height: 24,
                                       child: Image.asset(Appcontent.addpostst))),
+
+                                      //ADD SETTINGS BUTTON HERE
+                                      GestureDetector(
+                                        onTap: () => Navigator.push(context,
+                                        MaterialPageRoute(
+                                          builder: (context)=> SettingsPage(),
+                                          ),
+                                      ),
+                                      child: SizedBox(
+                                        height: 24,
+                                        child: Icon(
+                                          Icons.settings,
+                                          color: AppColor.purple,
+                                        ),
+                                      ),
+                                  ),
                             ],
                           ),
                         ),

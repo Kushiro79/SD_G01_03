@@ -62,7 +62,7 @@ class SettingsPage extends StatelessWidget {
                     color: Colors.grey[600], // Set the text color to a dark grey
                   ),
                 ),
-                onTap: () => context.router.push(ForgotRouteView()),
+                onTap: () => context.router.push(ChangePasswordRoute()),
               ),
             ),
             SizedBox(height: 10), // Add some space between the capsules

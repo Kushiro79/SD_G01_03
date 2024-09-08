@@ -36,7 +36,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                 ),
 
                 const Center(child: Text('Forgot Password.', style: TextStyle(fontSize: 32, fontFamily: 'Urbanist-bold'))),
-                const Center(child: Text('Enter your email account to reset\n                 your password.', style: TextStyle(fontSize: 14, color: Colors.grey, fontFamily: 'Urbanist-medium'))),
+                const Center(child: Text('Enter your email account to reset\nyour password.', style: TextStyle(fontSize: 14, color: Colors.grey, fontFamily: 'Urbanist-medium'))),
 
                 Padding(padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
                   child: textfield(text: 'Enter your Email', text1: 'Email'),

@@ -1,4 +1,4 @@
-plugin{
+plugins{
     id 'com.android.application'
     id 'kotlin-android' 
     id 'com.google.gms.google-services'
@@ -27,12 +27,15 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+//apply plugin: 'com.android.application'
+//apply plugin: 'com.google.gms.google-services' // This line should be at the top
+//apply plugin: 'kotlin-android'
+//apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.example.learnSphere"
+    apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
@@ -54,8 +57,8 @@ android {
         applicationId "com.example.learnSphere"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 22
-        targetSdkVersion 31
+        minSdkVersion 35
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
