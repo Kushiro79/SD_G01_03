@@ -49,3 +49,15 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+class MyApps extends StatelessWidget {
+  final _appRouter = AppRouter(); // Instantiate the generated router
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerDelegate: _appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
+    );
+  }
+}
