@@ -1,4 +1,4 @@
-part of '../page.dart';
+/*part of '../page.dart';
 
 class _InformationRow extends StatelessWidget {
   const _InformationRow();
@@ -45,4 +45,4 @@ class _InformationRow extends StatelessWidget {
       ],
     );
   }
-}
+}*/

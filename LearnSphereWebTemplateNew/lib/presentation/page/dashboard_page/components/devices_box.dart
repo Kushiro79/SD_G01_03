@@ -1,4 +1,4 @@
-part of '../page.dart';
+/*part of '../page.dart';
 
 class _DevicesBox extends StatelessWidget {
   const _DevicesBox();
@@ -165,3 +165,4 @@ class _BarPainter extends CustomPainter {
         oldPainter.values != values;
   }
 }
+*/

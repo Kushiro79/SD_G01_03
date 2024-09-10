@@ -1,4 +1,4 @@
-part of '../page.dart';
+/*part of '../page.dart';
 
 class _PlatformsBox extends StatelessWidget {
   const _PlatformsBox();
@@ -202,3 +202,4 @@ class _PercentBarPainter extends CustomPainter {
         oldPainter.value != value;
   }
 }
+*/

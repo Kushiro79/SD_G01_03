@@ -1,4 +1,4 @@
-part of '../../page.dart';
+/*part of '../../page.dart';
 
 class _StatisticsBox extends StatefulWidget {
   const _StatisticsBox();
@@ -143,3 +143,4 @@ class _StatisticsTab extends StatelessWidget {
     );
   }
 }
+*/
