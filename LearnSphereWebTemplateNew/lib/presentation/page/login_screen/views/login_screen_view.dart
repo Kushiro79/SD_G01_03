@@ -346,7 +346,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
     );
   }
 
-  Widget _loginWithButton({required String image, bool isActive = false}) {
+  Widget _loginWithButton({required String image}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: MouseRegion(
