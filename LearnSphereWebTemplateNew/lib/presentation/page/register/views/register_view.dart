@@ -10,7 +10,6 @@ class RegisterScreenView extends GetView<RegisterController> {
   RegisterScreenView({Key? key}) : super(key: key);
 
   final RegisterController registerController = Get.put(RegisterController());
-
   @override
   void dispose() {
     registerController.disposeControllers();
@@ -37,19 +36,11 @@ class RegisterScreenView extends GetView<RegisterController> {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         children: [
-                          _menuItem(title: 'Home'),
-                          _menuItem(title: 'About us'),
-                          _menuItem(title: 'Contact us'),
-                          _menuItem(title: 'Help'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          _SignInButton(context),
+                          _signInButton(context),
                           _menuItem(title: 'Register', isActive: true),
                         ],
                       ),
@@ -80,7 +71,8 @@ class RegisterScreenView extends GetView<RegisterController> {
             SizedBox(height: 6),
             isActive
                 ? Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.deepPurple,
                       borderRadius: BorderRadius.circular(30),
@@ -93,7 +85,7 @@ class RegisterScreenView extends GetView<RegisterController> {
     );
   }
 
-  Widget _SignInButton(BuildContext context) {
+  Widget _signInButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
         context.router.push(LoginRouteView());
@@ -123,64 +115,127 @@ class RegisterScreenView extends GetView<RegisterController> {
   }
 
   Widget _body(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: 490,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 800) {
+          // Wide layout
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    Image.asset(
+                      'assets/register4.png',
+                      width: 500,
+                    ),
+                  ],
+                ),
+              
+              Padding(
+                 padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width *
+                      0.05, // Set your desired right padding
+                  top: MediaQuery.of(context).size.height /
+                      6, // Keep the vertical padding
+                  bottom: MediaQuery.of(context).size.height /
+                      6, // Keep the vertical padding
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width *
+                      0.25, // Adjust width for wide layout
+                  child: Column(
+                    children: [
+                      _buildForm(context),
+                      SizedBox(height: 20),
+                      _buildSignUpButton(context),
+                      SizedBox(height: 10),
+                      _buildSignInLink(context),
+                      SizedBox(height: 20),
+                      /*Row(children: [
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey[300],
+                            height: 50,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text('Or continue with'),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey[400],
+                            height: 50,
+                          ),
+                        ),
+                      ]),*/
+                      SizedBox(height: 15),
+
+                      //_loginWithButton(image: 'assets/google.png'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          // Narrow layout (Column)
+          return Column(
             children: [
               _buildHeader(),
               Image.asset(
                 'assets/register4.png',
-                width: 500,
+                width: constraints.maxWidth *
+                    0.9, // Adjust width for narrow layout
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height / 10),
+                child: Container(
+                  width: constraints.maxWidth * 0.8,
+                  child: Column(
+                    children: [
+                      _buildForm(context),
+                      SizedBox(height: 20),
+                      _buildSignUpButton(context),
+                      SizedBox(height: 10),
+                      _buildSignInLink(context),
+                      SizedBox(height: 20),
+                      Row(children: [
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey[300],
+                            height: 50,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text('Or continue with'),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey[400],
+                            height: 50,
+                          ),
+                        ),
+                      ]),
+                      SizedBox(height: 15),
+                      _loginWithButton(image: 'assets/google.png'),
+                    ],
+                  ),
+                ),
               ),
             ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.height / 6),
-          child: Container(
-            width: 320,
-            child: Column(
-              children: [
-                _buildForm(context),
-                SizedBox(height: 20),
-                _buildSignUpButton(context),
-                SizedBox(height: 10),
-                _buildSignInLink(context),
-                SizedBox(height: 20),
-                Row(children: [
-                  Expanded(
-                    child: Divider(
-                      color: Colors.grey[300],
-                      height: 50,
-                    ),
-                  ),
-                 Expanded(
-                    child: Text('Or continue with'),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Colors.grey[400],
-                      height: 50,
-                    ),
-                  ),
-                ]),
-                SizedBox(height: 15),
-                _loginWithButton(image: 'assets/google.png'),
-              ],
-            ),
-          ),
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 
   Widget _buildHeader() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
         Text(
@@ -221,7 +276,7 @@ class RegisterScreenView extends GetView<RegisterController> {
         ),
         SizedBox(height: 20),
         _buildTextField(
-          hintText: 'Min. 8 characters...',
+          hintText: 'Min. 6 characters...',
           labelText: 'Password',
           onChanged: registerController.updatePassword,
           obscureText: registerController.showPassword,
@@ -255,16 +310,17 @@ class RegisterScreenView extends GetView<RegisterController> {
         labelText: labelText,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: Colors.grey[200],
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.grey.shade500),
-        ),
+            fillColor: Colors.blueGrey[50],
+            labelStyle: TextStyle(fontSize: 12),
+            contentPadding: EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueGrey[50]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueGrey[50]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
       ),
     );
   }
@@ -315,7 +371,9 @@ class RegisterScreenView extends GetView<RegisterController> {
       children: [
         Text(
           'Already have an account?',
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(
+            color: Colors.black54,
+             fontWeight: FontWeight.bold),
         ),
         TextButton(
           onPressed: () {
@@ -323,7 +381,10 @@ class RegisterScreenView extends GetView<RegisterController> {
           },
           child: const Text(
             'Sign In',
-            style: TextStyle(color: AppColor.purple),
+            style:
+                TextStyle(color: AppColor.purple, 
+                fontWeight: FontWeight.bold
+                ),
           ),
         ),
       ],

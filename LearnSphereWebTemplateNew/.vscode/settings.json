@@ -2,4 +2,5 @@
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
     "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
 }

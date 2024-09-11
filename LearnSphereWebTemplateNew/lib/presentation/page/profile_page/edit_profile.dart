@@ -104,14 +104,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                           size: 28,
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          'Certified User',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        
                       ],
                     );
                   }),
@@ -196,7 +189,7 @@ class EditProfilePage extends GetView<EditProfileController> {
 
                         ElevatedButton(
                           onPressed: () {
-                            controller.saveProfile(); // Save changes to Firebase
+                            controller.saveProfile(context); // Save changes to Firebase
                             isEditing.value = false; // Switch back to display mode
                           },
                           child: Text('Save Changes'),
@@ -207,7 +200,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                         label: Text("Forgot Password"),
                       onPressed: () {
                       // Navigate to the Change Password screen
-                      AutoRouter.of(context).push(ForgotRouteView());
+                      AutoRouter.of(context).push(ChangePasswordRoute());
                     },
                     ),
                     ],

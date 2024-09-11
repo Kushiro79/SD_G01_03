@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../utils/custom_toast.dart';
+
 class EditProfileController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,24 +32,37 @@ class EditProfileController extends GetxController {
     }
   }
 
-  // Method to save profile changes to Firebase
-  Future<void> saveProfile() async {
-    try {
-      User? user = _auth.currentUser;
-      if (user != null) {
-        await _firestore.collection('users').doc(user.uid).update({
-          'username': username.value,
-          'email': email.value,
-          'credentials': credentials.value,  // Changed from bio to credentials
-          'profileImageUrl': profileImageUrl.value,
-          'certificate': certificate.value,
-        });
-        print('Profile updated successfully');
-      }
-    } catch (e) {
-      print('Error updating profile: $e');
-    }
+    bool isEmail(String email) {
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(email);
   }
+
+  // Method to save profile changes to Firebase
+Future<void> saveProfile(context) async {
+  if (!isEmail(email.value)) {  // Check if the email is invalid
+    showCustomToast(context, 'Enter a valid email address');
+    print('Invalid email format');
+    return;
+  } 
+  try {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await _firestore.collection('users').doc(user.uid).update({
+        'username': username.value,
+        'email': email.value,
+        'credentials': credentials.value,
+        'profileImageUrl': profileImageUrl.value,
+        'certificate': certificate.value,
+      });
+      print('Profile updated successfully');
+    }
+  } catch (e) {
+    print('Error updating profile: $e');
+  }
+}
+
 
   Future<void> logout() async {
   try {

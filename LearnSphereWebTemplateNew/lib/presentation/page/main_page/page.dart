@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../routes/app_router.dart';
@@ -18,20 +19,20 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       body: Stack(
         children: <Widget>[
           Row(
             children: <Widget>[
               SizedBox(
-                width: 220,
+                width: MediaQuery.of(context).size.width * 0.15,
                 height: double.infinity,
                 child: ColoredBox(
                   color: AppColor.purple,
                   child: _NavigationMenu(),
                 ),
               ),
-              Expanded(
+              const Expanded(
                 child: ColoredBox(
                   color: Palette.dirtyWhite,
                   child: Column(
@@ -44,7 +45,7 @@ class MainPage extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
+          const Positioned(
             top: 80,
             left: 0,
             right: 0,

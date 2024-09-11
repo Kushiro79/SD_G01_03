@@ -8,10 +8,15 @@ import '../controllers/forgot_screen_controller.dart';
 
 @RoutePage()
 class ForgotScreenView extends GetView<ForgotScreenController> {
-  ForgotScreenView({super.key});
-  final _email = TextEditingController();
+   ForgotScreenView({super.key});
 
-  Future passwordReset(BuildContext context) async {
+  final TextEditingController _email = TextEditingController();
+
+  forgotpasswordEmail(String value) {
+    _email.text = value;
+  }
+
+  Future<void> passwordReset(BuildContext context) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
       showModalBottomSheet(
@@ -35,7 +40,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                     width: 120,
                     child: Image.asset(Appcontent.password),
                   ),
-                  Text(
+                  const Text(
                     'Recovery password Successfully',
                     style: TextStyle(
                       color: Colors.black,
@@ -43,7 +48,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                       fontFamily: 'Urbanist-semibold',
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Please login again to get started.',
                     style: TextStyle(
                       color: Colors.grey,
@@ -276,23 +281,23 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             ),
           ),
         ),
-        SizedBox(height: 30),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Already remember?',
               style: TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             GestureDetector(
               onTap: () {
                 context.router.push(LoginRouteView());
               },
-              child: Text(
+              child: const Text(
                 'Sign In',
                 style: TextStyle(
                   color: Colors.deepPurple,

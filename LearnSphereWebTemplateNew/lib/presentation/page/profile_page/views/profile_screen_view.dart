@@ -73,12 +73,11 @@ class ProfileScreenPage extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'Certified User',
+                          'Newbie',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
                             color: Colors.grey,
-                          ),
+                          ),    
                         ),
                       ],
                     ),

@@ -55,6 +55,13 @@ class AppRouter extends RootStackRouter {
             )
           ],
         ),
+        CustomRoute(
+            path: '/change-password',
+            page: ChangePasswordRoute.page,
+            durationInMilliseconds: 0,
+            reverseDurationInMilliseconds: 1,
+            transitionsBuilder: TransitionsBuilders.noTransition
+            ),
         AutoRoute(
             page: ForgotRouteView.page,
              path: '/forgot-Password'
