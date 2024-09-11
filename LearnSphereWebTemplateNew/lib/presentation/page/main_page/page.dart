@@ -8,7 +8,6 @@ import '../../theme/palette.dart';
 import '../../config/app_color.dart';
 import '../../theme/text_styles.dart';
 import '../../utils/color_extension.dart';
-import '../view_and_user_management_page/view/view_and_user_management.dart';
 
 part 'components/appbar.dart';
 part 'components/navigation_menu.dart';

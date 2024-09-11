@@ -2,8 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../config/app_contents.dart';
-import '../../../config/app_color.dart';
 import '../controllers/proflie_screen_controller.dart';
 
 // ignore: must_be_immutable

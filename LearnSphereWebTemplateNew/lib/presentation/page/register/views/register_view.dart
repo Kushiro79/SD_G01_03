@@ -2,9 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../config/app_color.dart';
-import '../../../config/app_contents.dart';
 import '../../../routes/app_router.dart';
-import '../../change_password/change_password_controller.dart';
 import '../controllers/register_controller.dart';
 
 @RoutePage()
@@ -12,49 +10,58 @@ class RegisterScreenView extends GetView<RegisterController> {
   RegisterScreenView({Key? key}) : super(key: key);
 
   final RegisterController registerController = Get.put(RegisterController());
-    @override
-   void dispose() {
+
+  @override
+  void dispose() {
     registerController.disposeControllers();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFf5f5f5),
-      body: ListView(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width / 8),
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    _menuItem(title: 'Home'),
-                    _menuItem(title: 'About us'),
-                    _menuItem(title: 'Contact us'),
-                    _menuItem(title: 'Help'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _SignInButton(context),
-                    _menuItem(title: 'Register', isActive: true),
-                  ],
-                ),
-              ],
-            )
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/background4.jpg',
+              fit: BoxFit.cover, // Makes the image cover the entire screen
+            ),
           ),
-          _body(context),
-        ]
-      )
+          // Content on top of the background image
+          ListView(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 8),
+            children: [
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          _menuItem(title: 'Home'),
+                          _menuItem(title: 'About us'),
+                          _menuItem(title: 'Contact us'),
+                          _menuItem(title: 'Help'),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _SignInButton(context),
+                          _menuItem(title: 'Register', isActive: true),
+                        ],
+                      ),
+                    ],
+                  )),
+              _body(context),
+            ],
+          ),
+        ],
+      ),
     );
   }
-  
-
-  
-
 
   Widget _menuItem({String title = 'Title Menu', bool isActive = false}) {
     return Padding(
@@ -152,8 +159,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                       height: 50,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                 Expanded(
                     child: Text('Or continue with'),
                   ),
                   Expanded(
@@ -283,7 +289,6 @@ class RegisterScreenView extends GetView<RegisterController> {
               registerController.email,
               registerController.password,
               context,
-            
             );
             print('Username: ${registerController.username}');
             print('Email: ${registerController.email}');

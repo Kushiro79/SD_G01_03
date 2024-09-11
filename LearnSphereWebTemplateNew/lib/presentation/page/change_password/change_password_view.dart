@@ -1,14 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../routes/app_router.dart';
-import '../login_screen/views/login_screen_view.dart';
-import '../../config/app_contents.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../config/app_color.dart';
-import '../../config/common_button.dart';
-import '../../config/common_textfield.dart';
 import 'change_password_controller.dart';
 
 @RoutePage()

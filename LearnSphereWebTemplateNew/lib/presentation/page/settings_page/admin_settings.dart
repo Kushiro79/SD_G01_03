@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../routes/app_router.dart';
-import '../../config/app_contents.dart';
-import '../../config/common_button.dart';
-import '../../config/common_textfield.dart';
-import '../../config/app_color.dart';
-import '../login_screen/views/login_screen_view.dart';
 
 @RoutePage()
 class SettingsPage extends StatelessWidget {

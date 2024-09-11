@@ -5,7 +5,7 @@ class ActivityScreenController extends GetxController{
 
   int gValue = 0;
   final count = 0.obs;
-  final selected  = "".obs;
+  final selected  = ''.obs;
 
   // RxString dropdownValue = list.first.obs;
 

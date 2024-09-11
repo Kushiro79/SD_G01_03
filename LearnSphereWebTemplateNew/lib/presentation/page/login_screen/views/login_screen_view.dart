@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../config/app_color.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/login_screen_controller.dart';
 
@@ -19,25 +18,37 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFf5f5f5),
-      body: ListView(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width / 8),
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    _menuItem(title: 'Sign In', isActive: true),
-                    _registerButton(context),
-                  ],
-                ),
-              ],
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/background4.jpg', // Your background image
+              fit: BoxFit.cover,
             ),
           ),
-          _body(context),
+          // Content on top of the background
+          ListView(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 8),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        _menuItem(title: 'Sign In', isActive: true),
+                        _registerButton(context),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              _body(context),
+            ],
+          ),
         ],
       ),
     );
@@ -104,9 +115,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget _body(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Check the available width and adjust the layout accordingly
         if (constraints.maxWidth > 800) {
-          // Wide layout
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -117,7 +126,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   children: [
                     Container(
                       alignment: AlignmentDirectional.center,
-                      width: MediaQuery.of(context).size.width * 0.3,
+                      width: MediaQuery.of(context).size.width * 0.4,
                       child: Text(
                         'Welcome to LearnSphere, Buddy!',
                         style: TextStyle(
@@ -135,12 +144,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  right: MediaQuery.of(context).size.width *
-                      0.1, // Set your desired right padding
-                  top: MediaQuery.of(context).size.height /
-                      6, // Keep the vertical padding
-                  bottom: MediaQuery.of(context).size.height /
-                      6, // Keep the vertical padding
+                  right: MediaQuery.of(context).size.width * 0.1,
+                  top: MediaQuery.of(context).size.height / 6,
+                  bottom: MediaQuery.of(context).size.height / 6,
                 ),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.2,
@@ -150,7 +156,6 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ],
           );
         } else {
-          // Narrow layout (e.g., mobile devices)
           return Column(
             children: [
               Padding(
@@ -158,22 +163,21 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 child: Text(
                   'Welcome to LearnSphere, Buddy!',
                   style: TextStyle(
-                    fontSize: 30, // Reduce font size for narrow layout
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center, // Center the text
+                  textAlign: TextAlign.center,
                 ),
               ),
               Image.asset(
                 'assets/login_ui2.png',
-                width: constraints.maxWidth *
-                    0.7, // Reduce image width to 70% of available width
+                width: constraints.maxWidth * 0.7,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 10),
                 child: Container(
-                  width: constraints.maxWidth * 0.9, // Adjust form width
+                  width: constraints.maxWidth * 0.9,
                   child: _formLogin(context),
                 ),
               ),
@@ -343,29 +347,17 @@ class LoginScreenView extends GetView<LoginScreenController> {
   }
 
   Widget _loginWithButton({required String image, bool isActive = false}) {
-    return Container(
-      width: 90,
-      height: 70,
-      decoration: isActive
-          ? BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[300]!,
-                  spreadRadius: 10,
-                  blurRadius: 30,
-                )
-              ],
-              borderRadius: BorderRadius.circular(15),
-            )
-          : BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Colors.grey[400]!),
-            ),
-      child: Center(
-        child: Image.asset(
-          image,
-          width: 35,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[400]!),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Image.asset(image, width: 40),
         ),
       ),
     );

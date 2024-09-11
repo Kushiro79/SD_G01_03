@@ -1,11 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
-import '../../../config/app_contents.dart';
 import '../../../config/app_color.dart';
-import '../../../config/common_button.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/verification_screen_controller.dart';
 
@@ -81,7 +77,7 @@ class VerificationScreenView extends GetView<VerificationScreenController> {
                             style: TextStyle(fontSize: 14, color: Colors.grey[600], fontFamily: 'Urbanist'),
                           ),
                           TextSpan(
-                            text: "Use another email address?",
+                            text: 'Use another email address?',
                             style: TextStyle(fontSize: 14, color: AppColor.purple, fontFamily: 'Urbanist'),
                           ),
                         ],

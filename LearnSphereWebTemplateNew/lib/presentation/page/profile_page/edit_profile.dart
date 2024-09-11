@@ -28,11 +28,11 @@ class EditProfilePage extends GetView<ActivityScreenController> {
       'History Username',
     ];
     List sutext = [
-      "You made your account mode on view\nPublic.",
-      "You crerated your account on\nDecember 28, 2019.",
-      "History of devices connected to your\naccount.",
-      "History history of devices logged in with\nyour account",
-      "History of email changes in your\naccount",
+      'You made your account mode on view\nPublic.',
+      'You crerated your account on\nDecember 28, 2019.',
+      'History of devices connected to your\naccount.',
+      'History history of devices logged in with\nyour account',
+      'History of email changes in your\naccount',
       'History of username changes in your\naccount',
     ];
     return LayoutBuilder(

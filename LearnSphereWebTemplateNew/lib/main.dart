@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'presentation/routes/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import '../firebase_options.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:fluttertoast/fluttertoast.dart';

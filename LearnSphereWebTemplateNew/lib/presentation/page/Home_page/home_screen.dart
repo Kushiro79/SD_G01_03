@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'home_controller.dart';
 
-import '../../config/app_contents.dart';
-import '../../config/app_color.dart';
 import '../../theme/palette.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
@@ -376,7 +374,7 @@ class MyHomePage extends GetView<HomeController> {
                                                           FullScreenImage(
                                                         imageUrl: frame[index],
                                                         tag:
-                                                            "generate_a_unique_tag",
+                                                            'generate_a_unique_tag',
                                                       ),
                                                     ));
                                               },
@@ -570,7 +568,7 @@ class MyHomePage extends GetView<HomeController> {
                                                                             index],
                                                                         style: const TextStyle(
                                                                             fontFamily:
-                                                                                "Urbanist-medium"),
+                                                                                'Urbanist-medium'),
                                                                       ),
                                                                       trailing:
                                                                           Text(
@@ -578,7 +576,7 @@ class MyHomePage extends GetView<HomeController> {
                                                                             index],
                                                                         style: TextStyle(
                                                                             fontFamily:
-                                                                                "Urbanist-medium",
+                                                                                'Urbanist-medium',
                                                                             fontSize:
                                                                                 12,
                                                                             color:
