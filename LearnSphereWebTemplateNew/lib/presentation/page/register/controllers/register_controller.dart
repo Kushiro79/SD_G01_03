@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:flutter/foundation.dart' show kIsWeb; //to check if the app is running on the web
+import 'dart:io' as io; // to check if the app running on app
+
 import '../../../routes/app_router.dart';
 import '../../verification_screen/controllers/verification_screen_controller.dart';
 
@@ -72,16 +75,31 @@ class RegisterController extends GetxController {
     final firestore = FirebaseFirestore.instance;
     final userCollection = firestore.collection('users');
 
+    // Determine the device type
+  String _getDeviceType() {
+    if (kIsWeb) {
+      return 'Web';
+    } else if (io.Platform.isAndroid) {
+      return 'Android';
+    } else {
+      return 'Unknown';
+    }
+  }
+
+  // Get the device type
+  String deviceType = _getDeviceType();
+  
+
     final userData = {
     'username': username, // You can get the username from the user input
     'role': 'user',
     'uid': user.uid,
     'email': user.email,
+    'active': true, // Automatically setting active status to true
+    'registrationDate': FieldValue.serverTimestamp(),
+    'device': deviceType,
     };
 
     await userCollection.doc(user.uid).set(userData);
-
   }
-
-
 }
