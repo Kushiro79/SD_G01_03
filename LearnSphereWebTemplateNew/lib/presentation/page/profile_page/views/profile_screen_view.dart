@@ -14,11 +14,16 @@ class ProfileScreenPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
         actions: [
-          ElevatedButton.icon(
-            label: Text("Edit"),
-            icon: const Icon(Icons.edit),
+          IconButton(
+            icon: Icon(Icons.edit, color: Colors.black),
             onPressed: () {
               // Navigate to the Edit Profile screen
               AutoRouter.of(context).push(EditProfileRoute());
@@ -26,71 +31,81 @@ class ProfileScreenPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: Obx(() {
-                String username = profileController.username.value;
-                String email = profileController.email.value;
-                String profileImageUrl = profileController.profileImageUrl.value;
+          // Background image
+          Image.asset(
+            'assets/background.jpg',
+            fit: BoxFit.cover,
+          ),
+          // Profile content
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: Obx(() {
+                    String username = profileController.username.value;
+                    String email = profileController.email.value;
+                    String profileImageUrl = profileController.profileImageUrl.value;
 
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: profileImageUrl.isNotEmpty
-                          ? NetworkImage(profileImageUrl)
-                          : AssetImage('assets/default_profile.png') as ImageProvider,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      username,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      email,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.verified,
-                          color: Colors.grey,
-                          size: 28,
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: profileImageUrl.isNotEmpty
+                              ? NetworkImage(profileImageUrl)
+                              : AssetImage('assets/default_profile.png') as ImageProvider,
                         ),
-                        SizedBox(width: 8),
+                        SizedBox(height: 16),
                         Text(
-                          'Newbie',
+                          username,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black, // Changed to black
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          email,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey,
-                          ),    
+                            color: Colors.black87, // Changed to black
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.verified,
+                              color: Colors.black, // Changed to black
+                              size: 24,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Newbie',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black, // Changed to black
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                );
-              }),
-            ),
+                    );
+                  }),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
-
-
   
 
 
