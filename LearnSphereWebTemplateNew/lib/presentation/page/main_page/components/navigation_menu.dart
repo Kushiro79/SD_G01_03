@@ -116,11 +116,35 @@ class _MenuItem extends StatelessWidget {
                 ),
               )
             : null,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Row(
-            children: <Widget>[
-              iconPath.endsWith('.svg')
+        child: screenwidth
+          ? Row(
+              children: <Widget>[
+                iconPath.endsWith('.svg')
+                    ? SvgPicture.asset(
+                        iconPath,
+                        width: iconsize,
+                        height: iconsize,
+                        colorFilter: Palette.dirtyWhite.toColorFilter,
+                      )
+                    : Image.asset(
+                        iconPath,
+                        width: iconsize,
+                        height: iconsize,
+                        color: Palette.dirtyWhite,
+                      ),
+                const SizedBox(width: 8),
+                Text(
+                  text,
+                  style: isSelected
+                      ? TextStyles.myriadProSemiBold12DirtyWhite
+                      : TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
+                          color: Palette.dirtyWhite.withOpacity(0.8),
+                        ),
+                ),
+              ],
+            )
+          : Center( // Center the icon when text is hidden
+              child: iconPath.endsWith('.svg')
                   ? SvgPicture.asset(
                       iconPath,
                       width: iconsize,
@@ -133,25 +157,8 @@ class _MenuItem extends StatelessWidget {
                       height: iconsize,
                       color: Palette.dirtyWhite,
                     ),
-              const SizedBox(width: 8),
-              screenwidth
-                  ? Text(
-                      text,
-
-                      softWrap: true,
-
-                      style: isSelected
-                          ? TextStyles.myriadProSemiBold12DirtyWhite
-                          : TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
-                              color: Palette.dirtyWhite.withOpacity(0.8),
-                            ),
-                    )
-                                        
-
-                  : const SizedBox(),
-            ],
-          ),
-        ),
+            ),
+        
       ),
     );
   }

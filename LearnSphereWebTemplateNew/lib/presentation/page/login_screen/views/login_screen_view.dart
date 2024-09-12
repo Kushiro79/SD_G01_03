@@ -161,6 +161,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ],
           );
         } else {
+          //mobile layout
           return Column(
             children: [
               Padding(
@@ -176,7 +177,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               ),
               Image.asset(
                 'assets/login_ui2.png',
-                width: constraints.maxWidth * 0.7,
+                width: constraints.maxWidth * 0.9,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -296,7 +297,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ],
         ),
         SizedBox(height: 15),
-        Row(children: [
+        /*Row(children: [
           Expanded(
             child: Divider(
               color: Colors.grey[300],
@@ -318,9 +319,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _loginWithButton(image: 'assets/google.png'),
+           // _loginWithButton(image: 'assets/google.png'),
           ],
-        ),
+        ),*/
       ],
     );
   }

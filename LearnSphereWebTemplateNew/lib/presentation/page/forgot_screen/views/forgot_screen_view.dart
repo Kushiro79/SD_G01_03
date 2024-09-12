@@ -165,7 +165,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'forgot_ui.png',
+                      'assets/forgot_ui.png',
                       width: MediaQuery.of(context).size.width * 0.3,
                     ),
                   ],
@@ -190,7 +190,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
           return Column(
             children: [
               Image.asset(
-                'forgot_ui.png',
+                'assets/forgot_ui.png',
                 width: constraints.maxWidth * 0.7, // Reduce image width to 70% of available width
               ),
               Padding(

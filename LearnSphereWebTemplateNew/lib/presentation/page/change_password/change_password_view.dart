@@ -69,7 +69,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    'forgot_ui.png',
+                    'assets/forgot_ui.png',
                     width: 500,
                   ),
                 ],
@@ -90,7 +90,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
         return Column(
           children: [
             Image.asset(
-              'forgot_ui.png',
+              'assets/forgot_ui.png',
               width: constraints.maxWidth * 0.7, // Adjust image width
             ),
             Padding(

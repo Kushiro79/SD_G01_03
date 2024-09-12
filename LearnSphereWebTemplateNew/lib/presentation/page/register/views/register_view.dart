@@ -194,7 +194,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 10),
                 child: Container(
-                  width: constraints.maxWidth * 0.8,
+                  width: constraints.maxWidth * 0.9,
                   child: Column(
                     children: [
                       _buildForm(context),
@@ -203,7 +203,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                       SizedBox(height: 10),
                       _buildSignInLink(context),
                       SizedBox(height: 20),
-                      Row(children: [
+                      /*Row(children: [
                         Expanded(
                           child: Divider(
                             color: Colors.grey[300],
@@ -221,8 +221,8 @@ class RegisterScreenView extends GetView<RegisterController> {
                           ),
                         ),
                       ]),
-                      SizedBox(height: 15),
-                      _loginWithButton(image: 'assets/google.png'),
+                      SizedBox(height: 15),*/
+                      //_loginWithButton(image: 'assets/google.png'),
                     ],
                   ),
                 ),
