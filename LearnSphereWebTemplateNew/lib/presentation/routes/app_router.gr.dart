@@ -96,7 +96,7 @@ class EditProfileRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const EditProfilePage();
+      return EditProfilePage();
     },
   );
 }

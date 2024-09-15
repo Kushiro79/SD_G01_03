@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class FullScreenImage extends StatelessWidget {
   String? imageUrl;
@@ -17,9 +16,9 @@ class FullScreenImage extends StatelessWidget {
           children: [
             Center(
               child: Hero(
-                tag: tag ?? "",
+                tag: tag ?? '',
                 child: Image.asset(
-                  imageUrl ?? "",
+                  imageUrl ?? '',
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.contain,
                 ),

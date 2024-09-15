@@ -1,4 +1,4 @@
-part of '../../page.dart';
+/*part of '../../page.dart';
 
 class _LocationPage extends StatelessWidget {
   const _LocationPage();
@@ -10,3 +10,4 @@ class _LocationPage extends StatelessWidget {
     );
   }
 }
+*/

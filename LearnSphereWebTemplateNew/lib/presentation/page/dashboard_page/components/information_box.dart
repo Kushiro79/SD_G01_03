@@ -1,4 +1,4 @@
-part of '../page.dart';
+/*part of '../page.dart';
 
 class _InformationBox extends StatelessWidget {
   const _InformationBox({
@@ -77,3 +77,4 @@ class _InformationBox extends StatelessWidget {
     );
   }
 }
+*/

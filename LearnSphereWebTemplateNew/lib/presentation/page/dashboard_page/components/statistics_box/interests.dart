@@ -1,4 +1,4 @@
-part of '../../page.dart';
+/*part of '../../page.dart';
 
 class _InterestsPage extends StatelessWidget {
   const _InterestsPage();
@@ -9,4 +9,4 @@ class _InterestsPage extends StatelessWidget {
       child: Text('INTERESTS'),
     );
   }
-}
+}*/

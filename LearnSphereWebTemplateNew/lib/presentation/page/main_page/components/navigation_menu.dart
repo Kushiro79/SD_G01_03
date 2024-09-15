@@ -28,46 +28,58 @@ class _NavigationMenuState extends State<_NavigationMenu> {
   @override
   Widget build(BuildContext context) {
     final currentUrl = AutoRouterDelegate.of(context).urlState.path;
+    final screenwidth = MediaQuery.of(context).size.width > 850;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            child: ProjectAssets.icons.whiteLogo.svg(
-              height: 14,
-              width: 127,
-              colorFilter: Palette.white.toColorFilter,
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+
+        return SizedBox(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+               Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    screenwidth ? 'LearnSphere' :'LS',
+                    style: const TextStyle(
+                      color: Palette.dirtyWhite,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              _MenuItem(
+                iconPath: ProjectAssets.icons.home.path,
+                isSelected: currentUrl == '/dashboard',
+                onTap: () => _onTabTap(const DashboardRoute()),
+                text: 'Dashboard',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.icons.stack.path,
+                isSelected: currentUrl == '/content-management',
+                onTap: () => _onTabTap(const ContentManagementRoute()),
+                text: 'Content Management',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.tagUser1.path,
+                isSelected: currentUrl == '/user-management',
+                onTap: () => _onTabTap(const ViewAndManageUsersRoute()),
+                text: 'User & Staff Management',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.icons.setting2.path,
+                isSelected: currentUrl == '/settings',
+                onTap: () => _onTabTap(const SettingsRoute()),
+                text: 'Settings',
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 40),
-        _MenuItem(
-          iconPath: ProjectAssets.icons.home.path,
-          isSelected: currentUrl == '/dashboard',
-          onTap:() => _onTabTap(const DashboardRoute()),
-          text: 'Dashboard',
-        ),
-        _MenuItem(
-          iconPath: ProjectAssets.icons.stack.path,
-          isSelected: currentUrl == '/content-management',
-          onTap:() => _onTabTap(const ContentManagementRoute()),
-          text: 'Content Management',
-        ),
-        _MenuItem(
-          iconPath: ProjectAssets.tagUser1.path,
-          isSelected: currentUrl == '/user-management',
-          onTap:() => _onTabTap(const ViewAndManageUsersRoute()),
-          text: 'User & Staff Management',
-        ),
-        _MenuItem(
-            iconPath: ProjectAssets.icons.setting2.path,
-            text: 'Settings',
-            isSelected: currentUrl == '/settings',
-            onTap:() => _onTabTap(const SettingsRoute()),
-        )
-      ],
+        );
+      },
     );
   }
 }
@@ -81,49 +93,45 @@ class _MenuItem extends StatelessWidget {
   });
 
   final String iconPath;
-
   final String text;
-
-  final void Function() onTap;
-
   final bool isSelected;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: 205,
-          height: 42,
-          margin: const EdgeInsets.only(bottom: 25),
-          decoration: isSelected
-              ? const BoxDecoration(
-                  color: Palette.lightBlue,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                  ),
-                )
-              : null,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 43.0),
-            child: Row(
+    final screenwidth = MediaQuery.of(context).size.width > 1235;
+    final iconsize = screenwidth  ? 16.0 : 24.0;
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 42,
+        margin: const EdgeInsets.only(bottom: 25),
+        decoration: isSelected
+            ? const BoxDecoration(
+                color: Palette.lightBlue,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+              )
+            : null,
+        child: screenwidth
+          ? Row(
               children: <Widget>[
                 iconPath.endsWith('.svg')
-                  ? SvgPicture.asset(
-                      iconPath,
-                      width: 16,
-                      height: 16,
-                      colorFilter:
-                          Palette.dirtyWhite.toColorFilter,
-                    )
-                  : Image.asset(
-                    iconPath, 
-                    width: 16, 
-                    height: 16,
-                    color: Palette.dirtyWhite 
-                    ),
+                    ? SvgPicture.asset(
+                        iconPath,
+                        width: iconsize,
+                        height: iconsize,
+                        colorFilter: Palette.dirtyWhite.toColorFilter,
+                      )
+                    : Image.asset(
+                        iconPath,
+                        width: iconsize,
+                        height: iconsize,
+                        color: Palette.dirtyWhite,
+                      ),
                 const SizedBox(width: 8),
                 Text(
                   text,
@@ -134,9 +142,23 @@ class _MenuItem extends StatelessWidget {
                         ),
                 ),
               ],
+            )
+          : Center( // Center the icon when text is hidden
+              child: iconPath.endsWith('.svg')
+                  ? SvgPicture.asset(
+                      iconPath,
+                      width: iconsize,
+                      height: iconsize,
+                      colorFilter: Palette.dirtyWhite.toColorFilter,
+                    )
+                  : Image.asset(
+                      iconPath,
+                      width: iconsize,
+                      height: iconsize,
+                      color: Palette.dirtyWhite,
+                    ),
             ),
-          ),
-        ),
+        
       ),
     );
   }

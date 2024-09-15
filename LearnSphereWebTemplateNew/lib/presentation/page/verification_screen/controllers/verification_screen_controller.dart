@@ -24,9 +24,9 @@ class VerificationScreenController extends GetxController {
     try {
       User? user = _auth.currentUser;
       await user?.sendEmailVerification();
-      Get.snackbar("Verification", "Verification email has been resent.");
+      Get.snackbar('Verification', 'Verification email has been resent.');
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar('Error', e.toString());
     }
   }
 

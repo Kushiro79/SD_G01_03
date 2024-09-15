@@ -1,140 +1,236 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../config/common_textfield.dart';
-import 'edit_profile_controller.dart';
-
+import '../../routes/app_router.dart';
+import 'controllers/edit_profile_controller.dart';
+import 'controllers/proflie_screen_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 @RoutePage()
-class EditProfilePage extends GetView<ActivityScreenController> {
-  const EditProfilePage({super.key});
+class EditProfilePage extends GetView<EditProfileController> {
+   EditProfilePage({super.key});
+
+  final EditProfileController controller = Get.put(EditProfileController());
 
   @override
   Widget build(BuildContext context) {
-    List img = [
-      'assets/security-user.png',
-      'assets/info-circle1.png',
-      'assets/direct.png',
-      'assets/login.png',
-      'assets/sms-notification.png',
-      'assets/document.png',
-    ];
-    List text = [
-      'Privacy',
-      'Account Created',
-      'History Device',
-      'History Login',
-      'History E-mail',
-      'History Username',
-    ];
-    List sutext = [
-      "You made your account mode on view\nPublic.",
-      "You crerated your account on\nDecember 28, 2019.",
-      "History of devices connected to your\naccount.",
-      "History history of devices logged in with\nyour account",
-      "History of email changes in your\naccount",
-      'History of username changes in your\naccount',
-    ];
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            leading: InkWell(
-              onTap: () => Navigator.pop(context),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-            ),
-            title: const Text(
-              'Account History',
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontFamily: 'Urbanist-semibold',
-                  fontWeight: FontWeight.w600),
-            ),
-            centerTitle: true,
-            actions: [
-              SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Image.asset('assets/setting-4.png')),
-              const SizedBox(
-                width: 15,
-              ),
-            ],
+
+    // To control whether to show editable fields or static text
+    final isEditing = false.obs;
+
+    return Scaffold(
+      backgroundColor: Colors.transparent, // Set background color to transparent
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
           ),
-          body: SingleChildScrollView(
-            child: Column(
+        ),
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.black,
+            fontFamily: 'Urbanist-semibold',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('assets/setting-4.png'),
+          ),
+          const SizedBox(width: 15),
+        ],
+      ),
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/background.jpg',
+              fit: BoxFit.cover, // This ensures the image fills the background
+            ),
+          ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 10, bottom: 30),
-                  child: textfield1(text: 'Search..', text1: 'Search'),
-                ),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: img.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
-                      child: InkWell(
-                        onTap: () {},
-                        child: ListTile(
-                          leading: Stack(
-                            children: [
-                              Container(
-                                height: 48,
-                                width: 48,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: const Color(0xffF8F9FD),
+                // Left side with profile image and static info (from Firebase)
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Obx(() {
+                        String profileImageUrl = controller.profileImageUrl.value;
+                        return CircleAvatar(
+                          radius: 50,
+                          backgroundImage: profileImageUrl.isNotEmpty
+                              ? NetworkImage(profileImageUrl) as ImageProvider
+                              : const AssetImage('assets/default_profile.png'),
+                        );
+                      }),
+                      SizedBox(height: 16),
+                      Obx(() {
+                        String username = controller.username.value;
+                        String email = controller.email.value;
+                        String certificate = controller.certificate.value;
+                        return Card(
+                          elevation: 4,
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  username,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 11,
-                                left: 0,
-                                right: 0,
-                                child: SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: Image.asset(img[index]),
+                                SizedBox(height: 8),
+                                Text(
+                                  email,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.verified,
+                                      color: Colors.grey,
+                                      size: 28,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(certificate),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          title: Text(
-                            text[index],
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'Urbanist-semibold',
-                                fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text(
-                            sutext[index],
-                            style: const TextStyle(
-                                fontSize: 12,
-                                color: Color(0xff64748B),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Urbanist-medium'),
-                          ),
-                          trailing: const Icon(Icons.navigate_next),
-                        ),
+                        );
+                      }),
+                      Spacer(),
+                      ElevatedButton.icon(
+                        label: Text("Logout"),
+                        onPressed: () async {
+                          try {
+                            await controller.logout();
+                            print('Log out successfully');
+                            context.router.replace(LoginRouteView());
+                          } catch (e) {
+                            print('Error logging out: ${e.toString()}');
+                          }
+                        },
                       ),
-                    );
-                  },
-                )
+                    ],
+                  ),
+                ),
+
+                // Vertical Divider between the sections
+                VerticalDivider(
+                  color: Colors.grey,
+                  thickness: 1.0,
+                  width: 40,
+                ),
+
+                // Right side with toggle between static text and editable fields
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Obx(() {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(vertical: 8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (!isEditing.value) ...[
+                                    Text('Username: ${controller.username.value}'),
+                                    SizedBox(height: 16),
+                                    Text('Email: ${controller.email.value}'),
+                                    SizedBox(height: 16),
+                                    Text('Credentials: ${controller.credentials.value}'),
+                                    SizedBox(height: 32),
+                                    ElevatedButton.icon(
+                                      onPressed: () {
+                                        isEditing.value = true;
+                                      },
+                                      icon: Icon(Icons.edit),
+                                      label: Text('Change'),
+                                    ),
+                                  ] else ...[
+                                    TextFormField(
+                                      initialValue: controller.username.value,
+                                      decoration: InputDecoration(labelText: 'Username'),
+                                      onChanged: (value) {
+                                        controller.username.value = value;
+                                      },
+                                    ),
+                                    SizedBox(height: 16),
+                                    TextFormField(
+                                      initialValue: controller.email.value,
+                                      decoration: InputDecoration(labelText: 'Email'),
+                                      onChanged: (value) {
+                                        controller.email.value = value;
+                                      },
+                                    ),
+                                    SizedBox(height: 16),
+                                    TextFormField(
+                                      initialValue: controller.credentials.value,
+                                      decoration: InputDecoration(labelText: 'Credentials'),
+                                      onChanged: (value) {
+                                        controller.credentials.value = value;
+                                      },
+                                    ),
+                                    SizedBox(height: 32),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        controller.saveProfile(context);
+                                        isEditing.value = false;
+                                      },
+                                      child: Text('Save Changes'),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          ElevatedButton.icon(
+                            label: Text("Change Password"),
+                            onPressed: () {
+                              AutoRouter.of(context).push(ChangePasswordRoute());
+                            },
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
               ],
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

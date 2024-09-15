@@ -14,22 +14,19 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Map<String, dynamic> _usersMap = {}; // Maps userId to username and roles
-
   List<DocumentSnapshot> _users = [];
   List<DocumentSnapshot> _filteredUsers = [];
-
   String searchQuery = '';
   String selectedRole = 'All';
+  String _currentUserRole = '';
 
   @override
   void initState() {
     super.initState();
     _fetchUsers();
   }
- String _currentUserRole = '';
+
   Future<void> _fetchUsers() async {
-   
     final userId = _auth.currentUser?.uid;
     if (userId != null) {
       final userDoc = await _firestore.collection('users').doc(userId).get();
@@ -38,7 +35,6 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
       }
     }
 
-    // Fetch users from Firestore, filtered by the current user's role
     final snapshot = await _firestore
         .collection('users')
         .where('role',
@@ -75,82 +71,106 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
       appBar: AppBar(
         title: Text('User Management'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'User List',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            // Search Bar
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Search by username',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.jpg'), // Add your image path here
+                fit: BoxFit.cover, // Cover the whole background
               ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                  _filterUsers();
-                });
-              },
             ),
-            SizedBox(height: 16),
-            // Filter by Role
-            _currentUserRole == 'staff'
-                ? Container()
-                : Row(
-                    children: [
-                      Text(
-                        'Filter by role:',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(width: 16),
-                      DropdownButton<String>(
-                        value: selectedRole,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedRole = newValue!;
-                            _filterUsers();
-                          });
-                        },
-                        items: ['All', 'user', 'admin', 'staff']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-            SizedBox(height: 16),
-            // User List
-            Expanded(
-              child: ListView.builder(
-                itemCount: _filteredUsers.length,
-                itemBuilder: (context, index) {
-                  final userDoc = _filteredUsers[index];
-                  final user = userDoc.data() as Map<String, dynamic>;
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      title: Text(user['username'] ?? 'Unknown'),
-                      subtitle: Text('${user['role']}\n' +
-                          'UID: ${user['uid']}\n'),
-                      trailing: _buildActionDropdown(context, userDoc),
+          ),
+          // Main content over the background image
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'User List',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                // Search Bar
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Search by username',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)), // Curved border
                     ),
-                  );
-                },
-              ),
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                      _filterUsers();
+                    });
+                  },
+                ),
+                SizedBox(height: 16),
+                // Filter by Role
+                _currentUserRole == 'staff'
+                    ? Container()
+                    : Row(
+                        children: [
+                          Text(
+                            'Filter by role:',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 16),
+                          DropdownButton<String>(
+                            value: selectedRole,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedRole = newValue!;
+                                _filterUsers();
+                              });
+                            },
+                            items: ['All', 'user', 'admin', 'staff']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                SizedBox(height: 16),
+                // User List with transparency
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.6), // Set transparency
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: ListView.separated(
+                      itemCount: _filteredUsers.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: Colors.grey, // Color of the separator
+                        thickness: 1.0, // Thickness of the separator
+                        indent: 16, // Optional: Add indentation if needed
+                        endIndent: 16, // Optional: Add indentation if needed
+                      ),
+                      itemBuilder: (context, index) {
+                        final userDoc = _filteredUsers[index];
+                        final user = userDoc.data() as Map<String, dynamic>;
+                        return ListTile(
+                          title: Text(user['username'] ?? 'Unknown'),
+                          subtitle: Text('${user['role']}\nUID: ${user['uid']}'),
+                          trailing: _buildActionDropdown(context, userDoc),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -166,7 +186,6 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
           case 'Change Role':
             _changeUserRole(context, userDoc);
             break;
-          
         }
       },
       itemBuilder: (BuildContext context) {
@@ -179,8 +198,6 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
             value: 'Change Role',
             child: Text('Change Role'),
           ),
-         
-          
         ];
       },
     );
@@ -228,17 +245,11 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
         _fetchUsers();
         setState(() {});
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(' ${userDoc['username']} is now a $newRole')),
+          SnackBar(content: Text('${userDoc['username']} is now a $newRole')),
         );
       }
     } catch (e) {
       print(e.toString());
     }
   }
-
-
-  
-    
-  
 }
-

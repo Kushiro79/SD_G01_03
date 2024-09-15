@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import '../../../config/app_color.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/login_screen_controller.dart';
 
@@ -19,25 +19,37 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFf5f5f5),
-      body: ListView(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width / 8),
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    _menuItem(title: 'Sign In', isActive: true),
-                    _registerButton(context),
-                  ],
-                ),
-              ],
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/background4.jpg', // Your background image
+              fit: BoxFit.cover,
             ),
           ),
-          _body(context),
+          // Content on top of the background
+          ListView(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 8),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        _menuItem(title: 'Sign In', isActive: true),
+                        _registerButton(context),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              _body(context),
+            ],
+          ),
         ],
       ),
     );
@@ -104,9 +116,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget _body(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Check the available width and adjust the layout accordingly
         if (constraints.maxWidth > 800) {
-          // Wide layout
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -117,7 +127,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   children: [
                     Container(
                       alignment: AlignmentDirectional.center,
-                      width: MediaQuery.of(context).size.width * 0.3,
+                      width: MediaQuery.of(context).size.width * 0.4,
                       child: Text(
                         'Welcome to LearnSphere, Buddy!',
                         style: TextStyle(
@@ -136,21 +146,22 @@ class LoginScreenView extends GetView<LoginScreenController> {
               Padding(
                 padding: EdgeInsets.only(
                   right: MediaQuery.of(context).size.width *
-                      0.1, // Set your desired right padding
+                      0.05, // Set your desired right padding
                   top: MediaQuery.of(context).size.height /
                       6, // Keep the vertical padding
                   bottom: MediaQuery.of(context).size.height /
                       6, // Keep the vertical padding
+                  
                 ),
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   child: _formLogin(context),
                 ),
               ),
             ],
           );
         } else {
-          // Narrow layout (e.g., mobile devices)
+          //mobile layout
           return Column(
             children: [
               Padding(
@@ -158,22 +169,21 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 child: Text(
                   'Welcome to LearnSphere, Buddy!',
                   style: TextStyle(
-                    fontSize: 30, // Reduce font size for narrow layout
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center, // Center the text
+                  textAlign: TextAlign.center,
                 ),
               ),
               Image.asset(
                 'assets/login_ui2.png',
-                width: constraints.maxWidth *
-                    0.7, // Reduce image width to 70% of available width
+                width: constraints.maxWidth * 0.9,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 10),
                 child: Container(
-                  width: constraints.maxWidth * 0.9, // Adjust form width
+                  width: constraints.maxWidth * 0.9,
                   child: _formLogin(context),
                 ),
               ),
@@ -187,125 +197,99 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget _formLogin(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          onChanged: (value) {
-            loginScreenController.updateEmail(value);
-          },
-          decoration: InputDecoration(
-            hintText: 'Enter email ',
-            filled: true,
-            fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey[50]!),
-              borderRadius: BorderRadius.circular(15),
+        SizedBox(height: 20),
+        _buildTextField(
+          hintText: 'Enter your Email...',
+          labelText: 'Email',
+          onChanged: loginScreenController.updateEmail,
+        ),
+        SizedBox(height: 20),
+        _buildTextField(
+          hintText: 'Min. 6 characters...',
+          labelText: 'Password',
+          onChanged: loginScreenController.updatePassword,
+          obscureText: loginScreenController.showPassword,
+          suffixIcon: IconButton(
+            icon: Icon(
+              loginScreenController.showPassword
+                  ? Icons.visibility_off
+                  : Icons.visibility,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueGrey[50]!),
-              borderRadius: BorderRadius.circular(15),
-            ),
+            onPressed: () {
+              loginScreenController.changePasswordhideAndShow();
+            },
           ),
         ),
-        SizedBox(height: 30),
-        GetBuilder<LoginScreenController>(
-          builder: (context) {
-            return TextField(
-              onChanged: (value) {
-                loginScreenController.updatePassword(value);
-              },
-              obscureText: loginScreenController.showPassword,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                suffixIcon: InkWell(
-                  onTap: () {
-                    loginScreenController.changePasswordhideAndShow();
-                  },
-                  child: Icon(
-                    loginScreenController.showPassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: Colors.grey,
-                  ),
-                ),
-                filled: true,
-                fillColor: Colors.blueGrey[50],
-                labelStyle: TextStyle(fontSize: 12),
-                contentPadding: EdgeInsets.only(left: 30),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueGrey[50]!),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueGrey[50]!),
-                  borderRadius: BorderRadius.circular(15),
-                ),
+      
+      SizedBox(height: 10),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(
+            onPressed: () {
+              context.router.push(ForgotRouteView());
+            },
+            child: const Text(
+              'Forgot Password?',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.bold,
               ),
-            );
-          },
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            GestureDetector(
-              onTap: () {
-                context.router.push(ForgotRouteView());
-              },
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  color: Colors.deepPurple,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 40),
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepPurple[100]!,
+              spreadRadius: 10,
+              blurRadius: 20,
             ),
           ],
         ),
-        SizedBox(height: 40),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.deepPurple[100]!,
-                spreadRadius: 10,
-                blurRadius: 20,
-              ),
-            ],
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-              loginScreenController.SigninWithEmailandPassword(context);
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: 50,
-                child: Center(child: Text('Sign In'))),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+        child: ElevatedButton(
+          onPressed: () {
+            loginScreenController.SigninWithEmailandPassword(context);
+          },
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: 50,
+              child: Center(child: Text('Sign In'))),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
             ),
           ),
         ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Don't have an account? Join us",
-              style:
-                  TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 5),
-            GestureDetector(
-              onTap: () {
+      ),
+      SizedBox(height: 20),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Don't have an account? Join us",
+            style:
+                TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+          ),
+          TextButton(
+              onPressed: () {
                 context.router.push(RegisterRouteView());
               },
-              child: Text(
-                'here!',
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.only(
+                  left: 4,
+                ), // Removes all padding
+                minimumSize: Size(0, 0), // Optionally adjust the minimum size
+                tapTargetSize:
+                    MaterialTapTargetSize.shrinkWrap, // Shrinks the hitbox
+              ),
+              child: const Text(
+                'here',
                 style: TextStyle(
                     color: Colors.deepPurple, fontWeight: FontWeight.bold),
               ),
@@ -313,7 +297,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ],
         ),
         SizedBox(height: 15),
-        Row(children: [
+        /*Row(children: [
           Expanded(
             child: Divider(
               color: Colors.grey[300],
@@ -335,38 +319,56 @@ class LoginScreenView extends GetView<LoginScreenController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _loginWithButton(image: 'assets/google.png'),
+           // _loginWithButton(image: 'assets/google.png'),
           ],
-        ),
+        ),*/
       ],
     );
   }
 
-  Widget _loginWithButton({required String image, bool isActive = false}) {
-    return Container(
-      width: 90,
-      height: 70,
-      decoration: isActive
-          ? BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[300]!,
-                  spreadRadius: 10,
-                  blurRadius: 30,
-                )
-              ],
-              borderRadius: BorderRadius.circular(15),
-            )
-          : BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Colors.grey[400]!),
-            ),
-      child: Center(
-        child: Image.asset(
-          image,
-          width: 35,
+  Widget _loginWithButton({required String image}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[400]!),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Image.asset(image, width: 40),
         ),
+      ),
+    );
+  }
+
+   Widget _buildTextField({
+    required String hintText,
+    required String labelText,
+    required Function(String) onChanged,
+    bool obscureText = false,
+    Widget? suffixIcon,
+  }) {
+    return TextField(
+      onChanged: onChanged,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        hintText: hintText,
+        labelText: labelText,
+        suffixIcon: suffixIcon,
+        filled: true,
+            fillColor: Colors.blueGrey[50],
+            labelStyle: TextStyle(fontSize: 12),
+            contentPadding: EdgeInsets.only(left: 30),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueGrey[50]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueGrey[50]!),
+              borderRadius: BorderRadius.circular(15),
+            ),
       ),
     );
   }

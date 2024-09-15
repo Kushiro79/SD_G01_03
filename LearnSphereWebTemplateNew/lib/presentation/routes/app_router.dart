@@ -15,6 +15,7 @@ import '../page/profile_page/edit_profile.dart';
 import '../page/view_and_user_management_page/view/view_and_user_management.dart';
 import '../page/verification_screen/views/verification_screen_view.dart';
 
+
 part 'app_router.gr.dart';
 
 @AutoRouterConfig()
@@ -54,6 +55,13 @@ class AppRouter extends RootStackRouter {
             )
           ],
         ),
+        CustomRoute(
+            path: '/change-password',
+            page: ChangePasswordRoute.page,
+            durationInMilliseconds: 0,
+            reverseDurationInMilliseconds: 1,
+            transitionsBuilder: TransitionsBuilders.noTransition
+            ),
         AutoRoute(
             page: ForgotRouteView.page,
              path: '/forgot-Password'
@@ -109,6 +117,5 @@ class AppRouter extends RootStackRouter {
             reverseDurationInMilliseconds: 1,
             transitionsBuilder: TransitionsBuilders.noTransition
           ),
-          
-      ];
-}
+  ];
+} 

@@ -1,4 +1,4 @@
-part of '../../page.dart';
+/*part of '../../page.dart';
 
 class _DemographicsPage extends StatelessWidget {
   const _DemographicsPage();
@@ -243,3 +243,4 @@ class _BarChart extends StatelessWidget {
     );
   }
 }
+*/
