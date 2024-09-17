@@ -84,10 +84,13 @@ class DashboardRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [EditProfilePage]
-class EditProfileRoute extends PageRouteInfo<void> {
-  const EditProfileRoute({List<PageRouteInfo>? children})
-      : super(
+class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
+  EditProfileRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           EditProfileRoute.name,
+          args: EditProfileRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -96,9 +99,22 @@ class EditProfileRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return EditProfilePage();
+      final args = data.argsAs<EditProfileRouteArgs>(
+          orElse: () => const EditProfileRouteArgs());
+      return EditProfilePage(key: args.key);
     },
   );
+}
+
+class EditProfileRouteArgs {
+  const EditProfileRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'EditProfileRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -134,6 +150,25 @@ class ForgotRouteViewArgs {
   String toString() {
     return 'ForgotRouteViewArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [GiveFeedbackPage]
+class GiveFeedbackRoute extends PageRouteInfo<void> {
+  const GiveFeedbackRoute({List<PageRouteInfo>? children})
+      : super(
+          GiveFeedbackRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GiveFeedbackRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const GiveFeedbackPage();
+    },
+  );
 }
 
 /// generated route for
@@ -315,6 +350,25 @@ class SettingsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [UploadAcademicQualificationsPage]
+class UploadAcademicQualificationsRoute extends PageRouteInfo<void> {
+  const UploadAcademicQualificationsRoute({List<PageRouteInfo>? children})
+      : super(
+          UploadAcademicQualificationsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UploadAcademicQualificationsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UploadAcademicQualificationsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [VerificationScreenView]
 class VerificationRouteView extends PageRouteInfo<void> {
   const VerificationRouteView({List<PageRouteInfo>? children})
@@ -334,6 +388,25 @@ class VerificationRouteView extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ViewAcademicQualificationsPage]
+class ViewAcademicQualificationsRoute extends PageRouteInfo<void> {
+  const ViewAcademicQualificationsRoute({List<PageRouteInfo>? children})
+      : super(
+          ViewAcademicQualificationsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewAcademicQualificationsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ViewAcademicQualificationsPage();
+    },
+  );
+}
+
+/// generated route for
 /// [ViewAndManageUsersPage]
 class ViewAndManageUsersRoute extends PageRouteInfo<void> {
   const ViewAndManageUsersRoute({List<PageRouteInfo>? children})
@@ -348,6 +421,25 @@ class ViewAndManageUsersRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const ViewAndManageUsersPage();
+    },
+  );
+}
+
+/// generated route for
+/// [ViewFeedbackPage]
+class ViewFeedbackRoute extends PageRouteInfo<void> {
+  const ViewFeedbackRoute({List<PageRouteInfo>? children})
+      : super(
+          ViewFeedbackRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewFeedbackRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ViewFeedbackPage();
     },
   );
 }

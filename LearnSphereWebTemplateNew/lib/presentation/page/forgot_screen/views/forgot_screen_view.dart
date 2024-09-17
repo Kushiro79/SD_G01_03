@@ -19,63 +19,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
   Future<void> passwordReset(BuildContext context) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
-      showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20),
-          ),
-        ),
-        context: context,
-        builder: (context) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: Padding(
-              padding: MediaQuery.of(context).padding + const EdgeInsets.only(top: 25),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 120,
-                    width: 120,
-                    child: Image.asset(Appcontent.password),
-                  ),
-                  const Text(
-                    'Recovery password Successfully',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'Urbanist-semibold',
-                    ),
-                  ),
-                  const Text(
-                    'Please login again to get started.',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontFamily: 'Urbanist-regular',
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, bottom: 16, top: 30),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.router.push(LoginRouteView());
-                      },
-                      child: Text('Sign In'),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
+      _showSuccessDialog(context);
     } on FirebaseAuthException catch (e) {
       showDialog(
         context: context,
@@ -308,6 +252,72 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
           ],
         ),
       ],
+    );
+  }
+
+  void _showSuccessDialog(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width ;
+    final screenheight = MediaQuery.of(context).size.height;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          content: SizedBox(
+            height: screenheight >555 ? screenheight *0.2 : screenheight *0.3,
+            width: screenwidth >555 ? screenwidth *0.2 : screenwidth *0.8,
+            child: Padding(
+              padding: MediaQuery.of(context).padding +
+                  const EdgeInsets.only(top: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: Image.asset(Appcontent.password),
+                  ),
+                  const Text(
+                    'Recovery password Successfully',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: 'Urbanist-semibold',
+                    ),
+                  ),
+                  const Text(
+                    'Please login again to get started.',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontFamily: 'Urbanist-regular',
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8, bottom: 16, top: 30),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.router.push(LoginRouteView());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Text('Sign In'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

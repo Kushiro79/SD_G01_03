@@ -22,12 +22,10 @@ class ChangePasswordController extends GetxController {
       if (user != null) {
         if (newpassword.text == confirmpassword.text) {
           // Create a credential for re-authentication
-            AuthCredential credential = EmailAuthProvider.credential(
+          AuthCredential credential = EmailAuthProvider.credential(
             email: user.email!,
             password: oldpassword.text,
           );
-       
-          
 
           // Re-authenticate the user
           await user.reauthenticateWithCredential(credential);
@@ -43,71 +41,73 @@ class ChangePasswordController extends GetxController {
     } on FirebaseAuthException catch (e) {
       showCustomToast(context, e.message.toString());
     } catch (e) {
-      showCustomToast(context,'An unexpected error occurred');
+      showCustomToast(context, 'An unexpected error occurred');
     }
   }
 
   void _showSuccessDialog(BuildContext context) {
-    showModalBottomSheet(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
+    final screenwidth = MediaQuery.of(context).size.width ;
+    final screenheight = MediaQuery.of(context).size.height;
+    showDialog(
       context: context,
       builder: (context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.4,
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Padding(
-            padding:
-                MediaQuery.of(context).padding + const EdgeInsets.only(top: 25),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 120,
-                  width: 120,
-                  child: Image.asset(Appcontent.password),
-                ),
-                Text(
-                  'Recovery password Successfully',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontFamily: 'Urbanist-semibold',
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          content: SizedBox(
+            height: screenheight >555 ? screenheight *0.2 : screenheight *0.3,
+            width: screenwidth >555 ? screenwidth *0.2 : screenwidth *0.8,
+            child: Padding(
+              padding: MediaQuery.of(context).padding +
+                  const EdgeInsets.only(top: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 120,
+                    width: 120,
+                    child: Image.asset(Appcontent.password),
                   ),
-                ),
-                Text(
-                  'Please login again to get started.',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                    fontFamily: 'Urbanist-regular',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 16, top: 30),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.router.push(LoginRouteView());
-                    },
-                    child: Text('Sign In'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                  const Text(
+                    'Recovery password Successfully',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: 'Urbanist-semibold',
                     ),
                   ),
-                ),
-              ],
+                  const Text(
+                    'Please login again to get started.',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontFamily: 'Urbanist-regular',
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8, bottom: 16, top: 30),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.router.push(LoginRouteView());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Text('Sign In'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
     );
   }
-
-
-  
 }

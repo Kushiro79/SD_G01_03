@@ -72,8 +72,10 @@ class ProjectAssets {
   static const AssetGenImage a03 = AssetGenImage('assets/03.png');
   static const AssetGenImage a04 = AssetGenImage('assets/04.png');
   static const AssetGenImage a05 = AssetGenImage('assets/05.png');
-  static const AssetGenImage background =
+  static const AssetGenImage backgroundPng =
       AssetGenImage('assets/Background.png');
+  static const AssetGenImage backgroundJpg =
+      AssetGenImage('assets/background.jpg');
   static const AssetGenImage banner = AssetGenImage('assets/Banner.png');
   static const AssetGenImage business = AssetGenImage('assets/Business.png');
   static const AssetGenImage button = AssetGenImage('assets/Button.png');
@@ -161,6 +163,20 @@ class ProjectAssets {
       AssetGenImage('assets/arrow-right.png');
   static const AssetGenImage arrowdown = AssetGenImage('assets/arrowdown.png');
   static const AssetGenImage back = AssetGenImage('assets/back.png');
+  static const AssetGenImage background2 =
+      AssetGenImage('assets/background2.jpg');
+  static const AssetGenImage background3 =
+      AssetGenImage('assets/background3.jpg');
+  static const AssetGenImage background4 =
+      AssetGenImage('assets/background4.jpg');
+  static const AssetGenImage background5 =
+      AssetGenImage('assets/background5.jpg');
+  static const AssetGenImage background6 =
+      AssetGenImage('assets/background6.jpg');
+  static const AssetGenImage background7 =
+      AssetGenImage('assets/background7.jpg');
+  static const AssetGenImage background8 =
+      AssetGenImage('assets/background8.jpg');
   static const AssetGenImage badgeCheck =
       AssetGenImage('assets/badge-check.png');
   static const AssetGenImage calendar1 = AssetGenImage('assets/calendar1.png');
@@ -195,6 +211,7 @@ class ProjectAssets {
   static const AssetGenImage eyeSlash = AssetGenImage('assets/eye-slash.png');
   static const AssetGenImage faceid = AssetGenImage('assets/faceid.png');
   static const AssetGenImage fashion = AssetGenImage('assets/fashion.png');
+  static const AssetGenImage feedback = AssetGenImage('assets/feedback.png');
   static const AssetGenImage flash = AssetGenImage('assets/flash.png');
   static const AssetGenImage fluentEye = AssetGenImage('assets/fluent_eye.png');
   static const AssetGenImage food = AssetGenImage('assets/food.png');
@@ -216,6 +233,7 @@ class ProjectAssets {
   static const AssetGenImage globalSearch =
       AssetGenImage('assets/global-search.png');
   static const AssetGenImage google = AssetGenImage('assets/google.png');
+  static const AssetGenImage graduate = AssetGenImage('assets/graduate.png');
   static const AssetGenImage grid1 = AssetGenImage('assets/grid-1.png');
   static const AssetGenImage grid5 = AssetGenImage('assets/grid5.png');
   static const AssetGenImage happyemoji =
@@ -298,6 +316,9 @@ class ProjectAssets {
   static const AssetGenImage reel = AssetGenImage('assets/reel.png');
   static const AssetGenImage reel1 = AssetGenImage('assets/reel1.png');
   static const AssetGenImage reel3 = AssetGenImage('assets/reel3.png');
+  static const AssetGenImage register3 = AssetGenImage('assets/register3.png');
+  static const AssetGenImage register4 = AssetGenImage('assets/register4.png');
+  static const AssetGenImage register5 = AssetGenImage('assets/register5.png');
   static const AssetGenImage repost = AssetGenImage('assets/repost.png');
   static const AssetGenImage roatact = AssetGenImage('assets/roatact.png');
   static const AssetGenImage sale1 = AssetGenImage('assets/sale1.png');
@@ -349,6 +370,9 @@ class ProjectAssets {
   static const AssetGenImage tshirt = AssetGenImage('assets/tshirt.png');
   static const AssetGenImage tshirt3 = AssetGenImage('assets/tshirt3.png');
   static const AssetGenImage user = AssetGenImage('assets/user.png');
+  static const AssetGenImage verify1 = AssetGenImage('assets/verify1.png');
+  static const AssetGenImage verify3 = AssetGenImage('assets/verify3.png');
+  static const AssetGenImage verify4 = AssetGenImage('assets/verify4.png');
   static const AssetGenImage videoPlay = AssetGenImage('assets/video-play.png');
   static const AssetGenImage videoPlay1 =
       AssetGenImage('assets/video-play1.png');
@@ -365,7 +389,8 @@ class ProjectAssets {
         a03,
         a04,
         a05,
-        background,
+        backgroundPng,
+        backgroundJpg,
         banner,
         business,
         button,
@@ -438,6 +463,13 @@ class ProjectAssets {
         arrowRight,
         arrowdown,
         back,
+        background2,
+        background3,
+        background4,
+        background5,
+        background6,
+        background7,
+        background8,
         badgeCheck,
         calendar1,
         call,
@@ -466,6 +498,7 @@ class ProjectAssets {
         eyeSlash,
         faceid,
         fashion,
+        feedback,
         flash,
         fluentEye,
         food,
@@ -482,6 +515,7 @@ class ProjectAssets {
         getstarted,
         globalSearch,
         google,
+        graduate,
         grid1,
         grid5,
         happyemoji,
@@ -553,6 +587,9 @@ class ProjectAssets {
         reel,
         reel1,
         reel3,
+        register3,
+        register4,
+        register5,
         repost,
         roatact,
         sale1,
@@ -595,6 +632,9 @@ class ProjectAssets {
         tshirt,
         tshirt3,
         user,
+        verify1,
+        verify3,
+        verify4,
         videoPlay,
         videoPlay1,
         video,
