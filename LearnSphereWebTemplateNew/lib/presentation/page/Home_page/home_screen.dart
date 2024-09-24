@@ -32,8 +32,20 @@ class MyHomePage extends GetView<HomeController> {
             ),
           ]),
         ),
-        body: Row(
-            children: [_buildSidebar(context), Expanded(child: _buildPost())]));
+        body: Container(
+            decoration: BoxDecoration(), // add this to avoid errors
+            child: Stack(children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/background4.jpg', // replace with your image path
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Row(children: [
+                _buildSidebar(context),
+                Expanded(child: _buildPost())
+              ])
+            ])));
   }
 }
 
