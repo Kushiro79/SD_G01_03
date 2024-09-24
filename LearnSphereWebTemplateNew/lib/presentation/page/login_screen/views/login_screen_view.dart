@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../../../theme/gen/assets.gen.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/login_screen_controller.dart';
@@ -17,6 +18,8 @@ class LoginScreenView extends GetView<LoginScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width > 850;
+
     return Scaffold(
       backgroundColor: Color(0xFFf5f5f5),
       body: Stack(
@@ -36,12 +39,23 @@ class LoginScreenView extends GetView<LoginScreenController> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Row(
+                      children: [
+                        Image(
+                          color: Colors.black,
+                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                          width: screenwidth ? 300 : 80,
+                          height: screenwidth ? 100 : 80,
+                        ),
+                      ]
+                    ),
                     Row(
                       children: [
                         _menuItem(title: 'Sign In', isActive: true),
                         _registerButton(context),
+                        SizedBox(width: 140),
                       ],
                     ),
                   ],
@@ -104,7 +118,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ],
           ),
           child: Text(
-            'Register',
+            'Sign Up',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black54,

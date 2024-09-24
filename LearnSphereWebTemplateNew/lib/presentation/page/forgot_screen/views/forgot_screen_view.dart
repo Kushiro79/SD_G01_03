@@ -4,11 +4,12 @@ import 'package:get/get.dart';
 import '../../../routes/app_router.dart';
 import '../../../config/app_contents.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../utils/custom_toast.dart';
 import '../controllers/forgot_screen_controller.dart';
 
 @RoutePage()
 class ForgotScreenView extends GetView<ForgotScreenController> {
-   ForgotScreenView({super.key});
+  ForgotScreenView({super.key});
 
   final TextEditingController _email = TextEditingController();
 
@@ -16,20 +17,20 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
     _email.text = value;
   }
 
+  
+
   Future<void> passwordReset(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _email.text.trim());
       _showSuccessDialog(context);
     } on FirebaseAuthException catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text(e.message.toString()),
-          );
-        },
-      );
+      if (_email.text.isEmpty) {
+        showCustomToast(context, 'Please enter an email');
+      }
+      else{
+        showCustomToast(context, e.message.toString());
+      }
     }
   }
 
@@ -51,8 +52,8 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
               horizontal: MediaQuery.of(context).size.width / 8,
             ),
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 ),
@@ -88,7 +89,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
@@ -117,13 +118,15 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  right: MediaQuery.of(context).size.width * 0.1, // Set your desired right padding
-                  top: MediaQuery.of(context).size.height / 6, // Keep the vertical padding
-                  bottom: MediaQuery.of(context).size.height / 6, // Keep the vertical padding
+                  right: MediaQuery.of(context).size.width *
+                      0.05, // Set your desired right padding
+                  top: MediaQuery.of(context).size.height /
+                      6, // Keep the vertical padding
+                  bottom: MediaQuery.of(context).size.height /
+                      6, // Keep the vertical padding
                 ),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.height * 0.5,
                   child: _formForgot(context),
                 ),
               ),
@@ -135,12 +138,12 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             children: [
               Image.asset(
                 'assets/forgot_ui.png',
-                width: constraints.maxWidth * 0.7, // Reduce image width to 70% of available width
+                width: constraints.maxWidth *
+                    0.7, // Reduce image width to 70% of available width
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 10,
-                ),
+                    vertical: MediaQuery.of(context).size.height / 10),
                 child: Container(
                   width: constraints.maxWidth * 0.9, // Adjust form width
                   child: _formForgot(context),
@@ -157,7 +160,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
+        const Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Text(
             'Forgot Password?',
@@ -167,7 +170,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             ),
           ),
         ),
-        Padding(
+        const Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           child: Text(
             'Enter your email account to reset your password.',
@@ -177,7 +180,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             ),
           ),
         ),
-        Padding(padding: EdgeInsets.symmetric(vertical: 40)),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 40)),
         TextField(
           controller: _email,
           decoration: InputDecoration(
@@ -196,7 +199,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             ),
           ),
         ),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -213,15 +216,15 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             onPressed: () {
               passwordReset(context);
             },
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              child: Center(child: Text('Reset Password')),
-            ),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
+            ),
+            child: const SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Center(child: Text('Reset Password')),
             ),
           ),
         ),
@@ -256,7 +259,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
   }
 
   void _showSuccessDialog(BuildContext context) {
-    final screenwidth = MediaQuery.of(context).size.width ;
+    final screenwidth = MediaQuery.of(context).size.width;
     final screenheight = MediaQuery.of(context).size.height;
     showDialog(
       context: context,
@@ -268,8 +271,9 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             ),
           ),
           content: SizedBox(
-            height: screenheight >555 ? screenheight *0.2 : screenheight *0.3,
-            width: screenwidth >555 ? screenwidth *0.2 : screenwidth *0.8,
+            height:
+                screenheight > 555 ? screenheight * 0.2 : screenheight * 0.3,
+            width: screenwidth > 555 ? screenwidth * 0.2 : screenwidth * 0.8,
             child: Padding(
               padding: MediaQuery.of(context).padding +
                   const EdgeInsets.only(top: 25),

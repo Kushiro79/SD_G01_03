@@ -260,6 +260,8 @@ class ProjectAssets {
   static const AssetGenImage invite5 = AssetGenImage('assets/invite5.png');
   static const AssetGenImage invite6 = AssetGenImage('assets/invite6.png');
   static const AssetGenImage key = AssetGenImage('assets/key.png');
+  static const AssetGenImage learnSphereLogo =
+      AssetGenImage('assets/learnSphere_Logo.png');
   static const AssetGenImage like = AssetGenImage('assets/like.png');
   static const AssetGenImage live = AssetGenImage('assets/live.png');
   static const AssetGenImage live1 = AssetGenImage('assets/live1.png');
@@ -537,6 +539,7 @@ class ProjectAssets {
         invite5,
         invite6,
         key,
+        learnSphereLogo,
         like,
         live,
         live1,

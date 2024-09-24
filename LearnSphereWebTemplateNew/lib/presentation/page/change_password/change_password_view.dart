@@ -6,7 +6,7 @@ import 'change_password_controller.dart';
 @RoutePage()
 class ChangePasswordPage extends GetView<ChangePasswordController> {
   ChangePasswordPage({super.key});
-
+  @override
   ChangePasswordController controller = Get.put(ChangePasswordController());
 
   @override

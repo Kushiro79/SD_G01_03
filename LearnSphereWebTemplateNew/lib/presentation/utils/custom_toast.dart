@@ -9,7 +9,7 @@ void showCustomToast(BuildContext context, String message) {
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: AppColor.purple,
+        color: Colors.red,
         boxShadow: [
           BoxShadow(
             color: Colors.black26,

@@ -86,8 +86,24 @@ class RegisterController extends GetxController {
     _passwordController.dispose();
   }
 
-  Future<void> createUserwithEmailandPassword(
-      String email, String password, BuildContext context) async {
+  Future<void> createUserwithEmailandPassword(String email, String password, BuildContext context) async {
+        
+    if(username.isEmpty && email.isEmpty && password.isEmpty){
+      showCustomToast(context, 'Please enter the information.');
+      return;
+    }
+    if(username.isEmpty){
+      showCustomToast(context, 'Please enter your username.');
+      return;
+    }
+    if(email.isEmpty){
+      showCustomToast(context, 'Please enter your email address.');
+      return;
+    }
+    if(password.isEmpty){
+      showCustomToast(context, 'Please enter your password.');
+      return;
+    }
     if (!isValidEmail.value) {
       showCustomToast(context, 'Please enter a valid email address.');
       return;
@@ -97,6 +113,7 @@ class RegisterController extends GetxController {
       showCustomToast(context, 'Username already exists.');
       return;
     }
+
 
     if (validateCredentials()) {
       print('Username: ${_usernameController.text}');

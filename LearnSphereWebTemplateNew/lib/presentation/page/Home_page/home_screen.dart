@@ -13,24 +13,25 @@ import 'showimage_view.dart';
 class MyHomePage extends GetView<HomeController> {
   MyHomePage({super.key});
 
-
   final HomeController homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width > 850;
+
     return Scaffold(
         appBar: AppBar(
           elevation: 2,
           toolbarHeight: 80,
-          title: Row(
-            children: <Widget>[
-         
-              const Text('LearnSphere'), // Add a title to the AppBar
-  
-            ],
-          ),
+          title: Row(children: <Widget>[
+            Image(
+              color: Colors.black,
+              image: AssetImage(ProjectAssets.learnSphereLogo.path),
+              width: screenwidth ? 300 : 80,
+              height: screenwidth ? 100 : 80,
+            ),
+          ]),
         ),
-
         body: Row(
             children: [_buildSidebar(context), Expanded(child: _buildPost())]));
   }
@@ -39,7 +40,7 @@ class MyHomePage extends GetView<HomeController> {
 Widget _buildSidebar(BuildContext context) {
   HomeController homeController = Get.put(HomeController());
 
-   var screenwidth = MediaQuery.of(context).size.width >=800;
+  var screenwidth = MediaQuery.of(context).size.width >= 800;
 
   return Container(
     width: MediaQuery.of(context).size.width *
@@ -59,61 +60,77 @@ Widget _buildSidebar(BuildContext context) {
               CircleAvatar(
                 backgroundImage: AssetImage('assets/01.png'),
               ),
-             Text('@${homeController.username}')// Listen to username changes
-              
+              Text('@${homeController.username}') // Listen to username changes
             ],
           ),
         ),
         ListTile(
-          leading: Image.asset('assets/home.png',width: 25,color: Colors.black,),
-          title: screenwidth
-          ?const Text('Home')
-          :null,
-
+          leading: Image.asset(
+            'assets/home.png',
+            width: 25,
+            color: Colors.black,
+          ),
+          title: screenwidth ? const Text('Home') : null,
           onTap: () {
             // Handle tap on Home
           },
         ),
         ListTile(
-          leading: Image.asset('assets/profile-2user.png', width: 25,color: Colors.black,),
-          title: screenwidth ?Text('Follows') : null,
+          leading: Image.asset(
+            'assets/profile-2user.png',
+            width: 25,
+            color: Colors.black,
+          ),
+          title: screenwidth ? Text('Follows') : null,
           onTap: () {
             // Handle tap on Explore
           },
         ),
         ListTile(
-          leading: Image.asset('assets/notification.png',width: 25,color: Colors.black,),
-          title:  screenwidth ?const Text('Notifications')  : null,
+          leading: Image.asset(
+            'assets/notification.png',
+            width: 25,
+            color: Colors.black,
+          ),
+          title: screenwidth ? const Text('Notifications') : null,
           onTap: () {
             // Handle tap on Notifications
           },
         ),
         ListTile(
-          leading: Image.asset('assets/people.png',width: 25),
-          title:screenwidth ?const Text('Discussion')  : null,
+          leading: Image.asset('assets/people.png', width: 25),
+          title: screenwidth ? const Text('Discussion') : null,
           onTap: () {
             // Handle tap on Messages
           },
         ),
         ListTile(
           leading: Icon(Icons.bookmark),
-          title: screenwidth ?const Text('Bookmarks')  : null,
+          title: screenwidth ? const Text('Bookmarks') : null,
           onTap: () {
             // Handle tap on Bookmarks
           },
         ),
         ListTile(
-          leading: Image.asset('assets/profile.png',width: 25,color: Colors.black,),
-          title:screenwidth ?const Text('Profile')  : null,
+          leading: Image.asset(
+            'assets/profile.png',
+            width: 25,
+            color: Colors.black,
+          ),
+          title: screenwidth ? const Text('Profile') : null,
           onTap: () {
             context.router.push(ProfileRouteRoute());
           },
         ),
         ListTile(
-          leading: Image.asset('assets/setting.png', width: 25, color: Colors.black,),
-          title:screenwidth ?const Text('Settings')  : null,
+          leading: Image.asset(
+            'assets/setting.png',
+            width: 25,
+            color: Colors.black,
+          ),
+          title: screenwidth ? const Text('Settings') : null,
           onTap: () {
-            
+            context.router.push(const SettingsRoute());
           },
         ),
       ],

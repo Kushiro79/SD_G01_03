@@ -38,18 +38,12 @@ class _NavigationMenuState extends State<_NavigationMenu> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    screenwidth ? 'LearnSphere' : 'LS',
-                    style: const TextStyle(
-                      color: Palette.dirtyWhite,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Image(
+                    image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                    width: screenwidth ? 200 : 80,
+                    height: screenwidth ? 100 : 80,
                   ),
                 ),
-              ),
               const SizedBox(height: 70),
               _MenuItem(
                 iconPath: ProjectAssets.icons.home.path,

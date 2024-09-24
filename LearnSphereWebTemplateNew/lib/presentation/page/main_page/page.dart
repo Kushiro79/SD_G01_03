@@ -29,7 +29,7 @@ class MainPage extends StatelessWidget {
                 height: double.infinity,
                 child: ColoredBox(
                   color: AppColor.purple,
-                  child: _NavigationMenu(),
+                  child: const _NavigationMenu(),
                 ),
               ),
               const Expanded(

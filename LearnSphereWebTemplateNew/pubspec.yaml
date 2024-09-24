@@ -16,6 +16,7 @@ dependencies:
   firebase_admin: ^0.3.0
   firebase_auth: ^5.1.4
   firebase_core: ^3.3.0
+  firebase_storage: ^12.3.1
   fl_chart: ^0.68.0
   flutter:
     sdk: flutter
@@ -24,6 +25,7 @@ dependencies:
   flutter_svg: 2.0.10+1
   fluttertoast: ^8.2.8
   get: ^4.6.6
+  image_picker: ^1.1.2
   intl: ^0.19.0
   oktoast: ^3.4.0
   otp_text_field: ^1.1.3

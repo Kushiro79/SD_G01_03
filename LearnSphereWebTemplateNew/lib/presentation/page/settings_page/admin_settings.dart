@@ -61,20 +61,20 @@ class SettingsPage extends StatelessWidget {
                             color: Colors.grey[700],
                           ),
                           title: Text(
-                            'Account',
+                            'Profile ',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                             ),
                           ),
                           subtitle: Text(
-                            'Manage your account settings',
+                            'View and Edit your profile details',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
                             ),
                           ),
-                          onTap: () => context.router.push(ChangePasswordRoute()),
+                          onTap: () => context.router.push(ProfileRouteRoute()),
                         ),
                         Divider(), // Line separator
                         // Sign out section

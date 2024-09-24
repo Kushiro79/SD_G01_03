@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../config/app_color.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/register_controller.dart';
+import '../../../theme/gen/assets.gen.dart';
+
 
 @RoutePage()
 class RegisterScreenView extends GetView<RegisterController> {
@@ -17,6 +19,8 @@ class RegisterScreenView extends GetView<RegisterController> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width > 850;
+
     return Scaffold(
       backgroundColor: Color(0xFFf5f5f5),
       body: Stack(
@@ -36,16 +40,27 @@ class RegisterScreenView extends GetView<RegisterController> {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          _signInButton(context),
-                          _menuItem(title: 'Register', isActive: true),
-                        ],
-                      ),
-                    ],
-                  )),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image(
+                          color: Colors.black,
+                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                          width: screenwidth ? 300 : 80,
+                          height: screenwidth ? 100 : 80,
+                        ),
+                      ]
+                    ),
+                    Row(
+                      children: [
+                        _signInButton(context),
+                        _menuItem(title: 'Sign Up', isActive: true),
+                        SizedBox(width: 140),
+                      ],
+                    ),
+                  ],
+                ),),
               _body(context),
             ],
           ),

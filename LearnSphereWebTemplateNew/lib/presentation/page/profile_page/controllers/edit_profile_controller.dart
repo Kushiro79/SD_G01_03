@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../../../utils/custom_toast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,7 +26,6 @@ class EditProfileController extends GetxController {
         username.value = profileData['username'] ?? '';
         email.value = user.email ?? '';
         credentials.value = profileData['credentials'] ?? '';  // Changed from bio to credentials
-        profileImageUrl.value = profileData['profileImageUrl'] ?? '';
         certificate.value = profileData['certificate'] ?? 'Newbie';
       }
     } catch (e) {
@@ -91,4 +93,28 @@ Future<void> saveProfile(context) async {
     super.onInit();
     loadProfile(); // Load profile data when the controller is initialized
   }
+
+  void picUploadImage() async {
+    final picker = await ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+
+    if (pickedFile == null) {
+    print('No image selected');
+    return;  // Stop further execution if no image is selected
+  }
+
+    Reference ref = FirebaseStorage.instance.ref().child('profile').child('${DateTime.now()}profilepic.png');
+
+    try {
+    await ref.putFile(File(pickedFile!.path));
+    String downloadUrl = await ref.getDownloadURL();
+    profileImageUrl.value = downloadUrl;
+    print('Image uploaded successfully: $downloadUrl');
+  } catch (e) {
+    print('Error uploading image: $e');
+  }
+    
+    }
 }
+

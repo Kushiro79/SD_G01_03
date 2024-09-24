@@ -70,16 +70,27 @@ class LoginScreenController extends GetxController {
   }
 
   SigninWithEmailandPassword(BuildContext context) async {
-      if (!isValidEmail.value) {
-        showCustomToast(context, 'Please enter a valid email address.');
-        return;
-      }
+    if (_emailController.text.isEmpty && _passwordController.text.isEmpty) {
+      showCustomToast(context, 'Please enter your information.');
+      return;
+    }
+    if (_emailController.text.isEmpty) {
+      showCustomToast(context, 'Please enter your email address.');
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      showCustomToast(context, 'Please enter your password.');
+      return;
+    }
+    if (!isValidEmail.value) {
+      showCustomToast(context, 'Please enter a valid email address.');
+      return;
+    }
 
     if (validateCredentials()) {
-      print('Email: ${_emailController.text}'); 
-      print('Password: ${_passwordController.text}'); 
+      print('Email: ${_emailController.text}');
+      print('Password: ${_passwordController.text}');
 
-    
       try {
         UserCredential userCredential =
             await _firebaseAuth.signInWithEmailAndPassword(
@@ -89,13 +100,11 @@ class LoginScreenController extends GetxController {
         print('Signed in successfully');
 
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection(
-                'users')
+            .collection('users')
             .doc(userCredential.user!.uid)
             .get();
 
-        String role =
-            userDoc.get('role'); 
+        String role = userDoc.get('role');
 
         if (context.mounted) {
           if (role == 'user') {

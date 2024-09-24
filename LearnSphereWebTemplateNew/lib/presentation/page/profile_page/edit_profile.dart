@@ -1,24 +1,26 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../config/app_color.dart';
 import '../../routes/app_router.dart';
 import 'controllers/edit_profile_controller.dart';
 import 'controllers/proflie_screen_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 @RoutePage()
 class EditProfilePage extends GetView<EditProfileController> {
-   EditProfilePage({super.key});
+  EditProfilePage({super.key});
 
   final EditProfileController controller = Get.put(EditProfileController());
 
   @override
   Widget build(BuildContext context) {
-
     // To control whether to show editable fields or static text
     final isEditing = false.obs;
 
     return Scaffold(
-      backgroundColor: Colors.transparent, // Set background color to transparent
+      backgroundColor:
+          Colors.transparent, // Set background color to transparent
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -68,16 +70,29 @@ class EditProfilePage extends GetView<EditProfileController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Obx(() {
-                        String profileImageUrl = controller.profileImageUrl.value;
-                        return CircleAvatar(
-                          radius: 50,
-                          backgroundImage: profileImageUrl.isNotEmpty
-                              ? NetworkImage(profileImageUrl) as ImageProvider
-                              : const AssetImage('assets/default_profile.png'),
-                        );
-                      }),
-                      SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          controller.picUploadImage();
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 16),
+                          height: 120,
+                          width: 120,
+                          alignment: Alignment.topLeft,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColor.purple,
+                            image: controller.profileImageUrl.value.isNotEmpty
+                                ? DecorationImage(
+                                    image: NetworkImage(
+                                        controller.profileImageUrl.value),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null, // No image uploaded yet
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       Obx(() {
                         String username = controller.username.value;
                         String email = controller.email.value;
@@ -164,11 +179,13 @@ class EditProfilePage extends GetView<EditProfileController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   if (!isEditing.value) ...[
-                                    Text('Username: ${controller.username.value}'),
+                                    Text(
+                                        'Username: ${controller.username.value}'),
                                     SizedBox(height: 16),
                                     Text('Email: ${controller.email.value}'),
                                     SizedBox(height: 16),
-                                    Text('Credentials: ${controller.credentials.value}'),
+                                    Text(
+                                        'Credentials: ${controller.credentials.value}'),
                                     SizedBox(height: 32),
                                     ElevatedButton.icon(
                                       onPressed: () {
@@ -180,7 +197,8 @@ class EditProfilePage extends GetView<EditProfileController> {
                                   ] else ...[
                                     TextFormField(
                                       initialValue: controller.username.value,
-                                      decoration: InputDecoration(labelText: 'Username'),
+                                      decoration: InputDecoration(
+                                          labelText: 'Username'),
                                       onChanged: (value) {
                                         controller.username.value = value;
                                       },
@@ -188,15 +206,18 @@ class EditProfilePage extends GetView<EditProfileController> {
                                     SizedBox(height: 16),
                                     TextFormField(
                                       initialValue: controller.email.value,
-                                      decoration: InputDecoration(labelText: 'Email'),
+                                      decoration:
+                                          InputDecoration(labelText: 'Email'),
                                       onChanged: (value) {
                                         controller.email.value = value;
                                       },
                                     ),
                                     SizedBox(height: 16),
                                     TextFormField(
-                                      initialValue: controller.credentials.value,
-                                      decoration: InputDecoration(labelText: 'Credentials'),
+                                      initialValue:
+                                          controller.credentials.value,
+                                      decoration: InputDecoration(
+                                          labelText: 'Credentials'),
                                       onChanged: (value) {
                                         controller.credentials.value = value;
                                       },
@@ -218,7 +239,8 @@ class EditProfilePage extends GetView<EditProfileController> {
                           ElevatedButton.icon(
                             label: Text("Change Password"),
                             onPressed: () {
-                              AutoRouter.of(context).push(ChangePasswordRoute());
+                              AutoRouter.of(context)
+                                  .push(ChangePasswordRoute());
                             },
                           ),
                         ],

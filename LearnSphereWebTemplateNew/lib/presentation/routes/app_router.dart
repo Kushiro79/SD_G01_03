@@ -97,7 +97,10 @@ class AppRouter extends RootStackRouter {
           reverseDurationInMilliseconds: 1,
           transitionsBuilder: TransitionsBuilders.noTransition,
         ),
-
+        CustomRoute(
+              page: SettingsRoute.page, 
+              path: '/settings',
+            ),
         CustomRoute(
           page: MyHomeRoute.page,
           path: '/home-view',
