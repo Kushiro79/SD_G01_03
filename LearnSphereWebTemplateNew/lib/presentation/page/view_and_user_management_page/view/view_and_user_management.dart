@@ -37,16 +37,12 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
 
     final snapshot = await _firestore
         .collection('users')
-        .where('role',
-            whereIn: _currentUserRole == 'admin'
-                ? ['user', 'staff', 'admin']
-                : _currentUserRole == 'staff'
-                    ? ['user']
-                    : ['user'])
+        .where('role', whereIn: ['user', 'staff', 'admin'])
         .get();
+
     setState(() {
       _users = snapshot.docs;
-      _filteredUsers = _users;
+      _filterUsers(); // Apply filtering after fetching users
     });
   }
 
@@ -56,14 +52,89 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
         final user = userDoc.data() as Map<String, dynamic>;
         final matchesSearchQuery = user['username']
                 ?.toLowerCase()
-                .contains(searchQuery.toLowerCase()) ??
-            false;
+                .contains(searchQuery.toLowerCase()) ?? false;
         final matchesRole =
             selectedRole == 'All' || user['role'] == selectedRole;
         return matchesSearchQuery && matchesRole;
       }).toList();
     });
   }
+// Add staff
+  Future<void> _addStaff() async {
+    String email = '';
+    String username = '';
+    String password = '';
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Staff'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Email'),
+                onChanged: (value) {
+                  email = value;
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Username'),
+                onChanged: (value) {
+                  username = value;
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                onChanged: (value) {
+                  password = value;
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == true && email.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
+      try {
+        final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        await _firestore.collection('users').doc(userCredential.user?.uid).set({
+          'email': email,
+          'username': username,
+          'role': 'staff',
+          'uid': userCredential.user?.uid,
+        });
+
+        _fetchUsers(); // Refresh the list after adding staff
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Staff added successfully')),
+        );
+      } catch (e) {
+        print(e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add staff: $e')),
+        );
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +144,14 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
       ),
       body: Stack(
         children: [
-          // Background Image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/background.jpg'), // Add your image path here
-                fit: BoxFit.cover, // Cover the whole background
+                image: AssetImage('assets/background.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          // Main content over the background image
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -93,12 +162,11 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16),
-                // Search Bar
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Search by username',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)), // Curved border
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
                     ),
                     prefixIcon: Icon(Icons.search),
                   ),
@@ -126,7 +194,7 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedRole = newValue!;
-                                _filterUsers();
+                                _filterUsers(); // Reapply filter on dropdown change
                               });
                             },
                             items: ['All', 'user', 'admin', 'staff']
@@ -140,21 +208,15 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                         ],
                       ),
                 SizedBox(height: 16),
-                // User List with transparency
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6), // Set transparency
+                      color: Colors.white.withOpacity(0.6),
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: ListView.separated(
                       itemCount: _filteredUsers.length,
-                      separatorBuilder: (context, index) => Divider(
-                        color: Colors.grey, // Color of the separator
-                        thickness: 1.0, // Thickness of the separator
-                        indent: 16, // Optional: Add indentation if needed
-                        endIndent: 16, // Optional: Add indentation if needed
-                      ),
+                      separatorBuilder: (context, index) => Divider(color: Colors.grey, thickness: 1.0),
                       itemBuilder: (context, index) {
                         final userDoc = _filteredUsers[index];
                         final user = userDoc.data() as Map<String, dynamic>;
@@ -171,6 +233,11 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addStaff,
+        child: Icon(Icons.add),
+        tooltip: 'Add Staff',
       ),
     );
   }
@@ -239,10 +306,11 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
         );
       },
     );
+
     try {
       if (newRole != null && newRole != userRole) {
         await userDoc.reference.update({'role': newRole});
-        _fetchUsers();
+        _fetchUsers(); // Refresh the list after changing role
         setState(() {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${userDoc['username']} is now a $newRole')),
