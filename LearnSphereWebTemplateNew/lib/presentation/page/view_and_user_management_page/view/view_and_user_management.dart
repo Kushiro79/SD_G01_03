@@ -59,81 +59,90 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
       }).toList();
     });
   }
-// Add staff
-  Future<void> _addStaff() async {
-    String email = '';
-    String username = '';
-    String password = '';
 
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Add Staff'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Email'),
-                onChanged: (value) {
-                  email = value;
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Username'),
-                onChanged: (value) {
-                  username = value;
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                onChanged: (value) {
-                  password = value;
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('Cancel'),
+//ADD staff - only for admin, if staff alert message will pop out
+  Future<void> _addStaff() async {
+  // Check if the current user is an admin
+  if (_currentUserRole != 'admin') {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('You do not have permission to add staff.')),
+    );
+    return; // Exit the method if not an admin
+  }
+
+  String email = '';
+  String username = '';
+  String password = '';
+
+  final result = await showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Add Staff'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: 'Email'),
+              onChanged: (value) {
+                email = value;
+              },
             ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text('Add'),
+            TextField(
+              decoration: InputDecoration(labelText: 'Username'),
+              onChanged: (value) {
+                username = value;
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+              onChanged: (value) {
+                password = value;
+              },
             ),
           ],
-        );
-      },
-    );
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Add'),
+          ),
+        ],
+      );
+    },
+  );
 
-    if (result == true && email.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
-      try {
-        final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+  if (result == true && email.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
+    try {
+      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-        await _firestore.collection('users').doc(userCredential.user?.uid).set({
-          'email': email,
-          'username': username,
-          'role': 'staff',
-          'uid': userCredential.user?.uid,
-        });
+      await _firestore.collection('users').doc(userCredential.user?.uid).set({
+        'email': email,
+        'username': username,
+        'role': 'staff',
+        'uid': userCredential.user?.uid,
+      });
 
-        _fetchUsers(); // Refresh the list after adding staff
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Staff added successfully')),
-        );
-      } catch (e) {
-        print(e.toString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add staff: $e')),
-        );
-      }
+      _fetchUsers(); // Refresh the list after adding staff
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Staff added successfully')),
+      );
+    } catch (e) {
+      print(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add staff: $e')),
+      );
     }
   }
+}
 
 
   @override
@@ -253,6 +262,9 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
           case 'Change Role':
             _changeUserRole(context, userDoc);
             break;
+          case 'Delete':
+            _deleteUser(context, userDoc);
+            break;
         }
       },
       itemBuilder: (BuildContext context) {
@@ -265,17 +277,94 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
             value: 'Change Role',
             child: Text('Change Role'),
           ),
+          PopupMenuItem<String>(
+            value: 'Delete',
+            child: Text('Delete'),
+          )
         ];
       },
     );
   }
 
-  void _editUser(BuildContext context, DocumentSnapshot userDoc) {
+//EDIT - 
+ void _editUser(BuildContext context, DocumentSnapshot userDoc) {
+  String email = userDoc['email'] ?? '';
+  String username = userDoc['username'] ?? '';
+  final userRole = userDoc['role'];
+
+  // Check if the current user is staff and trying to edit another staff/admin
+  if (_currentUserRole == 'staff' && (userRole == 'admin' || userRole == 'staff')) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Edit ${userDoc['username']}')),
+      SnackBar(content: Text('You do not have permission to edit this user.')),
     );
+    return; // Exit the method if staff tries to edit admin or another staff
   }
 
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Edit Details'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: 'Email'),
+              controller: TextEditingController(text: email),
+              onChanged: (value) {
+                email = value;
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Username'),
+              controller: TextEditingController(text: username),
+              onChanged: (value) {
+                username = value;
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (email.isNotEmpty && username.isNotEmpty) {
+                try {
+                  await userDoc.reference.update({
+                    'email': email,
+                    'username': username,
+                  });
+                  Navigator.pop(context); // Close dialog
+                  _fetchUsers(); // Refresh user list
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Updated successfully')),
+                  );
+                } catch (e) {
+                  print(e.toString());
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to update: $e')),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Email and username cannot be empty')),
+                );
+              }
+            },
+            child: Text('Update'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+//CHANGE ROLE
   void _changeUserRole(BuildContext context, DocumentSnapshot userDoc) async {
     final userRole = userDoc['role'];
 
@@ -320,4 +409,54 @@ class _ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
       print(e.toString());
     }
   }
+
+  //DELETE -  only admin can delete staff/admin if sign in as staff only can delete regular users.
+  void _deleteUser(BuildContext context, DocumentSnapshot userDoc) async {
+  final user = userDoc.data() as Map<String, dynamic>;
+
+  // Check if the current user is an admin
+  if (_currentUserRole == 'admin' || user['role'] == 'user') {
+    final confirmation = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Role'),
+          content: Text('Are you sure you want to delete ${user['username']}? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmation == true) {
+      try {
+        await userDoc.reference.delete(); // Delete the user document from Firestore
+        _fetchUsers(); // Refresh the user list after deletion
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Deleted successfully')),
+        );
+      } catch (e) {
+        print(e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete: $e')),
+        );
+      }
+    }
+  } else {
+    // If the current user is staff and trying to delete an admin or another staff
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('You do not have permission to delete this account.')),
+    );
+  }
+}
+
+
 }
