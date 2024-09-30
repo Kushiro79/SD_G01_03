@@ -260,6 +260,9 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     return PopupMenuButton<String>(
       onSelected: (String value) {
         switch (value) {
+         case 'View Details':
+           _viewUserDetails(context, userDoc);
+           break;
           case 'Edit':
             _editUser(context, userDoc);
             break;
@@ -416,7 +419,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     }
   }
 
-  //DELETE -  only admin can delete staff/admin if sign in as staff only can delete regular users.
+  //DELETE -  only admin can delete staff/admin ,if sign in as staff only can delete regular users.
   void _deleteUser(BuildContext context, DocumentSnapshot userDoc) async {
     final user = userDoc.data() as Map<String, dynamic>;
 
@@ -468,3 +471,35 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     }
   }
 }
+
+ //VIEW USER
+  void _viewUserDetails(BuildContext context, DocumentSnapshot userDoc){
+    final user = userDoc.data() as Map<String, dynamic>;
+
+    showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          title: Text('Details'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Username: ${user['username']}'),
+                Text('Email: ${user['email']}'),
+                Text('Role: ${user['role']}'),
+                Text('UID: ${user['uid']}'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed:() => Navigator.pop(context), 
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
