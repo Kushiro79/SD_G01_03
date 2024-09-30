@@ -83,6 +83,41 @@ class DashboardRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [DiscoverPage]
+class DiscoverRoute extends PageRouteInfo<DiscoverRouteArgs> {
+  DiscoverRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DiscoverRoute.name,
+          args: DiscoverRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'DiscoverRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<DiscoverRouteArgs>(
+          orElse: () => const DiscoverRouteArgs());
+      return DiscoverPage(key: args.key);
+    },
+  );
+}
+
+class DiscoverRouteArgs {
+  const DiscoverRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DiscoverRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [EditProfilePage]
 class EditProfileRoute extends PageRouteInfo<EditProfileRouteArgs> {
   EditProfileRoute({
@@ -154,10 +189,13 @@ class ForgotRouteViewArgs {
 
 /// generated route for
 /// [GiveFeedbackPage]
-class GiveFeedbackRoute extends PageRouteInfo<void> {
-  const GiveFeedbackRoute({List<PageRouteInfo>? children})
-      : super(
+class GiveFeedbackRoute extends PageRouteInfo<GiveFeedbackRouteArgs> {
+  GiveFeedbackRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           GiveFeedbackRoute.name,
+          args: GiveFeedbackRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -166,9 +204,22 @@ class GiveFeedbackRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return GiveFeedbackPage();
+      final args = data.argsAs<GiveFeedbackRouteArgs>(
+          orElse: () => const GiveFeedbackRouteArgs());
+      return GiveFeedbackPage(key: args.key);
     },
   );
+}
+
+class GiveFeedbackRouteArgs {
+  const GiveFeedbackRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'GiveFeedbackRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -439,7 +490,7 @@ class ViewFeedbackRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const ViewFeedbackPage(); // Your FeedbackPage for user submission
+      return const ViewFeedbackPage();
     },
   );
 }

@@ -7,6 +7,7 @@ import '../page/academic_credentials/view_academic_qualifications_page.dart';
 import '../page/change_password/change_password_view.dart';
 import '../page/content_management_page/page.dart';
 import '../page/dashboard_page/page.dart';
+import '../page/discover_page/discover_page.dart';
 import '../page/feedback_pages/give_feedback_page.dart';
 import '../page/feedback_pages/view_feedback_page.dart';
 import '../page/forgot_screen/views/forgot_screen_view.dart';
@@ -144,6 +145,10 @@ class AppRouter extends RootStackRouter {
           CustomRoute(
             path: '/upload-academic-qualifications',
             page: UploadAcademicQualificationsRoute.page,
-          )
+          ),
+          CustomRoute(
+            path: '/discover-and-follows',
+            page: DiscoverRoute.page,
+            )
   ];
 } 

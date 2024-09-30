@@ -15,7 +15,7 @@ class MyHomePage extends GetView<HomeController> {
   MyHomePage({super.key});
 
   final HomeController homeController = Get.put(HomeController());
-
+  
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width > 850;
@@ -123,7 +123,7 @@ Widget _buildSidebar(BuildContext context) {
           ),
           title: screenwidth ? Text('Follows') : null,
           onTap: () {
-            // Handle tap on Explore
+            context.router.push(DiscoverRoute());
           },
         ),
         ListTile(
@@ -179,7 +179,7 @@ Widget _buildSidebar(BuildContext context) {
           title: screenwidth ? const Text('Give Feedback') : null,
           onTap: () {
             // Navigate to the GiveFeedbackPage when tapped
-            context.router.push(const GiveFeedbackRoute());
+            context.router.push( GiveFeedbackRoute());
         
           },
         ),

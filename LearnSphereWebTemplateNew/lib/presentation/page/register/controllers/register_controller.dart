@@ -170,6 +170,10 @@ class RegisterController extends GetxController {
       'active': true, // Automatically setting active status to true
       'registrationDate': FieldValue.serverTimestamp(),
       'device': deviceType,
+      'profileImageUrl': null,
+      'profileBannerUrl': null,
+      'credentials': null,
+      
     };
 
     await userCollection.doc(user.uid).set(userData);

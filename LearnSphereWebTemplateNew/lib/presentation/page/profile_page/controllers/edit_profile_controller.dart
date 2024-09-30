@@ -23,7 +23,9 @@ class EditProfileController extends GetxController {
   RxBool _isHovering = false.obs;
 
   RxBool get isHovering => _isHovering;
-
+  loadPfp() {
+    return profileImageUrl.value;
+  }
   // Method to fetch profile data from Firebase
   Future<void> loadProfile() async {
     try {
@@ -105,9 +107,20 @@ class EditProfileController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
     loadProfile(); // Load profile data when the controller is initialized
+    loadPfp();
+  }
+  @override
+  void onClose() {
+    super.onClose();
+    final username = ''.obs;
+    final email = ''.obs;
+    final profileImageUrl = ''.obs;
+    final credentials = ''.obs; // Changed from bio to credentials
+    final certificate = ''.obs; // For user certification level (e.g., Newbie)
+    final bannerImageUrl = ''.obs;
   }
 
   Future<void> pickAndUploadPfp(BuildContext context) async {
