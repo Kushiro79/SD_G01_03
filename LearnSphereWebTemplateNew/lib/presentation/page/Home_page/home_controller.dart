@@ -3,7 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../profile_page/controllers/edit_profile_controller.dart';
+
 class HomeController extends GetxController {
+  @override
+  void onReady() {
+    super.onReady();
+    userUsername();
+  }
+  void onClose() {
+    super.onClose();
+    username = ''.obs;
+  }
+
 
   var selectIndex = [];
   var selectIndex1 = [];
@@ -14,11 +26,7 @@ class HomeController extends GetxController {
 
 
   void increment() => count.value++;
-  @override
-  void onInit() {
-    super.onInit();
-    userUsername();
-  }
+
 
   changeValue({int? value}) {
     if (selectIndex.contains(value)) {
