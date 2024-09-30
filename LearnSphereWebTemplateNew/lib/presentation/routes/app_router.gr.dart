@@ -166,7 +166,7 @@ class GiveFeedbackRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const GiveFeedbackPage();
+      return GiveFeedbackPage();
     },
   );
 }
@@ -439,7 +439,7 @@ class ViewFeedbackRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const ViewFeedbackPage();
+      return const ViewFeedbackPage(); // Your FeedbackPage for user submission
     },
   );
 }

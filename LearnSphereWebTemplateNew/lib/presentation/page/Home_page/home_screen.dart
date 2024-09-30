@@ -145,6 +145,16 @@ Widget _buildSidebar(BuildContext context) {
             context.router.push(const SettingsRoute());
           },
         ),
+        // Add the Give Feedback button here
+        ListTile(
+          leading: Icon(Icons.feedback), // You can customize the icon
+          title: screenwidth ? const Text('Give Feedback') : null,
+          onTap: () {
+            // Navigate to the GiveFeedbackPage when tapped
+            context.router.push(const GiveFeedbackRoute());
+        
+          },
+        ),
       ],
     ),
   );
