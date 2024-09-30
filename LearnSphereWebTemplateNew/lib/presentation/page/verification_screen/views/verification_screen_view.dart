@@ -7,7 +7,7 @@ import '../controllers/verification_screen_controller.dart';
 
 @RoutePage()
 class VerificationScreenView extends GetView<VerificationScreenController> {
-  const VerificationScreenView({Key? key}) : super(key: key);
+  const VerificationScreenView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class VerificationScreenView extends GetView<VerificationScreenController> {
                             text: "Didn't receive the code? Check your spam folder.\n",
                             style: TextStyle(fontSize: 14, color: Colors.grey[600], fontFamily: 'Urbanist'),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: 'Use another email address?',
                             style: TextStyle(fontSize: 14, color: AppColor.purple, fontFamily: 'Urbanist'),
                           ),

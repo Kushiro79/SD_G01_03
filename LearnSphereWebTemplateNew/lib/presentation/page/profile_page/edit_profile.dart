@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../config/app_color.dart';
 import '../../routes/app_router.dart';
 import '../../utils/custom_toast.dart';
 import 'controllers/edit_profile_controller.dart';
@@ -12,6 +11,7 @@ import '../register/controllers/register_controller.dart';
 class EditProfilePage extends GetView<EditProfileController> {
   EditProfilePage({super.key});
 
+  @override
   final EditProfileController controller = Get.put(EditProfileController());
   final RegisterController registerController = Get.put(RegisterController());
   @override
@@ -66,7 +66,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                           // Handle banner tap
                           controller.pickAndUploadBanner(context);
                         },
-                        child: Container(
+                        child: SizedBox(
                           //profile banner
                           height: 200,
                           width: double.infinity,
@@ -91,7 +91,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                         },
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.only(top: 30),
+                            padding: const EdgeInsets.only(top: 30),
                             child: Obx(() {
                               return controller.profileImageUrl.isNotEmpty
                                   ? Stack(children: [
@@ -108,7 +108,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                                       ),
                                       const Padding(
                                         padding: EdgeInsets.only(top: 50 ,left: 50),
-                                          child: const Icon(Icons.create , color: Colors.black,)
+                                          child: Icon(Icons.create , color: Colors.black,)
                                         ),
                                       
                                     ])
@@ -181,7 +181,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                   }),
                   const Spacer(),
                   ElevatedButton.icon(
-                    label: const Text("Logout"),
+                    label: const Text('Logout'),
                     onPressed: () async {
                       try {
                         await controller.logout();

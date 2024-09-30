@@ -1,12 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../../utils/custom_toast.dart';
 import 'package:file_picker/file_picker.dart';
+
 
 class EditProfileController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -126,18 +125,18 @@ class EditProfileController extends GetxController {
         final storageRef =
             FirebaseStorage.instance.ref().child('profile/${file.name}');
         // Upload the file
-        await storageRef.putData(await file.bytes!);
+        await storageRef.putData(file.bytes!);
       
         // Optionally, get the download URL
         String downloadURL = await storageRef.getDownloadURL();
         profileImageUrl.value = downloadURL;
-        print("File uploaded successfully! Download URL: $downloadURL");
+        print('File uploaded successfully! Download URL: $downloadURL');
         saveProfile(context);
       } catch (e) {
-        print("Error uploading file: $e");
+        print('Error uploading file: $e');
       }
     } else {
-      print("No file selected.");
+      print('No file selected.');
     }
   }
 
@@ -157,18 +156,18 @@ class EditProfileController extends GetxController {
         final storageRef =
             FirebaseStorage.instance.ref().child('banner/${file.name}');
         // Upload the file
-        await storageRef.putData(await file.bytes!);
+        await storageRef.putData(file.bytes!);
       
         // Optionally, get the download URL
         String downloadURL = await storageRef.getDownloadURL();
         bannerImageUrl.value = downloadURL;
-        print("File uploaded successfully! Download URL: $downloadURL");
+        print('File uploaded successfully! Download URL: $downloadURL');
         saveProfile(context);
       } catch (e) {
-        print("Error uploading file: $e");
+        print('Error uploading file: $e');
       }
     } else {
-      print("No file selected.");
+      print('No file selected.');
     }
   }
 }

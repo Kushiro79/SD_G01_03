@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 // Page for viewing feedback given by users
 @RoutePage()
 class ViewFeedbackPage extends StatelessWidget {
-  const ViewFeedbackPage({Key? key}) : super(key: key);
+  const ViewFeedbackPage({super.key});
 
   @override
   Widget build(BuildContext context) {

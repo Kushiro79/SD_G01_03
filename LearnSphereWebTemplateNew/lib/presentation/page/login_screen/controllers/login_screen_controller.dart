@@ -16,8 +16,8 @@ class LoginScreenController extends GetxController {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  RxString _emailErrorText = ''.obs;
-  RxString _passwordErrorText = ''.obs;
+  final RxString _emailErrorText = ''.obs;
+  final RxString _passwordErrorText = ''.obs;
 
   String get emailErrorText => _emailErrorText.value;
   String get passwordErrorText => _passwordErrorText.value;

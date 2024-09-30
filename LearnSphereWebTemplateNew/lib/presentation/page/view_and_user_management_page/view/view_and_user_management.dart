@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../utils/custom_toast.dart';
 
 @RoutePage()
 class ViewAndManageUsersPage extends StatefulWidget {
@@ -140,7 +139,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
 
         _fetchUsers(); // Refresh the list after adding staff
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Staff added successfully')),
+          const SnackBar(content: Text('Staff added successfully')),
         );
       } catch (e) {
         print(e.toString());
@@ -227,7 +226,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                       child: ListView.separated(
                         itemCount: _filteredUsers.length,
                         separatorBuilder: (context, index) =>
-                            Divider(color: Colors.grey, thickness: 1.0),
+                            const Divider(color: Colors.grey, thickness: 1.0),
                         itemBuilder: (context, index) {
                           final userDoc = _filteredUsers[index];
                           final user = userDoc.data() as Map<String, dynamic>;
@@ -429,17 +428,17 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Delete Role'),
+            title: const Text('Delete Role'),
             content: Text(
                 'Are you sure you want to delete ${user['username']}? This action cannot be undone.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: Text('Cancel'),
+                child: const Text('Cancel'),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: Text('Delete'),
+                child: const Text('Delete'),
               ),
             ],
           );
@@ -452,7 +451,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
               .delete(); // Delete the user document from Firestore
           _fetchUsers(); // Refresh the user list after deletion
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Deleted successfully')),
+            const SnackBar(content: Text('Deleted successfully')),
           );
         } catch (e) {
           print(e.toString());
@@ -480,7 +479,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
       context: context,
       builder: (context){
         return AlertDialog(
-          title: Text('Details'),
+          title: const Text('Details'),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
@@ -494,7 +493,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
           actions: [
             TextButton(
               onPressed:() => Navigator.pop(context), 
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );

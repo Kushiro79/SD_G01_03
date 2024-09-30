@@ -34,7 +34,7 @@ class MyHomePage extends GetView<HomeController> {
           ]),
         ),
         body: Container(
-            decoration: BoxDecoration(), // add this to avoid errors
+            decoration: const BoxDecoration(), // add this to avoid errors
             child: Stack(children: [
               Positioned.fill(
                 child: Image.asset(
@@ -58,7 +58,7 @@ Widget _buildSidebar(BuildContext context) {
 
   return Container(
     width: screenwidth ? 300 : 100,
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       border: Border(
         right: BorderSide(width: 1, color: Colors.grey),
       ),
@@ -121,7 +121,7 @@ Widget _buildSidebar(BuildContext context) {
             width: 25,
             color: Colors.black,
           ),
-          title: screenwidth ? Text('Follows') : null,
+          title: screenwidth ? const Text('Follows') : null,
           onTap: () {
             // Handle tap on Explore
           },
@@ -145,7 +145,7 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         ListTile(
-          leading: Icon(Icons.bookmark),
+          leading: const Icon(Icons.bookmark),
           title: screenwidth ? const Text('Bookmarks') : null,
           onTap: () {
             // Handle tap on Bookmarks
@@ -175,7 +175,7 @@ Widget _buildSidebar(BuildContext context) {
         ),
         // Add the Give Feedback button here
         ListTile(
-          leading: Icon(Icons.feedback), // You can customize the icon
+          leading: const Icon(Icons.feedback), // You can customize the icon
           title: screenwidth ? const Text('Give Feedback') : null,
           onTap: () {
             // Navigate to the GiveFeedbackPage when tapped
@@ -202,7 +202,7 @@ Widget _buildPost() {
           child: SizedBox(
             height: constraints.maxHeight * 0.9,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(
                   left: BorderSide(width: 1, color: Colors.grey),
                   right: BorderSide(width: 1, color: Colors.grey),
@@ -427,7 +427,7 @@ Widget _buildPost() {
                                                     FullScreenImage(
                                                   imageUrl: homeController
                                                       .frame[index],
-                                                  tag: "generate_a_unique_tag",
+                                                  tag: 'generate_a_unique_tag',
                                                 ),
                                               ));
                                         },
@@ -604,7 +604,7 @@ Widget _buildPost() {
                                                                       index],
                                                                   style: const TextStyle(
                                                                       fontFamily:
-                                                                          "Urbanist-medium"),
+                                                                          'Urbanist-medium'),
                                                                 ),
                                                                 trailing: Text(
                                                                   homeController
@@ -612,7 +612,7 @@ Widget _buildPost() {
                                                                       index],
                                                                   style: TextStyle(
                                                                       fontFamily:
-                                                                          "Urbanist-medium",
+                                                                          'Urbanist-medium',
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors

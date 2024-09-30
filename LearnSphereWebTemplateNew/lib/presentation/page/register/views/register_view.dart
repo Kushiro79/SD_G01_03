@@ -9,7 +9,7 @@ import '../../../theme/gen/assets.gen.dart';
 
 @RoutePage()
 class RegisterScreenView extends GetView<RegisterController> {
-  RegisterScreenView({Key? key}) : super(key: key);
+  RegisterScreenView({super.key});
 
   final RegisterController registerController = Get.put(RegisterController());
   @override
@@ -157,7 +157,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                   bottom: MediaQuery.of(context).size.height /
                       6, // Keep the vertical padding
                 ),
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width *
                       0.25, // Adjust width for wide layout
                   child: Column(
@@ -186,7 +186,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                           ),
                         ),
                       ]),*/
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
 
                       //_loginWithButton(image: 'assets/google.png'),
                     ],
@@ -208,7 +208,7 @@ class RegisterScreenView extends GetView<RegisterController> {
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 10),
-                child: Container(
+                child: SizedBox(
                   width: constraints.maxWidth * 0.9,
                   child: Column(
                     children: [
@@ -370,10 +370,10 @@ class RegisterScreenView extends GetView<RegisterController> {
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          child: Container(
+          child: const SizedBox(
             width: double.infinity,
             height: 50,
-            child:const Center(child: Text('Sign Up')),
+            child:Center(child: Text('Sign Up')),
           ),
         ),
       ),

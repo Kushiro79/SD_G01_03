@@ -10,7 +10,7 @@ void showCustomToast(BuildContext context, String message) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: Colors.red,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             offset: Offset(0, 2),
@@ -21,10 +21,10 @@ void showCustomToast(BuildContext context, String message) {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: 12.0),
+          const SizedBox(width: 12.0),
           Text(
             message,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),
@@ -34,6 +34,6 @@ void showCustomToast(BuildContext context, String message) {
       child: toast,
       gravity: ToastGravity.BOTTOM,
     
-      toastDuration: Duration(seconds: 3),
+      toastDuration: const Duration(seconds: 3),
     );
   }
