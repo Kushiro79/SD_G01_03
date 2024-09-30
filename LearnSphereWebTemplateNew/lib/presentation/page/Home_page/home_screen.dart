@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'home_controller.dart';
 
+import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../theme/palette.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
@@ -27,8 +28,8 @@ class MyHomePage extends GetView<HomeController> {
             Image(
               color: Colors.black,
               image: AssetImage(ProjectAssets.learnSphereLogo.path),
-              width: screenwidth ? 300 : 80,
-              height: screenwidth ? 100 : 80,
+              width: 300,
+              height: 300,
             ),
           ]),
         ),
@@ -51,12 +52,12 @@ class MyHomePage extends GetView<HomeController> {
 
 Widget _buildSidebar(BuildContext context) {
   HomeController homeController = Get.put(HomeController());
+  final EditProfileController editController = Get.put(EditProfileController());
 
   var screenwidth = MediaQuery.of(context).size.width >= 800;
 
   return Container(
-    width: MediaQuery.of(context).size.width *
-        0.2, // Adjust the width to your liking
+    width: screenwidth ? 300 : 100,
     decoration: BoxDecoration(
       border: Border(
         right: BorderSide(width: 1, color: Colors.grey),
@@ -66,13 +67,40 @@ Widget _buildSidebar(BuildContext context) {
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/01.png'),
-              ),
-              Text('@${homeController.username}') // Listen to username changes
+              Obx(() {
+                return editController.profileImageUrl.isNotEmpty
+                    ? ClipOval(
+                        child: Image.network(
+                          editController.profileImageUrl.value,
+                          height: screenwidth ? 120 : 70,
+                          width: screenwidth ? 120 : 70,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(top: 16),
+                        height: screenwidth ? 120 : 70,
+                        width: screenwidth ? 120 : 70,
+                        alignment: Alignment.topLeft,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors
+                              .grey, // Use a default color or your AppColor.Secondary
+                        ),
+                        child: const Center(
+                            child: Icon(Icons.person,
+                                color: Colors.white)), // Optional: Add an icon
+                      );
+              }),
+              const SizedBox(width: 10),
+              Text('@ ${editController.username.value}',
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Urbanist-semibold',
+                      fontWeight: FontWeight.w600)),
             ],
           ),
         ),

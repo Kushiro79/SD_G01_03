@@ -22,7 +22,7 @@ class RegisterScreenView extends GetView<RegisterController> {
     final screenwidth = MediaQuery.of(context).size.width > 850;
 
     return Scaffold(
-      backgroundColor: Color(0xFFf5f5f5),
+      backgroundColor: const Color(0xFFf5f5f5),
       body: Stack(
         children: [
           // Background image
@@ -56,7 +56,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                       children: [
                         _signInButton(context),
                         _menuItem(title: 'Sign Up', isActive: true),
-                        SizedBox(width: 140),
+                        const SizedBox(width: 140),
                       ],
                     ),
                   ],
@@ -83,7 +83,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                 color: isActive ? Colors.deepPurple : Colors.grey,
               ),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             isActive
                 ? Container(
                     padding:
@@ -93,7 +93,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
@@ -106,7 +106,7 @@ class RegisterScreenView extends GetView<RegisterController> {
         context.router.push(LoginRouteView());
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -118,7 +118,7 @@ class RegisterScreenView extends GetView<RegisterController> {
             ),
           ],
         ),
-        child: Text(
+        child:const  Text(
           'Sign In',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -149,7 +149,7 @@ class RegisterScreenView extends GetView<RegisterController> {
                 ),
               
               Padding(
-                 padding: EdgeInsets.only(
+                padding: EdgeInsets.only(
                   right: MediaQuery.of(context).size.width *
                       0.05, // Set your desired right padding
                   top: MediaQuery.of(context).size.height /
@@ -163,11 +163,11 @@ class RegisterScreenView extends GetView<RegisterController> {
                   child: Column(
                     children: [
                       _buildForm(context),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       _buildSignUpButton(context),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildSignInLink(context),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       /*Row(children: [
                         Expanded(
                           child: Divider(
@@ -213,11 +213,11 @@ class RegisterScreenView extends GetView<RegisterController> {
                   child: Column(
                     children: [
                       _buildForm(context),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       _buildSignUpButton(context),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildSignInLink(context),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       /*Row(children: [
                         Expanded(
                           child: Divider(
@@ -252,7 +252,7 @@ class RegisterScreenView extends GetView<RegisterController> {
   Widget _buildHeader() {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children:  [
         Text(
           'Register',
           style: TextStyle(
@@ -283,13 +283,13 @@ class RegisterScreenView extends GetView<RegisterController> {
           labelText: 'Username',
           onChanged: registerController.updateUsername,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         _buildTextField(
           hintText: 'Enter your Email...',
           labelText: 'Email',
           onChanged: registerController.updateEmail,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         _buildTextField(
           hintText: 'Min. 6 characters...',
           labelText: 'Password',
@@ -326,8 +326,8 @@ class RegisterScreenView extends GetView<RegisterController> {
         suffixIcon: suffixIcon,
         filled: true,
             fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding:const  EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blueGrey[50]!),
               borderRadius: BorderRadius.circular(15),
@@ -365,15 +365,15 @@ class RegisterScreenView extends GetView<RegisterController> {
             print('Email: ${registerController.email}');
             print('Password: ${registerController.password}');
           },
-          child: Container(
-            width: double.infinity,
-            height: 50,
-            child: Center(child: Text('Sign Up')),
-          ),
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
+          ),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            child:const Center(child: Text('Sign Up')),
           ),
         ),
       ),
@@ -384,11 +384,11 @@ class RegisterScreenView extends GetView<RegisterController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           'Already have an account?',
           style: TextStyle(
             color: Colors.black54,
-             fontWeight: FontWeight.bold),
+            fontWeight: FontWeight.bold),
         ),
         TextButton(
           onPressed: () {

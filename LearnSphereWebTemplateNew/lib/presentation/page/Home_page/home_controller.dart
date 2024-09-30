@@ -1,13 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get_rx/get_rx.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
-  // final controller = PageController(viewportFraction: 0.8, keepPage: true);
+
   var selectIndex = [];
   var selectIndex1 = [];
   int seltectitem = 0;
@@ -98,10 +95,10 @@ class HomeController extends GetxController {
     Colors.red,
   ];
   Future<void> userUsername() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
     final firestore = FirebaseFirestore.instance;
 
-    User? user = _auth.currentUser; // Use currentUser property directly
+    User? user = auth.currentUser; // Use currentUser property directly
     if (user != null) {
       final userId = user.uid; // Get the current user's ID
       final collection = firestore.collection('users');
@@ -113,11 +110,8 @@ class HomeController extends GetxController {
 
        username.value = data?['username']; // Retrieve username
 
-      if (username != null) {
-        print('Username: $username'); // Handle the retrieved username
-      } else {
-        print('Username not found');
-      }
+      print('Username: $username'); // Handle the retrieved username
+   
     } else {
       print('No current user');
     }

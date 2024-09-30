@@ -38,29 +38,41 @@ class LoginScreenView extends GetView<LoginScreenController> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: screenwidth ?
+                  Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Image(
                           color: Colors.black,
                           image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                          width: screenwidth ? 300 : 80,
-                          height: screenwidth ? 100 : 80,
+                          width: 300,
+                          height: 100,
                         ),
                       ]
                     ),
-                    Row(
-                      children: [
-                        _menuItem(title: 'Sign In', isActive: true),
-                        _registerButton(context),
-                        SizedBox(width: 140),
-                      ],
-                    ),
+                    
                   ],
+                )
+                :Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  Row(
+                      children: [
+                        Image(
+                          color: Colors.black,
+                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                          width: 300,
+                          height: 100,
+                        ),
+                      ]
+                    ),
+                    
+                  ],
+                )
                 ),
-              ),
+              
               _body(context),
             ],
           ),
@@ -142,7 +154,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                     Container(
                       alignment: AlignmentDirectional.center,
                       width: MediaQuery.of(context).size.width * 0.4,
-                      child: Text(
+                      child:const Text(
                         'Welcome to LearnSphere, Buddy!',
                         style: TextStyle(
                           fontSize: 50,
@@ -169,7 +181,20 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 ),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.25,
-                  child: _formLogin(context),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _menuItem(title: 'Sign In', isActive: true),
+                            _registerButton(context),
+                          ],
+                        ),
+                        _formLogin(context),
+
+                      ],
+                    ),
                 ),
               ),
             ],
@@ -178,7 +203,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           //mobile layout
           return Column(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
                   'Welcome to LearnSphere, Buddy!',
@@ -198,7 +223,18 @@ class LoginScreenView extends GetView<LoginScreenController> {
                     vertical: MediaQuery.of(context).size.height / 10),
                 child: Container(
                   width: constraints.maxWidth * 0.9,
-                  child: _formLogin(context),
+                  child: Column(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _menuItem(title: 'Sign In', isActive: true),
+                            _registerButton(context),
+                          ],
+                        ),
+                        _formLogin(context),
+                    ],
+                  ),
                 ),
               ),
             ],

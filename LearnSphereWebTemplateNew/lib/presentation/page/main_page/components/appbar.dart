@@ -5,48 +5,41 @@ class _AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    EditProfileController controller = Get.put(EditProfileController());
+    return  SizedBox(
       height: 80,
       child: Row(
         children: <Widget>[
           Spacer(),
-          _BellIcon(hasNotifications: true),
           SizedBox(width: 34),
-          CircleAvatar(backgroundColor: Colors.green, radius: 23),
+          Obx(() {
+                            return controller.profileImageUrl.isNotEmpty
+                                ? ClipOval(
+                                    child: Image.network(
+                                      controller.profileImageUrl.value,
+                                      height: 60,
+                                      width: 60,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 60,
+                                    width: 60,
+                                    alignment: Alignment.topLeft,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors
+                                          .grey, // Use a default color or your AppColor.Secondary
+                                    ),
+                                    child: const Center(
+                                        child: Icon(Icons.person,
+                                            color: Colors
+                                                .white)), // Optional: Add an icon
+                                  );
+                          }),
           SizedBox(width: 40),
         ],
       ),
-    );
-  }
-}
-
-class _BellIcon extends StatelessWidget {
-  const _BellIcon({required this.hasNotifications});
-
-  final bool hasNotifications;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topRight,
-      children: <Widget>[
-        ProjectAssets.icons.bell.svg(
-          width: 24,
-          height: 27.79,
-          colorFilter: Palette.black.toColorFilter,
-        ),
-        if (hasNotifications)
-          Container(
-            margin: const EdgeInsets.all(1),
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: Palette.blue,
-              shape: BoxShape.circle,
-              border: Border.all(color: Palette.dirtyWhite),
-            ),
-          ),
-      ],
     );
   }
 }

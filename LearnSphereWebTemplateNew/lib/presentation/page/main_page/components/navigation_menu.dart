@@ -40,6 +40,7 @@ class _NavigationMenuState extends State<_NavigationMenu> {
               Center(
                   child: Image(
                     image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                    color: const Color.fromARGB(255, 0, 0, 0),
                     width: screenwidth ? 200 : 80,
                     height: screenwidth ? 100 : 80,
                   ),

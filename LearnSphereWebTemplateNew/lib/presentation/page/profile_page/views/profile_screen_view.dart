@@ -1,116 +1,109 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../config/app_color.dart';
 import '../../../routes/app_router.dart';
-import '../controllers/proflie_screen_controller.dart';
+import '../controllers/edit_profile_controller.dart';
+import '../controllers/profile_screen_controller.dart';
 
 @RoutePage()
 class ProfileScreenPage extends StatelessWidget {
-  final ProflieScreenController profileController = Get.put(ProflieScreenController());
+  final ProfileScreenController profileController =
+      Get.put(ProfileScreenController());
+  final EditProfileController editController = Get.put(EditProfileController());
 
   ProfileScreenPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    String username = profileController.username.value;
+    String email = profileController.email.value;
+    String profileImageUrl = editController.profileImageUrl.value;
+    //String bannerImageUrl = editController.bannerImageUrl.value;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: const Text(
+            'Profile',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.edit, color: Colors.black),
+              onPressed: () {
+                // Navigate to the Edit Profile screen
+                AutoRouter.of(context).push(EditProfileRoute());
+              },
+            ),
+          ],
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit, color: Colors.black),
-            onPressed: () {
-              // Navigate to the Edit Profile screen
-              AutoRouter.of(context).push(EditProfileRoute());
-            },
-          ),
-        ],
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Background image
-          Image.asset(
-            'assets/background.jpg',
-            fit: BoxFit.cover,
-          ),
-          // Profile content
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        body: Column(children: [
+          Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              Container(
+                //profile banner
+                height: 300,
+                width: double.infinity,
+                child: Obx(() {
+                  return editController.bannerImageUrl.isNotEmpty
+                      ? Opacity(
+                          opacity: 0.9,
+                          child: Image.network(
+                            editController.bannerImageUrl.value,
+                            fit: BoxFit.cover,
+                          ))
+                      : Image.asset(
+                          'assets/background.jpg',
+                          fit: BoxFit.cover,
+                        );
+                }),
+              ),
+              Positioned(
+                top: 80, // adjust the value to control the overlap
+                left: 0,
+                right: 0,
                 child: Center(
                   child: Obx(() {
-                    String username = profileController.username.value;
-                    String email = profileController.email.value;
-                    String profileImageUrl = profileController.profileImageUrl.value;
-
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: profileImageUrl.isNotEmpty
-                              ? NetworkImage(profileImageUrl)
-                              : AssetImage('assets/default_profile.png') as ImageProvider,
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          username,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black, // Changed to black
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          email,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87, // Changed to black
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.verified,
-                              color: Colors.black, // Changed to black
-                              size: 24,
+                    return profileController.profileImageUrl.isNotEmpty
+                        ? ClipOval(
+                            child: Image.network(
+                              profileController.profileImageUrl.value,
+                              height: 150,
+                              width: 150,
+                              fit: BoxFit.cover,
                             ),
-                            SizedBox(width: 8),
-                            Text(
-                              'Newbie',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black, // Changed to black
-                              ),
+                          )
+                        : Container(
+                            margin: const EdgeInsets.only(top: 16),
+                            height: 150,
+                            width: 150,
+                            alignment: Alignment.topLeft,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors
+                                  .grey, // Use a default color or your AppColor.Secondary
                             ),
-                          ],
-                        ),
-                      ],
-                    );
+                            child: const Center(
+                                child: Icon(Icons.person,
+                                    color:
+                                        Colors.white)), // Optional: Add an icon
+                          );
                   }),
                 ),
               ),
+
+              // Profile content
             ],
           ),
-        ],
-      ),
-    );
-  
+          Container(
+            height: 500,
+            color: AppColor.Greyscale,
+          )
+        ]));
 
-
-
-   /* List post = [
+    /* List post = [
       'assets/Post01.png',
       'assets/Post02.png',
     ];

@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
+import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../routes/app_router.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../theme/palette.dart';
@@ -34,7 +36,7 @@ class MainPage extends StatelessWidget {
               ),
               const Expanded(
                 child: ColoredBox(
-                  color: Palette.dirtyWhite,
+                  color: AppColor.purple,
                   child: Column(
                     children: [
                       _AppBar(),

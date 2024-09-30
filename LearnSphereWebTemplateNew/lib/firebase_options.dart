@@ -11,6 +11,7 @@ class DefaultFirebaseOptions {
         appId: '1:603404130009:web:5fd562b20af226586010c8',
         messagingSenderId: '603404130009',
         projectId: 'learnsphere-e6563',
+        storageBucket: 'learnsphere-e6563.appspot.com', // Add this line
       );
     } else if (Platform.isIOS || Platform.isMacOS) {
       // iOS and MacOS
@@ -19,6 +20,7 @@ class DefaultFirebaseOptions {
         appId: '1:603404130009:web:5fd562b20af226586010c8',
         messagingSenderId: '603404130009',
         projectId: 'learnsphere-e6563',
+        storageBucket: 'learnsphere-e6563.appspot.com', // Add this line
       );
     } else {
       // Android
@@ -27,6 +29,7 @@ class DefaultFirebaseOptions {
         appId: '1:603404130009:web:5fd562b20af226586010c8',
         messagingSenderId: '603404130009',
         projectId: 'learnsphere-e6563',
+        storageBucket: 'learnsphere-e6563.appspot.com', // Add this line
       );
     }
   }

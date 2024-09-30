@@ -12,7 +12,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFf5f5f5),
+      backgroundColor: const Color(0xFFf5f5f5),
       body: ListView(
         padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width / 8),
@@ -114,7 +114,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          padding:  EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Text(
             'Change Password?',
             style: TextStyle(
@@ -124,8 +124,8 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
           ),
         ),
         const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-          child: const Text(
+          padding:  EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+          child:  Text(
             'Change your old password to new password',
             style: TextStyle(
               fontSize: 14,
@@ -140,8 +140,8 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             hintText: 'Enter Old Password ',
             filled: true,
             fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding: const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blueGrey[50]!),
               borderRadius: BorderRadius.circular(15),
@@ -161,8 +161,8 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             hintText: 'Enter New Password ',
             filled: true,
             fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
+            labelStyle:const  TextStyle(fontSize: 12),
+            contentPadding:const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blueGrey[50]!),
               borderRadius: BorderRadius.circular(15),
@@ -182,8 +182,8 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             hintText: 'Confirm New Password ',
             filled: true,
             fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
+            labelStyle:const TextStyle(fontSize: 12),
+            contentPadding:const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blueGrey[50]!),
               borderRadius: BorderRadius.circular(15),
@@ -194,7 +194,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             ),
           ),
         ),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -211,18 +211,18 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             onPressed: () {
               controller.changePassword(context);
             },
-            child: Container(
-                width: double.infinity,
-                height: 50,
-                child: const Center(child: Text('Reset Password'))),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
+            child: Container(
+                width: double.infinity,
+                height: 50,
+                child: const Center(child: Text('Reset Password'))),
           ),
         ),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
       ],
     );
   }

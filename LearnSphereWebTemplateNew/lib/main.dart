@@ -11,6 +11,7 @@ void main() async {
   try {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
+        
       runApp(
         OKToast( // Wrap your app with OKToast
         child: MyApp(),

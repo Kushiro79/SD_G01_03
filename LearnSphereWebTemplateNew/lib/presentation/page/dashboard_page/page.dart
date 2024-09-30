@@ -106,13 +106,7 @@ class DashboardPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/background.jpg',
-              fit: BoxFit.cover, // Ensures the image fills the entire screen
-            ),
-          ),
+
           // Foreground content
           FutureBuilder(
             future: Future.wait([
@@ -212,12 +206,12 @@ class DashboardPage extends StatelessWidget {
             PieChartData(
               sections: [
                 PieChartSectionData(
-                  value: deviceUsage['Android']!.toDouble() ?? 0.0,
+                  value: deviceUsage['Android']!.toDouble() ,
                   title: 'Android: ${deviceUsage['Android'] ?? 0}',
                   color: const Color.fromARGB(255, 168, 229, 169),
                 ),
                 PieChartSectionData(
-                  value: deviceUsage['Web']!.toDouble() ?? 0.0,
+                  value: deviceUsage['Web']!.toDouble() ,
                   title: 'Web: ${deviceUsage['Web'] ?? 0}',
                   color: const Color.fromARGB(255, 125, 197, 255),
                 )

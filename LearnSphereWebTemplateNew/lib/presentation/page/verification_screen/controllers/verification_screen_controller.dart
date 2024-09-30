@@ -39,8 +39,8 @@ class VerificationScreenController extends GetxController {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
         color: Colors.black87,
-        boxShadow: [
-          BoxShadow(
+        boxShadow: const[
+            BoxShadow(
             color: Colors.black26,
             offset: Offset(0, 2),
             blurRadius: 6.0,
@@ -50,10 +50,10 @@ class VerificationScreenController extends GetxController {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: 12.0),
+          const SizedBox(width: 12.0),
           Text(
             message,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),
