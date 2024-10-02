@@ -289,6 +289,17 @@ class EditProfilePage extends GetView<EditProfileController> {
                           AutoRouter.of(context).push(ChangePasswordRoute());
                         },
                       ),
+                     
+                     // Add a SizedBox for spacing
+                      const SizedBox(height: 16), // Adjust the height as needed
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        label: const Text('Delete Account', style: TextStyle(color: Colors.red)),
+                        onPressed: () async {
+                          await controller.deleteAccount(context);
+                        },
+                      ),
+
                     ],
                   );
                 }),

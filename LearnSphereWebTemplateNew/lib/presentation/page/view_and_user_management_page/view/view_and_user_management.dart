@@ -254,123 +254,66 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     );
   }
 
-  Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
-    final user = userDoc.data() as Map<String, dynamic>;
-    return PopupMenuButton<String>(
-      onSelected: (String value) {
-        switch (value) {
-         case 'View Details':
-           _viewUserDetails(context, userDoc);
-           break;
-          case 'Edit':
-            _editUser(context, userDoc);
-            break;
-          case 'Change Role':
-            _changeUserRole(context, userDoc);
-            break;
-          case 'Delete':
-            _deleteUser(context, userDoc);
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) {
-        return <PopupMenuEntry<String>>[
-          const PopupMenuItem<String>(
-            value: 'Edit',
-            child: Text('Edit'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Change Role',
-            child: Text('Change Role'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'Delete',
-            child: Text('Delete'),
-          )
-        ];
-      },
-    );
+//DROPDDOWN
+Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
+  final user = userDoc.data() as Map<String, dynamic>;
+  bool canEdit = false;
+  
+
+  // Admins and staff can change roles, and staff can edit their own profiles
+  if (_currentUserRole == 'admin' || 
+     (_currentUserRole == 'staff' && user['uid'] == _auth.currentUser?.uid)) {
+    canEdit = true;
+    
   }
 
-//EDIT -
-  void _editUser(BuildContext context, DocumentSnapshot userDoc) {
-    String email = userDoc['email'] ?? '';
-    String username = userDoc['username'] ?? '';
-    final userRole = userDoc['role'];
-
-    // Check if the current user is staff and trying to edit another staff/admin
-    if (_currentUserRole == 'staff' &&
-        (userRole == 'admin' || userRole == 'staff')) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('You do not have permission to edit this user.')),
-      );
-      return; // Exit the method if staff tries to edit admin or another staff
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Edit Details'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: 'Email'),
-                controller: TextEditingController(text: email),
-                onChanged: (value) {
-                  email = value;
-                },
-              ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Username'),
-                controller: TextEditingController(text: username),
-                onChanged: (value) {
-                  username = value;
-                },
-              ),
-            ],
+  return PopupMenuButton<String>(
+    onSelected: (String value) {
+      switch (value) {
+        case 'View Details':
+          _viewUserDetails(context, userDoc);
+          break;
+        case 'Edit Profile':
+          if (canEdit) {
+            _editUserProfile(context, userDoc);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('You can only edit your own profile.')),
+            );
+          }
+          break;
+        case 'Change Role':
+          // Allow both admin and staff to change roles
+          _changeUserRole(context, userDoc);
+          break;
+       
+       
+      }
+    },
+    itemBuilder: (BuildContext context) {
+      return <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(
+          value: 'View Details',
+          child: Text('View Details'),
+        ),
+        if (canEdit) // Allow editing the profile if allowed
+          const PopupMenuItem<String>(
+            value: 'Edit Profile',
+            child: Text('Edit Profile'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (email.isNotEmpty && username.isNotEmpty) {
-                  try {
-                    await userDoc.reference.update({
-                      'email': email,
-                      'username': username,
-                    });
-                    Navigator.pop(context); // Close dialog
-                    _fetchUsers(); // Refresh user list
+        // Show Change Role for both admin and staff
+        const PopupMenuItem<String>(
+          value: 'Change Role',
+          child: Text('Change Role'),
+        ),
+        
+      ];
+    },
+  );
+}
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Updated successfully')),
-                    );
-                  } catch (e) {
-                    print(e.toString());
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to update: $e')),
-                    );
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Email and username cannot be empty')),
-                  );
-                }
-              },
-              child: const Text('Update'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
+
 
 //CHANGE ROLE
   void _changeUserRole(BuildContext context, DocumentSnapshot userDoc) async {
@@ -418,58 +361,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     }
   }
 
-  //DELETE -  only admin can delete staff/admin ,if sign in as staff only can delete regular users.
-  void _deleteUser(BuildContext context, DocumentSnapshot userDoc) async {
-    final user = userDoc.data() as Map<String, dynamic>;
-
-    // Check if the current user is an admin
-    if (_currentUserRole == 'admin' || user['role'] == 'user') {
-      final confirmation = await showDialog<bool>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Delete Role'),
-            content: Text(
-                'Are you sure you want to delete ${user['username']}? This action cannot be undone.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
-
-      if (confirmation == true) {
-        try {
-          await userDoc.reference
-              .delete(); // Delete the user document from Firestore
-          _fetchUsers(); // Refresh the user list after deletion
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Deleted successfully')),
-          );
-        } catch (e) {
-          print(e.toString());
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete: $e')),
-          );
-        }
-      }
-    } else {
-      // If the current user is staff and trying to delete an admin or another staff
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('You do not have permission to delete this account.')),
-      );
-    }
-  }
-}
+ 
 
  //VIEW USER
   void _viewUserDetails(BuildContext context, DocumentSnapshot userDoc){
@@ -501,4 +393,67 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     );
   }
 
+  //EDIT
+  void _editUserProfile(BuildContext context, DocumentSnapshot userDoc) {
+  final user = userDoc.data() as Map<String, dynamic>;
+  String updatedEmail = user['email'];
+  String updatedUsername = user['username'];
 
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Edit Profile'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: TextEditingController(text: user['username']),
+              decoration: const InputDecoration(labelText: 'Username'),
+              onChanged: (value) {
+                updatedUsername = value;
+              },
+            ),
+            TextField(
+              controller: TextEditingController(text: user['email']),
+              decoration: const InputDecoration(labelText: 'Email'),
+              onChanged: (value) {
+                updatedEmail = value;
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              try {
+                await userDoc.reference.update({
+                  'email': updatedEmail,
+                  'username': updatedUsername,
+                });
+                Navigator.pop(context);
+                _fetchUsers(); // Refresh the list after editing profile
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Profile updated successfully')),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to update profile: $e')),
+                );
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+//DELETE
+
+}
