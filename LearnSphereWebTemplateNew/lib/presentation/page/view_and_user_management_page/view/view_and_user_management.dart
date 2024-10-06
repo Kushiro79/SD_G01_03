@@ -260,12 +260,18 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
   bool canEdit = false;
   
 
-  // Admins and staff can change roles, and staff can edit their own profiles
-  if (_currentUserRole == 'admin' || 
-     (_currentUserRole == 'staff' && user['uid'] == _auth.currentUser?.uid)) {
+  if (_currentUserRole == 'admin') {
+  // Admins can always edit
+  canEdit = true;
+} else if (_currentUserRole == 'staff') {
+  if (user['uid'] == _auth.currentUser?.uid) {
+    // Staff can edit their own profile
     canEdit = true;
-    
+  } else if (user['role'] == 'user') {
+    // Staff can edit other users, but only if the role is 'user'
+    canEdit = true;
   }
+}
 
   return PopupMenuButton<String>(
     onSelected: (String value) {
@@ -454,6 +460,6 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
   );
 }
 
-//DELETE
+
 
 }
