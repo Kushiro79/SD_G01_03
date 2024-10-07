@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -112,16 +113,7 @@ class EditProfileController extends GetxController {
     loadProfile(); // Load profile data when the controller is initialized
     loadPfp();
   }
-  @override
-  void onClose() {
-    super.onClose();
-    final username = ''.obs;
-    final email = ''.obs;
-    final profileImageUrl = ''.obs;
-    final credentials = ''.obs; // Changed from bio to credentials
-    final certificate = ''.obs; // For user certification level (e.g., Newbie)
-    final bannerImageUrl = ''.obs;
-  }
+ 
 
   Future<void> pickAndUploadPfp(BuildContext context) async {
     // Open file picker and select an image

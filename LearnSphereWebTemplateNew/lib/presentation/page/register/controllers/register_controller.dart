@@ -32,16 +32,41 @@ class RegisterController extends GetxController {
   String get password => _passwordController.text;
 
   Future<bool> checkUsernameExists(String username) async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance.collection('users').where('username', isEqualTo: username).limit(1).get();
-          return querySnapshot.docs.isNotEmpty;
+  try {
+    // Get the current user's UID from Firebase Authentication
+    final User? currentUser = FirebaseAuth.instance.currentUser;
 
-    } catch (e) {
-      print('Error checking username: $e');
-      return true;
+    if (currentUser == null) {
+      throw Exception('No current user found');
     }
-  
+
+    // Fetch the current user's username from Firestore
+    final currentUserDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    if (!currentUserDoc.exists) {
+      throw Exception('Current user data not found');
+    }
+
+    final String? currentUsername = currentUserDoc['username'];
+
+    // Check if the new username exists, excluding the current user's username
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .where('username', isNotEqualTo: currentUsername) // Exclude current user's username
+        .limit(1)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
+  } catch (e) {
+    print('Error checking username: $e');
+    return true; // Return true in case of error to be cautious
   }
+}
+
 
   void updateEmail(String value) {
     _emailController.text = value;
@@ -170,8 +195,8 @@ class RegisterController extends GetxController {
       'active': true, // Automatically setting active status to true
       'registrationDate': FieldValue.serverTimestamp(),
       'device': deviceType,
-      'profileImageUrl': null,
-      'profileBannerUrl': null,
+      'profileImageUrl': '',
+      'profileBannerUrl': '',
       'credentials': null,
       
     };

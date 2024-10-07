@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import '../../routes/app_router.dart';
 
 @RoutePage()
@@ -100,6 +101,7 @@ class SettingsPage extends StatelessWidget {
                           onTap: () async {
                             try {
                               await FirebaseAuth.instance.signOut();
+                              Get.reset(); // Reset all GetX controllers
                               print('Log out successfully');
                               context.router.replace(LoginRouteView());
                             } catch (e) {

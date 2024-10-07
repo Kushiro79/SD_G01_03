@@ -15,7 +15,7 @@ class MyHomePage extends GetView<HomeController> {
   MyHomePage({super.key});
 
   final HomeController homeController = Get.put(HomeController());
-  
+
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width > 850;
@@ -96,11 +96,13 @@ Widget _buildSidebar(BuildContext context) {
                       );
               }),
               const SizedBox(width: 10),
-              Text('@ ${editController.username.value}',
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Urbanist-semibold',
-                      fontWeight: FontWeight.w600)),
+              Obx(() {
+                return Text('@ ${editController.username.value}',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Urbanist-semibold',
+                        fontWeight: FontWeight.w600));
+              })
             ],
           ),
         ),
@@ -179,8 +181,7 @@ Widget _buildSidebar(BuildContext context) {
           title: screenwidth ? const Text('Give Feedback') : null,
           onTap: () {
             // Navigate to the GiveFeedbackPage when tapped
-            context.router.push( GiveFeedbackRoute());
-        
+            context.router.push(GiveFeedbackRoute());
           },
         ),
       ],

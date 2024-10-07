@@ -10,10 +10,16 @@ class ProfileScreenController extends GetxController {
   var bannerImageUrl = ''.obs;
   var certificate = 'Newbie'.obs; // Added observable property for certificate
 
+  
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
     fetchUserProfile();
+    loadPfp();
+  }
+
+  loadPfp() {
+    return profileImageUrl.value;
   }
 
   Future<void> fetchUserProfile() async {
