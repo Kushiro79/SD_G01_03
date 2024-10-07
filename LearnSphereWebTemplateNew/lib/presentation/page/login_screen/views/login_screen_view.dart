@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../../../theme/gen/assets.gen.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_router.dart';
@@ -21,7 +20,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
     final screenwidth = MediaQuery.of(context).size.width > 850;
 
     return Scaffold(
-      backgroundColor: Color(0xFFf5f5f5),
+      backgroundColor: const Color(0xFFf5f5f5),
       body: Stack(
         children: [
           // Background image
@@ -95,16 +94,16 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 color: isActive ? Colors.deepPurple : Colors.grey,
               ),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             isActive
                 ? Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.deepPurple,
                       borderRadius: BorderRadius.circular(30),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
@@ -117,7 +116,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           context.router.push(RegisterRouteView());
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -129,7 +128,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               ),
             ],
           ),
-          child: Text(
+          child: const Text(
             'Sign Up',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -146,7 +145,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.45,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +178,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
                       6, // Keep the vertical padding
                   
                 ),
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,7 +220,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 10),
-                child: Container(
+                child: SizedBox(
                   width: constraints.maxWidth * 0.9,
                   child: Column(
                     children: [
@@ -247,13 +246,13 @@ class LoginScreenView extends GetView<LoginScreenController> {
   Widget _formLogin(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         _buildTextField(
           hintText: 'Enter your Email...',
           labelText: 'Email',
           onChanged: loginScreenController.updateEmail,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         _buildTextField(
           hintText: 'Min. 6 characters...',
           labelText: 'Password',
@@ -271,7 +270,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ),
         ),
       
-      SizedBox(height: 10),
+      const SizedBox(height: 10),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -289,7 +288,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ),
         ],
       ),
-      SizedBox(height: 40),
+      const SizedBox(height: 40),
       Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -306,22 +305,22 @@ class LoginScreenView extends GetView<LoginScreenController> {
           onPressed: () {
             loginScreenController.SigninWithEmailandPassword(context);
           },
-          child: Container(
-              width: MediaQuery.of(context).size.width * 0.5,
-              height: 50,
-              child: Center(child: Text('Sign In'))),
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
           ),
+          child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: 50,
+              child: const Center(child: Text('Sign In'))),
         ),
       ),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             "Don't have an account? Join us",
             style:
                 TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
@@ -331,10 +330,10 @@ class LoginScreenView extends GetView<LoginScreenController> {
                 context.router.push(RegisterRouteView());
               },
               style: TextButton.styleFrom(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 4,
                 ), // Removes all padding
-                minimumSize: Size(0, 0), // Optionally adjust the minimum size
+                minimumSize: const Size(0, 0), // Optionally adjust the minimum size
                 tapTargetSize:
                     MaterialTapTargetSize.shrinkWrap, // Shrinks the hitbox
               ),
@@ -346,7 +345,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
             ),
           ],
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         /*Row(children: [
           Expanded(
             child: Divider(
@@ -382,7 +381,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey[400]!),
             borderRadius: BorderRadius.circular(12),
@@ -409,8 +408,8 @@ class LoginScreenView extends GetView<LoginScreenController> {
         suffixIcon: suffixIcon,
         filled: true,
             fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding: const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blueGrey[50]!),
               borderRadius: BorderRadius.circular(15),

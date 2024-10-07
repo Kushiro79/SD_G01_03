@@ -157,7 +157,7 @@ class RegisterController extends GetxController {
 
           user.sendEmailVerification();
           Get.put(VerificationScreenController());
-          context.router.push(VerificationRouteView());
+          context.router.push(const VerificationRouteView());
         } else {
           print('Error creating user: user is null');
         }
@@ -174,7 +174,7 @@ class RegisterController extends GetxController {
     final userCollection = firestore.collection('users');
 
     // Determine the device type
-    String _getDeviceType() {
+    String getDeviceType() {
       if (kIsWeb) {
         return 'Web';
       } else if (io.Platform.isAndroid) {
@@ -185,7 +185,7 @@ class RegisterController extends GetxController {
     }
 
     // Get the device type
-    String deviceType = _getDeviceType();
+    String deviceType = getDeviceType();
 
     final userData = {
       'username': username, // You can get the username from the user input

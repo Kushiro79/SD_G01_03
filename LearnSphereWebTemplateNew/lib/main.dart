@@ -13,7 +13,7 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform);
         
       runApp(
-        OKToast( // Wrap your app with OKToast
+        const OKToast( // Wrap your app with OKToast
         child: MyApp(),
         ),
     );
@@ -23,6 +23,8 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -50,7 +52,9 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyApps extends StatelessWidget {
-  final _appRouter = AppRouter(); // Instantiate the generated router
+  final _appRouter = AppRouter();
+
+  MyApps({super.key}); // Instantiate the generated router
 
   @override
   Widget build(BuildContext context) {

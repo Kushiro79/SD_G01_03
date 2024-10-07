@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 @RoutePage()
 class GiveFeedbackPage extends StatelessWidget {
-  GiveFeedbackPage({Key? key}) : super(key: key);
+  GiveFeedbackPage({super.key});
 
   // TextEditingController to capture feedback input
   final TextEditingController _feedbackController = TextEditingController();
@@ -40,7 +40,7 @@ class GiveFeedbackPage extends StatelessWidget {
         // Clear the feedback form
         _feedbackController.clear();
       } catch (e) {
-        print("Error submitting feedback: $e");
+        print('Error submitting feedback: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error submitting feedback. Please try again.')),
         );
@@ -73,7 +73,7 @@ class GiveFeedbackPage extends StatelessWidget {
             TextField(
               controller: _feedbackController,
               maxLines: 5,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Enter your feedback here...',
               ),

@@ -42,7 +42,7 @@ class SettingsPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Title
-                        Align(
+                        const Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Settings',
@@ -53,15 +53,15 @@ class SettingsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
-                        Divider(), // Line separator
+                        const SizedBox(height: 20),
+                        const Divider(), // Line separator
                         // Account section
                         ListTile(
                           leading: Icon(
                             Icons.lock,
                             color: Colors.grey[700],
                           ),
-                          title: Text(
+                          title: const Text(
                             'Profile ',
                             style: TextStyle(
                               fontSize: 16,
@@ -77,14 +77,14 @@ class SettingsPage extends StatelessWidget {
                           ),
                           onTap: () => context.router.push(ProfileRouteRoute()),
                         ),
-                        Divider(), // Line separator
+                        const Divider(), // Line separator
                         // Sign out section
                         ListTile(
                           leading: Icon(
                             Icons.logout,
                             color: Colors.grey[700],
                           ),
-                          title: Text(
+                          title: const Text(
                             'Sign out',
                             style: TextStyle(
                               fontSize: 16,

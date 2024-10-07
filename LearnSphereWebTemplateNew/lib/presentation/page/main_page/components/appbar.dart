@@ -10,8 +10,8 @@ class _AppBar extends StatelessWidget {
       height: 80,
       child: Row(
         children: <Widget>[
-          Spacer(),
-          SizedBox(width: 34),
+          const Spacer(),
+          const SizedBox(width: 34),
           Obx(() {
                             return controller.profileImageUrl.isNotEmpty
                                 ? ClipOval(
@@ -37,7 +37,7 @@ class _AppBar extends StatelessWidget {
                                                 .white)), // Optional: Add an icon
                                   );
                           }),
-          SizedBox(width: 40),
+          const SizedBox(width: 40),
         ],
       ),
     );

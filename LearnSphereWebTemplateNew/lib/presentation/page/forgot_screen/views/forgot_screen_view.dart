@@ -80,10 +80,10 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                 color: isActive ? Colors.deepPurple : Colors.grey,
               ),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             isActive
                 ? Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.deepPurple,
                       borderRadius: BorderRadius.circular(30),
@@ -104,7 +104,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +125,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
                   bottom: MediaQuery.of(context).size.height /
                       6, // Keep the vertical padding
                 ),
-                child: Container(
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.2,
                   child: _formForgot(context),
                 ),
@@ -144,7 +144,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 10),
-                child: Container(
+                child: SizedBox(
                   width: constraints.maxWidth * 0.9, // Adjust form width
                   child: _formForgot(context),
                 ),
@@ -161,7 +161,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Text(
             'Forgot Password?',
             style: TextStyle(
@@ -171,7 +171,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
           ),
         ),
         const Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           child: Text(
             'Enter your email account to reset your password.',
             style: TextStyle(
@@ -187,8 +187,8 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             hintText: 'Enter email ',
             filled: true,
             fillColor: Colors.blueGrey[50],
-            labelStyle: TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 30),
+            labelStyle: const TextStyle(fontSize: 12),
+            contentPadding: const EdgeInsets.only(left: 30),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blueGrey[50]!),
               borderRadius: BorderRadius.circular(15),

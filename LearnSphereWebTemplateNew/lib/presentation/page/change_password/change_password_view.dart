@@ -38,16 +38,16 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                 color: isActive ? Colors.deepPurple : Colors.grey,
               ),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             isActive
                 ? Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.deepPurple,
                       borderRadius: BorderRadius.circular(30),
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
@@ -63,7 +63,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
               width: 490,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +78,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             Padding(
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height / 10),
-              child: Container(
+              child: SizedBox(
                 width: 320,
                 child: _formForgot(context),
               ),
@@ -96,7 +96,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             Padding(
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height / 10),
-              child: Container(
+              child: SizedBox(
                 width: constraints.maxWidth * 0.9, // Adjust form width
                 child: _formForgot(context),
               ),
@@ -216,10 +216,10 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            child: Container(
+            child: const SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: const Center(child: Text('Reset Password'))),
+                child: Center(child: Text('Reset Password'))),
           ),
         ),
         const SizedBox(height: 30),

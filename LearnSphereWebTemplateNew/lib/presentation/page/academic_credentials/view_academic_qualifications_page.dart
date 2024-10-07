@@ -6,7 +6,7 @@ import 'package:auto_route/auto_route.dart';
 //and according to their field. e.g 1. Computer Science 2. Medicine 3. Engineering 4. Business 5. Law
 @RoutePage()
 class ViewAcademicQualificationsPage extends StatelessWidget {
-const ViewAcademicQualificationsPage({ Key? key }) : super(key: key);
+const ViewAcademicQualificationsPage({ super.key });
 
   @override
   Widget build(BuildContext context){

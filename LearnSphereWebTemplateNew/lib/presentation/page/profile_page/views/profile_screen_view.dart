@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../config/app_color.dart';
 import '../../../routes/app_router.dart';
 import '../controllers/edit_profile_controller.dart';
 import '../controllers/profile_screen_controller.dart';
@@ -31,7 +30,7 @@ class ProfileScreenPage extends StatelessWidget {
           centerTitle: true,
           actions: [
             IconButton(
-              icon: Icon(Icons.edit, color: Colors.black),
+              icon: const Icon(Icons.edit, color: Colors.black),
               onPressed: () {
                 // Navigate to the Edit Profile screen
                 AutoRouter.of(context).push(EditProfileRoute());
@@ -42,7 +41,7 @@ class ProfileScreenPage extends StatelessWidget {
         body: Column(children: [
           Stack(
             children: [
-              Container(
+              SizedBox(
                 //profile banner
                 height: 300,
                 width: double.infinity,
@@ -97,10 +96,7 @@ class ProfileScreenPage extends StatelessWidget {
               // Profile content
             ],
           ),
-          Container(
-            height: 500,
-            color: AppColor.Greyscale,
-          )
+          
         ]));
 
     /* List post = [
