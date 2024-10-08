@@ -31,41 +31,21 @@ class RegisterController extends GetxController {
   String get email => _emailController.text;
   String get password => _passwordController.text;
 
-  Future<bool> checkUsernameExists(String username) async {
+Future<bool> checkUsernameExists(String username) async {
   try {
-    // Get the current user's UID from Firebase Authentication
-    final User? currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser == null) {
-      throw Exception('No current user found');
-    }
-
-    // Fetch the current user's username from Firestore
-    final currentUserDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
-
-    if (!currentUserDoc.exists) {
-      throw Exception('Current user data not found');
-    }
-
-    final String? currentUsername = currentUserDoc['username'];
-
-    // Check if the new username exists, excluding the current user's username
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('username', isEqualTo: username)
-        .where('username', isNotEqualTo: currentUsername) // Exclude current user's username
-        .limit(1)
+        .limit(1) // Limit to 1 to improve efficiency
         .get();
 
     return querySnapshot.docs.isNotEmpty;
   } catch (e) {
     print('Error checking username: $e');
-    return true; // Return true in case of error to be cautious
+    return false; // Better to return false on error and handle the error separately
   }
 }
+
 
 
   void updateEmail(String value) {
@@ -154,7 +134,6 @@ class RegisterController extends GetxController {
         if (user != null) {
           // Create a new user document in Firestore
           await _createUserDocument(user);
-
           user.sendEmailVerification();
           Get.put(VerificationScreenController());
           context.router.push(const VerificationRouteView());

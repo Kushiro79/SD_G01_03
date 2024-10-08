@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../routes/app_router.dart';
-import '../../utils/custom_toast.dart';
-import 'controllers/edit_profile_controller.dart';
+import '../../../routes/app_router.dart';
+import '../../../utils/custom_toast.dart';
+import '../controllers/edit_profile_controller.dart';
 
-import '../register/controllers/register_controller.dart';
+import '../../register/controllers/register_controller.dart';
 
 @RoutePage()
 class EditProfilePage extends GetView<EditProfileController> {
@@ -97,7 +97,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                                   ? Stack(children: [
                                       ClipOval(
                                         child: Opacity(
-                                          opacity:  0.7,
+                                          opacity: 0.7,
                                           child: Image.network(
                                             controller.profileImageUrl.value,
                                             height: 120,
@@ -107,10 +107,12 @@ class EditProfilePage extends GetView<EditProfileController> {
                                         ),
                                       ),
                                       const Padding(
-                                        padding: EdgeInsets.only(top: 50 ,left: 50),
-                                          child: Icon(Icons.create , color: Colors.black,)
-                                        ),
-                                      
+                                          padding: EdgeInsets.only(
+                                              top: 50, left: 50),
+                                          child: Icon(
+                                            Icons.create,
+                                            color: Colors.black,
+                                          )),
                                     ])
                                   : Container(
                                       margin: const EdgeInsets.only(top: 16),
@@ -181,6 +183,24 @@ class EditProfilePage extends GetView<EditProfileController> {
                   }),
                   const Spacer(),
                   ElevatedButton.icon(
+                    label: const Text('Add Certificate'),
+                    icon: const Icon(Icons.description_rounded),
+                    onPressed: () {
+                      AutoRouter.of(context).push(UploadAcademicQualificationsRoute());
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    label: const Text('Change Password'),
+                    icon: const Icon(Icons.lock),
+                    onPressed: () {
+                      AutoRouter.of(context).push(ChangePasswordRoute());
+                    },
+                  ),
+                  // Add a SizedBox for spacing
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.logout),
                     label: const Text('Logout'),
                     onPressed: () async {
                       try {
@@ -190,6 +210,15 @@ class EditProfilePage extends GetView<EditProfileController> {
                       } catch (e) {
                         print('Error logging out: ${e.toString()}');
                       }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    label: const Text('Delete Account',
+                        style: TextStyle(color: Colors.red)),
+                    onPressed: () async {
+                      await controller.deleteAccount(context);
                     },
                   ),
                 ],
@@ -282,24 +311,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                           ),
                         ),
                       ),
-                      const Spacer(),
-                      ElevatedButton.icon(
-                        label: const Text('Change Password'),
-                        onPressed: () {
-                          AutoRouter.of(context).push(ChangePasswordRoute());
-                        },
-                      ),
-                     
-                     // Add a SizedBox for spacing
-                      const SizedBox(height: 16), // Adjust the height as needed
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        label: const Text('Delete Account', style: TextStyle(color: Colors.red)),
-                        onPressed: () async {
-                          await controller.deleteAccount(context);
-                        },
-                      ),
-
+                      // Adjust the height as needed
                     ],
                   );
                 }),

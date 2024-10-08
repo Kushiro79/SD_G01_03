@@ -6,22 +6,7 @@ import 'dart:io';
 
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
-class DiscoverController extends GetxController with                                                                             {
-  late TabController tabController;
-
-  @override
-  void onInit() {
-    super.onInit();
-    tabController = TabController(length: 2, vsync: ); // Assuming you have 2 tabs
-  }
-
-  @override
-  void onClose() {
-    tabController.dispose();
-    super.onClose();
-  }
-
-
+class DiscoverController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxList<DocumentSnapshot> users = RxList<DocumentSnapshot>([]);
@@ -52,7 +37,7 @@ class DiscoverController extends GetxController with                            
               .collection('users')
               .where('uid', isNotEqualTo: userId) // Exclude the current user
               .get();
-
+          
           users.value = userDoc.docs.where((doc) {
             final uid = doc['uid'];
             return !followingUids.contains(uid); // Only include users not in followingUids
@@ -61,10 +46,13 @@ class DiscoverController extends GetxController with                            
           users.value = [];
         }
       } else {
-        users.value = [];
+        _firestore.collection('following').doc(userId).set({
+          'followedUsers': [],
+        });
+        await discoverList();
       }
     } catch (e) {
-      print('Error fetching following list: $e');
+      print('Error fetching discover list: $e');
       users.value = [];
     }
   }
@@ -98,9 +86,13 @@ Future<void> followingList() async {
               usersQuery.docs.map((doc) => doc as DocumentSnapshot).toList();
         } else {
           followedUsers.value = [];
+          Text('No User Followed',);
         }
       } else {
-        followedUsers.value = [];
+        _firestore.collection('following').doc(userId).set({
+          'followedUsers': [],
+        });
+        await followingList();
       }
     } catch (e) {
       print('Error fetching following list: $e');

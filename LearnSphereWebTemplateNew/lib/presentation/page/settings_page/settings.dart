@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../../routes/app_router.dart';
 
@@ -62,22 +63,105 @@ class SettingsPage extends StatelessWidget {
                             color: Colors.grey[700],
                           ),
                           title: const Text(
-                            'Profile ',
+                            'Edit Profile ',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                             ),
                           ),
                           subtitle: Text(
-                            'View and Edit your profile details',
+                            'Edit your profile details',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
                             ),
                           ),
-                          onTap: () => context.router.push(ProfileRouteRoute()),
+                          onTap: () => context.router.push(EditProfileRoute()),
                         ),
                         const Divider(), // Line separator
+                        //Delete Account
+                        ListTile(
+                          leading: Icon(
+                            Icons.delete,
+                            color: Colors.grey[700],
+                          ),
+                          title: const Text(
+                            'Delete Account',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Delete your account permanently',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          onTap: () async {
+                            try {
+                              final user = FirebaseAuth.instance.currentUser;
+
+                              if (user != null) {
+                                // Show confirmation dialog before proceeding
+                                bool confirmed = await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Confirm Deletion'),
+                                      content: const Text(
+                                          'Are you sure you want to delete your account? This action cannot be undone.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                if (confirmed) {
+                                  await user.delete(); // Delete the Firebase account
+
+                                  // Show success message
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Account deleted successfully'),
+                                      duration: Duration(seconds: 2), // Display for 2 seconds
+                                    ),
+                                  );
+
+                                  // Optionally: Remove user data from Firestore or any other database
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(user.uid)
+                                      .delete();
+
+                                  // Wait for the SnackBar to show before navigating away
+                                  await Future.delayed(const Duration(seconds: 2));
+
+                                  // Navigate to the login page after showing the message
+                                  context.router.replace(LoginRouteView());
+                                }
+                              }
+                            } catch (e) {
+                              print('Error deleting account: $e');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Error deleting account. Please try again.')),
+                              );
+                            }
+                          },
+                        ),
+                        const Divider(),
                         // Sign out section
                         ListTile(
                           leading: Icon(
@@ -120,4 +204,6 @@ class SettingsPage extends StatelessWidget {
       ),
     );
   }
+
+  
 }

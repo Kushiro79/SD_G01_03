@@ -30,7 +30,6 @@ class DiscoverPage extends GetView<DiscoverController> {
               title: const Text('Discover'),
             ),
             body: TabBarView (
-              controller: controller.tabController,
               children: [
               discoverTab(),
               followingTab(),
@@ -52,7 +51,7 @@ class DiscoverPage extends GetView<DiscoverController> {
     return Obx(() {
       controller.followingList();
       if (controller.followedUsers.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
+        return const Text('No users followed yet');
       } else {
         return usersLists(controller.followedUsers);
       }
