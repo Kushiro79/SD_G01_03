@@ -21,6 +21,7 @@ dependencies:
   fl_chart: ^0.68.0
   flutter:
     sdk: flutter
+  flutter_gen: ^5.8.0
   flutter_gen_runner: ^5.7.0
   flutter_platform_widgets: ^7.0.1
   flutter_svg: 2.0.10+1
@@ -37,7 +38,6 @@ dependencies:
 dev_dependencies:
   auto_route_generator: ^9.0.0
   build_runner: null
-  flutter_gen_runner: null
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter

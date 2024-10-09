@@ -24,6 +24,12 @@ class EditProfileController extends GetxController {
 
   RxBool _isHovering = false.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    loadProfile();
+  }
+
   RxBool get isHovering => _isHovering;
   loadPfp() {
     return profileImageUrl.value;
@@ -233,5 +239,10 @@ class EditProfileController extends GetxController {
     );
   }
 }
+
+  @override
+  void onClose(){
+    super.onClose();
+  }
 
 }

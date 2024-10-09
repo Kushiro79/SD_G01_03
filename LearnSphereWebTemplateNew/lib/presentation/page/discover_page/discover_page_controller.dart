@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
 
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class DiscoverController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxList<DocumentSnapshot> users = RxList<DocumentSnapshot>([]);
   RxList<DocumentSnapshot> followedUsers = RxList<DocumentSnapshot>([]);
-
-  String _currentUserRole = '';
 
   Future<void> discoverList() async {
   final userId = _auth.currentUser?.uid;

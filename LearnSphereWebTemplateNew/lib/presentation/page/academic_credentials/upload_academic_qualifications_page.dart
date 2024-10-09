@@ -101,8 +101,8 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                                       controller.certificateUrl.isEmpty
                                   ? null // Disable the button
                                   : () async {
-                                      await controller.submitInfo(
-                                          context); // Submit form after upload
+                                      await controller.submitInfo(context); // Submit form after upload
+                                      
                                     },
                               child: const Text('Submit'),
                             );

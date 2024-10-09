@@ -186,7 +186,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                     label: const Text('Add Certificate'),
                     icon: const Icon(Icons.description_rounded),
                     onPressed: () {
-                      AutoRouter.of(context).push(UploadAcademicQualificationsRoute());
+                      AutoRouter.of(context).push(const UploadAcademicQualificationsRoute());
                     },
                   ),
                   const SizedBox(height: 16),

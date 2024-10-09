@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:typed_data';
 
 import '../../../routes/app_router.dart';
 
@@ -20,7 +19,6 @@ class UploadAcademicQualificationController extends GetxController {
   final institution = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final certificateUrl = ''.obs;
   final file = ''.obs;
   
@@ -103,6 +101,12 @@ Future<void> submitInfo(BuildContext context) async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data submitted successfully!')),
       );
+
+      name.clear();
+      education.clear();
+      fieldOfStudy.clear();
+      institution.clear();
+      certificateUrl.value = '';
 
     } catch (e) {
       print('Error submitting data: $e');
