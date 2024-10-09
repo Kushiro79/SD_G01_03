@@ -56,7 +56,7 @@ class _NavigationMenuState extends State<_NavigationMenu> {
                 iconPath: ProjectAssets.graduate.path,
                 isSelected: currentUrl == '/view-academic-qualifications',
                 onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
-                text: 'User Academic Qualifications',
+                text: 'User Academic\n Qualifications',
               ),
               _MenuItem(
                 iconPath: ProjectAssets.feedback.path,
@@ -99,7 +99,7 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenwidth = MediaQuery.of(context).size.width > 1575;
+    final screenwidth = MediaQuery.of(context).size.width > 1400;
     final iconsize = screenwidth ? 20.0 : 24.0;
 
     return InkWell(

@@ -15,9 +15,6 @@ class ProfileScreenPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String username = profileController.username.value;
-    String email = profileController.email.value;
-    String profileImageUrl = editController.profileImageUrl.value;
     //String bannerImageUrl = editController.bannerImageUrl.value;
     return Scaffold(
         appBar: AppBar(

@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../config/app_color.dart';
-import '../../../routes/app_router.dart';
 import '../controllers/verification_screen_controller.dart';
 
 @RoutePage()
 class VerificationScreenView extends GetView<VerificationScreenController> {
   const VerificationScreenView({super.key});
+  VerificationScreenController get controller => Get.put(VerificationScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class VerificationScreenView extends GetView<VerificationScreenController> {
                           style: TextStyle(fontSize: 16, fontFamily: 'Urbanist', color: Colors.white),
                         ),
                         onPressed: () {
-                          context.router.push(MyHomeRoute());
+                          controller.checkEmailVerified(context);
                         },
                       ),
                     ),

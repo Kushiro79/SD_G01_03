@@ -15,8 +15,8 @@ import '../page/login_screen/views/login_screen_view.dart';
 import '../page/main_page/page.dart';
 import '../page/profile_page/views/profile_screen_view.dart';
 import '../page/register/views/register_view.dart';
-import '../page/settings_page/admin_settings.dart';
-import '../page/profile_page/edit_profile.dart';
+import '../page/settings_page/settings.dart';
+import '../page/profile_page/views/edit_profile.dart';
 import '../page/view_and_user_management_page/view/view_and_user_management.dart';
 import '../page/verification_screen/views/verification_screen_view.dart';
 
@@ -73,7 +73,11 @@ class AppRouter extends RootStackRouter {
           CustomRoute(
             path: 'view-feedback',
             page: ViewFeedbackRoute.page
-          )
+          ),
+          CustomRoute(
+            path: 'upload-academic-qualifications',
+            page: UploadAcademicQualificationsRoute.page,
+          ),
           ],
         ),
         CustomRoute(

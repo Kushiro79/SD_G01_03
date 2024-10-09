@@ -31,17 +31,22 @@ class RegisterController extends GetxController {
   String get email => _emailController.text;
   String get password => _passwordController.text;
 
-  Future<bool> checkUsernameExists(String username) async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance.collection('users').where('username', isEqualTo: username).limit(1).get();
-          return querySnapshot.docs.isNotEmpty;
+Future<bool> checkUsernameExists(String username) async {
+  try {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .limit(1) // Limit to 1 to improve efficiency
+        .get();
 
-    } catch (e) {
-      print('Error checking username: $e');
-      return true;
-    }
-  
+    return querySnapshot.docs.isNotEmpty;
+  } catch (e) {
+    print('Error checking username: $e');
+    return false; // Better to return false on error and handle the error separately
   }
+}
+
+
 
   void updateEmail(String value) {
     _emailController.text = value;
@@ -129,7 +134,6 @@ class RegisterController extends GetxController {
         if (user != null) {
           // Create a new user document in Firestore
           await _createUserDocument(user);
-
           user.sendEmailVerification();
           Get.put(VerificationScreenController());
           context.router.push(const VerificationRouteView());
@@ -170,8 +174,8 @@ class RegisterController extends GetxController {
       'active': true, // Automatically setting active status to true
       'registrationDate': FieldValue.serverTimestamp(),
       'device': deviceType,
-      'profileImageUrl': null,
-      'profileBannerUrl': null,
+      'profileImageUrl': '',
+      'profileBannerUrl': '',
       'credentials': null,
       
     };

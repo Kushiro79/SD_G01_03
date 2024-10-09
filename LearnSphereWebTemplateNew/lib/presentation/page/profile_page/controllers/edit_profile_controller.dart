@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../../../routes/app_router.dart';
 import '../../../utils/custom_toast.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -20,6 +23,12 @@ class EditProfileController extends GetxController {
   final bannerImageUrl = ''.obs;
 
   RxBool _isHovering = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadProfile();
+  }
 
   RxBool get isHovering => _isHovering;
   loadPfp() {
@@ -111,16 +120,7 @@ class EditProfileController extends GetxController {
     loadProfile(); // Load profile data when the controller is initialized
     loadPfp();
   }
-  @override
-  void onClose() {
-    super.onClose();
-    final username = ''.obs;
-    final email = ''.obs;
-    final profileImageUrl = ''.obs;
-    final credentials = ''.obs; // Changed from bio to credentials
-    final certificate = ''.obs; // For user certification level (e.g., Newbie)
-    final bannerImageUrl = ''.obs;
-  }
+ 
 
   Future<void> pickAndUploadPfp(BuildContext context) async {
     // Open file picker and select an image
@@ -183,4 +183,66 @@ class EditProfileController extends GetxController {
       print('No file selected.');
     }
   }
+
+  //DELETE
+  Future<void> deleteAccount(BuildContext context) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Show confirmation dialog before proceeding
+      bool confirmed = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Confirm Deletion'),
+            content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Delete'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (confirmed) {
+        await user.delete(); // Delete the Firebase account
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Account deleted successfully'),
+            duration: Duration(seconds: 2), // Display for 2 seconds
+          ),
+        );
+
+         // Optionally: Remove user data from Firestore or any other database
+         await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+
+        // Wait for the SnackBar to show before navigating away
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Navigate to the login page after showing the message
+        context.router.replace(LoginRouteView());
+      }
+    }
+  } catch (e) {
+    print('Error deleting account: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Error deleting account. Please try again.')),
+    );
+  }
+}
+
+  @override
+  void onClose(){
+    super.onClose();
+  }
+
 }

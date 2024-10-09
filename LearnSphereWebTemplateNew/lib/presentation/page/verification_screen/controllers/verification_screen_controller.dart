@@ -12,12 +12,16 @@ class VerificationScreenController extends GetxController {
     User? user = _auth.currentUser;
     await user
         ?.reload(); // Reload user data to get the latest email verification status
-    if (user?.emailVerified ?? false) {
-      Get.put(VerificationScreenController());
-      context.router.push(MyHomeRoute());
+    if (user != null){
+      if (user.emailVerified == true) {
+      context.router.push(const UploadAcademicQualificationsRoute());
     } else {
       showCustomToast(context, 'Please verify your email');
     }
+    }else{
+      Get.snackbar('Error', 'User not found');
+    }
+    
   }
 
   Future<void> resendVerificationEmail() async {
@@ -29,6 +33,8 @@ class VerificationScreenController extends GetxController {
       Get.snackbar('Error', e.toString());
     }
   }
+
+
 
   void showCustomToast(BuildContext context, String message) {
     FToast fToast = FToast();

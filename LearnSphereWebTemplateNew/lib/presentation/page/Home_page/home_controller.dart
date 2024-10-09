@@ -11,10 +11,6 @@ class HomeController extends GetxController {
     super.onReady();
     userUsername();
   }
-  void onClose() {
-    super.onClose();
-    username = ''.obs;
-  }
 
 
   var selectIndex = [];
