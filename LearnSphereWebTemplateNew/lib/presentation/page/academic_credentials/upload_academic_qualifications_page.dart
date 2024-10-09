@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:get/get.dart';
+import '../../routes/app_router.dart';
+import '../Home_page/home_screen.dart';
 import 'controller/upload_controller.dart';
 
 // A page where users can upload their academic qualifications for approval by the admin or staff. Also insert their name, interest and other details according to their qualifications
 @RoutePage()
 class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificationController> {
   const UploadAcademicQualificationsPage({super.key});
+  @override
   UploadAcademicQualificationController get controller => Get.put(UploadAcademicQualificationController());
 
   @override
@@ -102,7 +105,6 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                                   ? null // Disable the button
                                   : () async {
                                       await controller.submitInfo(context); // Submit form after upload
-                                      
                                     },
                               child: const Text('Submit'),
                             );

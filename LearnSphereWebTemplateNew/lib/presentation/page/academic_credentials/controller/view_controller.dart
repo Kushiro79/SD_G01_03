@@ -22,12 +22,12 @@ class ViewAcademicQualificationController extends GetxController {
 
     qualifications.clear();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       qualifications.add({
         'qualificationId': doc.id,
         ...doc.data() as Map<String, dynamic>,
       });
-    });
+    }
 
     print(qualifications);
   }

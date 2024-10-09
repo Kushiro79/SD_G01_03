@@ -45,20 +45,13 @@ class RegisterScreenView extends GetView<RegisterController> {
                     Row(
                       children: [
                         Image(
-                          color: Colors.black,
-                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                          width: screenwidth ? 300 : 80,
-                          height: screenwidth ? 100 : 80,
+                          image: AssetImage(ProjectAssets.learnSpherelogo.path),
+                          width: screenwidth ? 250 : 80,
+                          height: screenwidth ? 250 : 80,
                         ),
                       ]
                     ),
-                    Row(
-                      children: [
-                        _signInButton(context),
-                        _menuItem(title: 'Sign Up', isActive: true),
-                        const SizedBox(width: 140),
-                      ],
-                    ),
+                    
                   ],
                 ),),
               _body(context),
@@ -161,7 +154,16 @@ class RegisterScreenView extends GetView<RegisterController> {
                   width: MediaQuery.of(context).size.width *
                       0.25, // Adjust width for wide layout
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _signInButton(context),
+                        _menuItem(title: 'Sign Up', isActive: true),
+                      ],
+                    ),
+                      const SizedBox(height: 20),
                       _buildForm(context),
                       const SizedBox(height: 20),
                       _buildSignUpButton(context),
@@ -212,6 +214,8 @@ class RegisterScreenView extends GetView<RegisterController> {
                   width: constraints.maxWidth * 0.9,
                   child: Column(
                     children: [
+                      _signInButton(context),
+                      _menuItem(title: 'Sign Up', isActive: true),
                       _buildForm(context),
                       const SizedBox(height: 20),
                       _buildSignUpButton(context),

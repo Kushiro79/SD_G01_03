@@ -152,11 +152,12 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width > 850;
     return Scaffold(
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(50),
+            padding: screenwidth ? const EdgeInsets.all(50) : const EdgeInsets.all(10),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

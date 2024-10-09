@@ -82,7 +82,7 @@ Future<void> followingList() async {
               usersQuery.docs.map((doc) => doc as DocumentSnapshot).toList();
         } else {
           followedUsers.value = [];
-          Text('No User Followed',);
+          const Text('No User Followed',);
         }
       } else {
         _firestore.collection('following').doc(userId).set({
@@ -103,18 +103,31 @@ Future<void> followingList() async {
 
   if (userId != null && targetUserId.isNotEmpty) {
     try {
-      final followingDocRef = _firestore.collection('following').doc(userId); // Fetch the current user's following document
+      // Update current user's following list
+      final followingDocRef = _firestore.collection('following').doc(userId); 
       final followingDoc = await followingDocRef.get();
 
       if (followingDoc.exists) {
-        // If the document exists, add the target user's UID to the array
         await followingDocRef.update({
           'followedUsers': FieldValue.arrayUnion([targetUserId]),
         });
       } else {
-        // If the following document doesn't exist, create it and add the target UID
         await followingDocRef.set({
           'followedUsers': [targetUserId],
+        });
+      }
+
+      // Add current user to the target user's followers list
+      final followersDocRef = _firestore.collection('followers').doc(targetUserId);
+      final followersDoc = await followersDocRef.get();
+
+      if (followersDoc.exists) {
+        await followersDocRef.update({
+          'followerUsers': FieldValue.arrayUnion([userId]),
+        });
+      } else {
+        await followersDocRef.set({
+          'followerUsers': [userId],
         });
       }
 
@@ -126,6 +139,7 @@ Future<void> followingList() async {
     print('Invalid user ID or target user ID.');
   }
 }
+
 
 Future<void> unfollowUser(String targetUserId) async {
   final userId = _auth.currentUser?.uid;

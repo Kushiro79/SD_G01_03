@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../../../routes/app_router.dart';
 import '../../../utils/custom_toast.dart';
 import 'package:file_picker/file_picker.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class EditProfileController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -22,6 +22,9 @@ class EditProfileController extends GetxController {
   final certificate = ''.obs; // For user certification level (e.g., Newbie)
   final bannerImageUrl = ''.obs;
 
+  RxList certificates = <Map<String, dynamic>>[].obs;
+
+
   RxBool _isHovering = false.obs;
 
   @override
@@ -34,19 +37,20 @@ class EditProfileController extends GetxController {
   loadPfp() {
     return profileImageUrl.value;
   }
+
   // Method to fetch profile data from Firebase
   Future<void> loadProfile() async {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
         var profileData =
-        await _firestore.collection('users').doc(user.uid).get();
+            await _firestore.collection('users').doc(user.uid).get();
         username.value = profileData['username'] ?? '';
         email.value = user.email ?? '';
         profileImageUrl.value = profileData['profileImageUrl'] ?? '';
         bannerImageUrl.value = profileData['bannerImageUrl'] ?? '';
         credentials.value =
-        profileData['credentials'] ?? ''; // Changed from bio to credentials
+            profileData['credentials'] ?? ''; // Changed from bio to credentials
         certificate.value = profileData['certificate'] ?? 'Newbie';
       }
     } catch (e) {
@@ -119,8 +123,8 @@ class EditProfileController extends GetxController {
     super.onReady();
     loadProfile(); // Load profile data when the controller is initialized
     loadPfp();
+    fetchCertificates();
   }
- 
 
   Future<void> pickAndUploadPfp(BuildContext context) async {
     // Open file picker and select an image
@@ -139,7 +143,7 @@ class EditProfileController extends GetxController {
             FirebaseStorage.instance.ref().child('profile/${file.name}');
         // Upload the file
         await storageRef.putData(file.bytes!);
-      
+
         // Optionally, get the download URL
         String downloadURL = await storageRef.getDownloadURL();
         profileImageUrl.value = downloadURL;
@@ -170,7 +174,7 @@ class EditProfileController extends GetxController {
             FirebaseStorage.instance.ref().child('banner/${file.name}');
         // Upload the file
         await storageRef.putData(file.bytes!);
-      
+
         // Optionally, get the download URL
         String downloadURL = await storageRef.getDownloadURL();
         bannerImageUrl.value = downloadURL;
@@ -186,63 +190,130 @@ class EditProfileController extends GetxController {
 
   //DELETE
   Future<void> deleteAccount(BuildContext context) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      // Show confirmation dialog before proceeding
-      bool confirmed = await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Confirm Deletion'),
-            content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
-
-      if (confirmed) {
-        await user.delete(); // Delete the Firebase account
-
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account deleted successfully'),
-            duration: Duration(seconds: 2), // Display for 2 seconds
-          ),
+      if (user != null) {
+        // Show confirmation dialog before proceeding
+        bool confirmed = await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Confirm Deletion'),
+              content: const Text(
+                  'Are you sure you want to delete your account? This action cannot be undone.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          },
         );
 
-         // Optionally: Remove user data from Firestore or any other database
-         await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+        if (confirmed) {
+          await user.delete(); // Delete the Firebase account
 
-        // Wait for the SnackBar to show before navigating away
-        await Future.delayed(const Duration(seconds: 2));
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account deleted successfully'),
+              duration: Duration(seconds: 2), // Display for 2 seconds
+            ),
+          );
 
-        // Navigate to the login page after showing the message
-        context.router.replace(LoginRouteView());
+          // Optionally: Remove user data from Firestore or any other database
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .delete();
+
+          // Wait for the SnackBar to show before navigating away
+          await Future.delayed(const Duration(seconds: 2));
+
+          // Navigate to the login page after showing the message
+          context.router.replace(LoginRouteView());
+        }
       }
+    } catch (e) {
+      print('Error deleting account: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Error deleting account. Please try again.')),
+      );
     }
+  }
+
+
+
+
+  Future<void> fetchCertificates() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    try {
+      // Replace 'userUID' with the actual user's UID and 'certificate' with the correct collection path
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('qualificationRequests')
+          .doc('approvedCertificates')
+          .collection('users')
+          .doc(uid)
+          .collection('certificates')
+          .get();
+
+      // Map through the documents and add them to the list
+      certificates.value = snapshot.docs.map((doc) {
+      return {
+        'id': doc.id, // Document ID
+        ...doc.data() as Map<String, dynamic>,
+      };
+    }).toList();
+
+      print(certificate);
+    } catch (e) {
+      print('Error fetching certificates: $e');
+    }
+  }
+
+  void downloadCertificate(String url) async {
+  try {
+    // Use any method for downloading the file, for example, url_launcher or dio package
+    await launchUrl(Uri.parse(url)); // Using url_launcher for demonstration
   } catch (e) {
-    print('Error deleting account: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Error deleting account. Please try again.')),
-    );
+    print('Error downloading certificate: $e');
   }
 }
 
-  @override
-  void onClose(){
-    super.onClose();
+Future<void> deleteCertificate(String certificateId) async {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  print('Certificate ID function: $certificateId');
+    try {
+      try {
+        await FirebaseFirestore.instance
+            .collection('qualificationRequests')
+            .doc('approvedCertificates') // Replace with the actual user ID
+            .collection('users')
+            .doc(uid)
+            .collection('certificates')
+            .doc(certificateId)
+            .delete();
+
+        // Optionally, remove the certificate from the local list
+        certificates.removeWhere((certificate) => certificate['id'] == certificateId);
+        Get.snackbar('Success', 'Certificate deleted successfully',
+            snackPosition: SnackPosition.BOTTOM);
+      } catch (e) {
+        Get.snackbar('Error', 'Certificate ID not found',
+            snackPosition: SnackPosition.BOTTOM);
+      }
+        // Access the Firestore collection and delete the document
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete certificate: $e',
+          snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
 }

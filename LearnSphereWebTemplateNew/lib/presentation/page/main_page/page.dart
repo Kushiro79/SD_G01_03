@@ -29,13 +29,13 @@ class MainPage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.15,
                 height: double.infinity,
                 child: const ColoredBox(
-                  color: AppColor.purple,
+                  color: AppColor.Secondary,
                   child: _NavigationMenu(),
                 ),
               ),
               const Expanded(
                 child: ColoredBox(
-                  color: AppColor.purple,
+                  color:AppColor.Secondary,
                   child: Column(
                     children: [
                       _AppBar(),

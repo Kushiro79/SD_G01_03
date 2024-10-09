@@ -10,6 +10,7 @@ import 'discover_page_controller.dart';
 class DiscoverPage extends GetView<DiscoverController> {
   DiscoverPage({super.key});
 
+  @override
   final DiscoverController controller = Get.put(DiscoverController());
 
   @override
@@ -60,12 +61,13 @@ class DiscoverPage extends GetView<DiscoverController> {
 
   usersLists(RxList<DocumentSnapshot> usersList) {
     RxMap<String, bool> isFollowingMap = RxMap<String, bool>();
+    
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: constraints.maxWidth * 0.22, vertical: 10),
+              horizontal: constraints.maxWidth > 1080 ? constraints.maxWidth *0.22 : constraints.maxWidth*0.05 , vertical: 10),
           child: ListView.separated(
             itemCount: usersList.length,
             separatorBuilder: (context, index) => const Divider(
@@ -90,7 +92,7 @@ class DiscoverPage extends GetView<DiscoverController> {
                 child: SizedBox(
                   child: ListTile(
                     dense: false,
-                    contentPadding: EdgeInsets.all(10),
+                    contentPadding: const EdgeInsets.all(10),
                     leading: usersList[index]['profileImageUrl'] != null
                         ? SizedBox(
                             height: 40,

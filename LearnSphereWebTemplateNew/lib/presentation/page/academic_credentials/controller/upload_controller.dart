@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 
 import '../../../routes/app_router.dart';
+import 'package:auto_route/auto_route.dart';
 
 
 
@@ -107,6 +108,8 @@ Future<void> submitInfo(BuildContext context) async {
       fieldOfStudy.clear();
       institution.clear();
       certificateUrl.value = '';
+
+      context.router.replace(MyHomeRoute());
 
     } catch (e) {
       print('Error submitting data: $e');

@@ -44,10 +44,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
                     Row(
                       children: [
                         Image(
-                          color: Colors.black,
-                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                          width: 300,
-                          height: 100,
+                          image: AssetImage(ProjectAssets.learnSpherelogo.path),
+                          width:  250 ,
+                          height:  250 ,
                         ),
                       ]
                     ),
@@ -60,10 +59,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   Row(
                       children: [
                         Image(
-                          color: Colors.black,
-                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                          width: 300,
-                          height: 100,
+                          image: AssetImage(ProjectAssets.learnSpherelogo.path),
+                          width: 80,
+                          height: 80,
                         ),
                       ]
                     ),
@@ -327,7 +325,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           ),
           TextButton(
               onPressed: () {
-                context.router.push(RegisterRouteView());
+                context.router.replace(RegisterRouteView());
               },
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.only(

@@ -10,6 +10,7 @@ import 'controller/view_controller.dart';
 class ViewAcademicQualificationsPage
     extends GetView<ViewAcademicQualificationController> {
   const ViewAcademicQualificationsPage({super.key});
+  @override
   ViewAcademicQualificationController get controller =>
       Get.put(ViewAcademicQualificationController());
 
@@ -82,20 +83,13 @@ class ViewAcademicQualificationsPage
                   Text('Education: ${qualification['levelOfEducation']}'),
                   Text('Field of Study: ${qualification['fieldOfStudy']}'),
                   Text('Institution: ${qualification['institutionName']}'),
-                  Spacer(),
+                  const Spacer(),
                   TextButton(
                     onPressed: () async {
                       final urlString = qualification['certificateUrl'];
                       Uri url = Uri.parse(urlString);
-                      if (url != null) {
-                        await launchUrl(url);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Could not launch certificate')),
-                        );
-                      }
-                    },
+                      await launchUrl(url);
+                                        },
                     child: const Text('View Certificate'),
                   )
                 ],

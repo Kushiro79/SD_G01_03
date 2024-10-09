@@ -59,6 +59,28 @@ class SettingsPage extends StatelessWidget {
                         // Account section
                         ListTile(
                           leading: Icon(
+                            Icons.person_2_rounded,
+                            color: Colors.grey[700],
+                          ),
+                          title: const Text(
+                            'View Profile ',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'View your profile details',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          onTap: () => context.router.push(ProfileRouteRoute()),
+                        ),
+                        const Divider(), // Line separator
+                        ListTile(
+                          leading: Icon(
                             Icons.lock,
                             color: Colors.grey[700],
                           ),
@@ -138,7 +160,8 @@ class SettingsPage extends StatelessWidget {
                                       duration: Duration(seconds: 2), // Display for 2 seconds
                                     ),
                                   );
-
+                                  Get.reset();
+                                  
                                   // Optionally: Remove user data from Firestore or any other database
                                   await FirebaseFirestore.instance
                                       .collection('users')
@@ -147,7 +170,6 @@ class SettingsPage extends StatelessWidget {
 
                                   // Wait for the SnackBar to show before navigating away
                                   await Future.delayed(const Duration(seconds: 2));
-
                                   // Navigate to the login page after showing the message
                                   context.router.replace(LoginRouteView());
                                 }

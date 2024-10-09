@@ -22,14 +22,14 @@ class MyHomePage extends GetView<HomeController> {
 
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           elevation: 2,
           toolbarHeight: 80,
           title: Row(children: <Widget>[
             Image(
-              color: Colors.black,
-              image: AssetImage(ProjectAssets.learnSphereLogo.path),
-              width: 300,
-              height: 300,
+              image: AssetImage(ProjectAssets.learnSpherelogo.path),
+              width: screenwidth ? 250 : 80,
+              height: screenwidth ? 250 : 80,
             ),
           ]),
         ),
@@ -66,44 +66,53 @@ Widget _buildSidebar(BuildContext context) {
     child: ListView(
       padding: EdgeInsets.zero,
       children: [
-        DrawerHeader(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() {
-                return editController.profileImageUrl.isNotEmpty
-                    ? ClipOval(
-                        child: Image.network(
-                          editController.profileImageUrl.value,
+        Container(
+          height: screenwidth ? 200 : 100,
+          child: Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(() {
+                  return editController.profileImageUrl.isNotEmpty
+                      ? ClipOval(
+                          child: Image.network(
+                            editController.profileImageUrl.value,
+                            height: screenwidth ? 120 : 70,
+                            width: screenwidth ? 120 : 70,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.only(top: 16),
                           height: screenwidth ? 120 : 70,
                           width: screenwidth ? 120 : 70,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Container(
-                        margin: const EdgeInsets.only(top: 16),
-                        height: screenwidth ? 120 : 70,
-                        width: screenwidth ? 120 : 70,
-                        alignment: Alignment.topLeft,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors
-                              .grey, // Use a default color or your AppColor.Secondary
-                        ),
-                        child: const Center(
-                            child: Icon(Icons.person,
-                                color: Colors.white)), // Optional: Add an icon
-                      );
-              }),
-              const SizedBox(width: 10),
-              Obx(() {
-                return Text('@ ${editController.username.value}',
+                          alignment: Alignment.topLeft,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors
+                                .grey, // Use a default color or your AppColor.Secondary
+                          ),
+                          child: const Center(
+                              child: Icon(Icons.person,
+                                  color:
+                                      Colors.white)), // Optional: Add an icon
+                        );
+                }),
+                const SizedBox(height: 10),
+                Obx(() {
+                  return Text(
+                    '@ ${editController.username.value}',
                     style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'Urbanist-semibold',
-                        fontWeight: FontWeight.w600));
-              })
-            ],
+                        fontWeight: FontWeight.w600),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  );
+                }),
+              ],
+            ),
           ),
         ),
         ListTile(

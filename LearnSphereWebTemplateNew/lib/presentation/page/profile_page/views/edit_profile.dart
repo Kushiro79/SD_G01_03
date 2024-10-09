@@ -14,6 +14,7 @@ class EditProfilePage extends GetView<EditProfileController> {
   @override
   final EditProfileController controller = Get.put(EditProfileController());
   final RegisterController registerController = Get.put(RegisterController());
+
   @override
   Widget build(BuildContext context) {
     // To control whether to show editable fields or static text
@@ -49,14 +50,16 @@ class EditProfilePage extends GetView<EditProfileController> {
           const SizedBox(width: 15),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Left side with profile image and static info (from Firebase)
-            Expanded(
-              flex: 1,
-              child: Column(
+      body: SingleChildScrollView(
+        // Added this for scrolling
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Added this to control alignment
+            children: [
+              // Left side with profile image and static info (from Firebase)
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
@@ -94,26 +97,29 @@ class EditProfilePage extends GetView<EditProfileController> {
                             padding: const EdgeInsets.only(top: 30),
                             child: Obx(() {
                               return controller.profileImageUrl.isNotEmpty
-                                  ? Stack(children: [
-                                      ClipOval(
-                                        child: Opacity(
-                                          opacity: 0.7,
-                                          child: Image.network(
-                                            controller.profileImageUrl.value,
-                                            height: 120,
-                                            width: 120,
-                                            fit: BoxFit.cover,
+                                  ? Stack(
+                                      children: [
+                                        ClipOval(
+                                          child: Opacity(
+                                            opacity: 0.7,
+                                            child: Image.network(
+                                              controller.profileImageUrl.value,
+                                              height: 120,
+                                              width: 120,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const Padding(
+                                        const Padding(
                                           padding: EdgeInsets.only(
                                               top: 50, left: 50),
                                           child: Icon(
                                             Icons.create,
                                             color: Colors.black,
-                                          )),
-                                    ])
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   : Container(
                                       margin: const EdgeInsets.only(top: 16),
                                       height: 120,
@@ -133,7 +139,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                           ),
                         ),
                       ),
-                      // Grey translucent layer
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -142,7 +147,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                     String email = controller.email.value;
                     String certificate = controller.certificate.value;
                     return Card(
-                      elevation: 4,
+                      elevation: 2,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -181,12 +186,205 @@ class EditProfilePage extends GetView<EditProfileController> {
                       ),
                     );
                   }),
-                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Obx(() {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Card(
+                            elevation: 2,
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (!isEditing.value) ...[
+                                    Text(
+                                        'Username: ${controller.username.value}'),
+                                    const SizedBox(height: 16),
+                                    Text('Email: ${controller.email.value}'),
+                                    const SizedBox(height: 32),
+                                    ElevatedButton.icon(
+                                      onPressed: () {
+                                        isEditing.value = true;
+                                      },
+                                      icon: const Icon(Icons.edit),
+                                      label: const Text('Change'),
+                                    ),
+                                  ] else ...[
+                                    TextFormField(
+                                      initialValue: controller.username.value,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Username'),
+                                      onChanged: (value) async {
+                                        controller.username.value = value;
+                                      },
+                                    ),
+                                    const SizedBox(height: 16),
+                                    TextFormField(
+                                      initialValue: controller.email.value,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Email'),
+                                      onChanged: (value) {
+                                        controller.email.value = value;
+                                      },
+                                    ),
+                                    const SizedBox(height: 32),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        if (await registerController
+                                            .checkUsernameExists(
+                                                controller.username.value)) {
+                                          showCustomToast(context,
+                                              'Username Already Exists.');
+                                        } else {
+                                          controller.saveProfile(context);
+                                          isEditing.value = false;
+                                        }
+                                      },
+                                      child: const Text('Save Changes'),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Card(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: MediaQuery.of(context).size.width *
+                                    0.5, // Constrain width to screen size
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // Aligns the title to the left
+                                  children: [
+                                    const Text(
+                                      'Approved Certificates',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height:
+                                            16), // Adds some spacing between the title and list
+                                    ...controller.certificates
+                                        .map((certificate) {
+                                      return ListTile(
+                                        title: Text(
+                                            certificate['fieldOfStudy'] ??
+                                                'Unknown Field of Study'),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(certificate[
+                                                    'levelOfEducation'] ??
+                                                'Unknown Level of Education'),
+                                            Text(certificate[
+                                                    'institutionName'] ??
+                                                'Unknown Institution'),
+                                            Text(certificate['id'] ??
+                                                'Unknown id'),
+                                          ],
+                                        ),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize
+                                              .min, // Ensures the row takes up the minimum width needed
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons
+                                                  .download), // Download icon
+                                              onPressed: () {
+                                                final certificateUrl =
+                                                    certificate[
+                                                        'certificateUrl'];
+                                                if (certificateUrl != null) {
+                                                  controller.downloadCertificate(
+                                                      certificateUrl); // Call function to download
+                                                } else {
+                                                  showCustomToast(context,
+                                                      'Certificate URL not available.');
+                                                }
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete,
+                                                  color: Colors
+                                                      .red), // Delete icon
+                                              onPressed: () async {
+                                                final certificateId = certificate[
+                                                    'id']; // Accessing the ID
+                                                print(
+                                                    'Certificate ID: $certificateId'); // Debug statement
+
+                                                if (certificateId != null &&
+                                                    certificateId.isNotEmpty) {
+                                                  // Show confirmation dialog
+                                                  final confirmed =
+                                                      await showDialog<bool>(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Confirm Deletion'),
+                                                        content: const Text(
+                                                            'Are you sure you want to delete this certificate?'),
+                                                        actions: [
+                                                          TextButton(
+                                                            child: const Text('Cancel'),
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop(false); // Return false for cancellation
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            child: const Text(
+                                                                'Delete'),
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop(true); // Return true for confirmation
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+
+                                                  if (confirmed == true) {
+                                                    // If the user confirmed, proceed to delete
+                                                    await controller.deleteCertificate(certificateId);
+                                                  }
+                                                } else {
+                                                  showCustomToast(context,'Certificate ID not found.');
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 16),
                   ElevatedButton.icon(
                     label: const Text('Add Certificate'),
                     icon: const Icon(Icons.description_rounded),
                     onPressed: () {
-                      AutoRouter.of(context).push(const UploadAcademicQualificationsRoute());
+                      AutoRouter.of(context)
+                          .push(const UploadAcademicQualificationsRoute());
                     },
                   ),
                   const SizedBox(height: 16),
@@ -197,7 +395,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                       AutoRouter.of(context).push(ChangePasswordRoute());
                     },
                   ),
-                  // Add a SizedBox for spacing
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.logout),
@@ -223,101 +420,8 @@ class EditProfilePage extends GetView<EditProfileController> {
                   ),
                 ],
               ),
-            ),
-
-            // Vertical Divider between the sections
-            const VerticalDivider(
-              color: Colors.grey,
-              thickness: 1.0,
-              width: 40,
-            ),
-
-            // Right side with toggle between static text and editable fields
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Obx(() {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Card(
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (!isEditing.value) ...[
-                                Text('Username: ${controller.username.value}'),
-                                const SizedBox(height: 16),
-                                Text('Email: ${controller.email.value}'),
-                                const SizedBox(height: 16),
-                                Text(
-                                    'Credentials: ${controller.credentials.value}'),
-                                const SizedBox(height: 32),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    isEditing.value = true;
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                  label: const Text('Change'),
-                                ),
-                              ] else ...[
-                                TextFormField(
-                                  initialValue: controller.username.value,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Username'),
-                                  onChanged: (value) async {
-                                    controller.username.value = value;
-                                  },
-                                ),
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  initialValue: controller.email.value,
-                                  decoration:
-                                      const InputDecoration(labelText: 'Email'),
-                                  onChanged: (value) {
-                                    controller.email.value = value;
-                                  },
-                                ),
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  initialValue: controller.credentials.value,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Credentials'),
-                                  onChanged: (value) {
-                                    controller.credentials.value = value;
-                                  },
-                                ),
-                                const SizedBox(height: 32),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    if (await registerController
-                                        .checkUsernameExists(
-                                            controller.username.value)) {
-                                      showCustomToast(
-                                          context, 'Username Already Exists.');
-                                    } else {
-                                      controller.saveProfile(context);
-                                      isEditing.value = false;
-                                    }
-                                  },
-                                  child: const Text('Save Changes'),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Adjust the height as needed
-                    ],
-                  );
-                }),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

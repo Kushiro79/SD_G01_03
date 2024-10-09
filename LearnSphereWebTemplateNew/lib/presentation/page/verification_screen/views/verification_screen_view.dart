@@ -7,6 +7,7 @@ import '../controllers/verification_screen_controller.dart';
 @RoutePage()
 class VerificationScreenView extends GetView<VerificationScreenController> {
   const VerificationScreenView({super.key});
+  @override
   VerificationScreenController get controller => Get.put(VerificationScreenController());
 
   @override

@@ -93,7 +93,103 @@ class ProfileScreenPage extends StatelessWidget {
               // Profile content
             ],
           ),
-          
+          const SizedBox(height: 20),
+          Card(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    const Text('89',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text('Posts',
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xff64748B))),
+                  ],
+                ),
+              Column(
+                  children: [
+                    Obx(() => Text(profileController.followersCountString,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))),
+                    const Text('Followers',
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xff64748B))),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Obx(() => Text(profileController.followingCountString,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))),
+                    const Text('Following',
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xff64748B))),
+                  ],
+                ),
+                Card(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width *
+                          0.5, // Constrain width to screen size
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Obx(() {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment
+                              .start, // Aligns the title to the left
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.verified_user,
+                                  color: Colors.greenAccent,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Verified Qualifications',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                                height:
+                                    16), // Adds some spacing between the title and list
+                            ...editController.certificates.map((certificate) {
+                              return ListTile(
+                                title: Text(certificate['fieldOfStudy'] ??
+                                    'Unknown Field of Study'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        certificate['levelOfEducation'] ??
+                                            'Unknown Level of Education',
+                                        style: TextStyle(
+                                            color: profileController.getColorBasedOnContent(certificate['levelOfEducation'])),
+                                        ),
+                                    Text(certificate['institutionName'] ??
+                                        'Unknown Institution'),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ]));
 
     /* List post = [

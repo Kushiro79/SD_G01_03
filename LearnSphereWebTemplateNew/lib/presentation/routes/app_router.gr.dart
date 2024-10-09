@@ -494,3 +494,38 @@ class ViewFeedbackRoute extends PageRouteInfo<void> {
     },
   );
 }
+
+/// generated route for
+/// [ViewOtherUsersPage]
+class ViewOtherUsersRoute extends PageRouteInfo<ViewOtherUsersRouteArgs> {
+  ViewOtherUsersRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ViewOtherUsersRoute.name,
+          args: ViewOtherUsersRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewOtherUsersRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ViewOtherUsersRouteArgs>(
+          orElse: () => const ViewOtherUsersRouteArgs());
+      return ViewOtherUsersPage(key: args.key);
+    },
+  );
+}
+
+class ViewOtherUsersRouteArgs {
+  const ViewOtherUsersRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ViewOtherUsersRouteArgs{key: $key}';
+  }
+}
