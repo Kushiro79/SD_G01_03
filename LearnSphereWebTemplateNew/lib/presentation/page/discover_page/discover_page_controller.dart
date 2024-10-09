@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 class DiscoverController extends GetxController {
@@ -9,6 +10,15 @@ class DiscoverController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxList<DocumentSnapshot> users = RxList<DocumentSnapshot>([]);
   RxList<DocumentSnapshot> followedUsers = RxList<DocumentSnapshot>([]);
+
+    var imageUrl = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    discoverList();
+    followingList();
+  }
 
   Future<void> discoverList() async {
   final userId = _auth.currentUser?.uid;
@@ -117,6 +127,18 @@ Future<void> followingList() async {
           'followedUsers': [targetUserId],
         });
       }
+      final followersDocRef = _firestore.collection('followers').doc(targetUserId);
+      final followersDoc = await followersDocRef.get();
+
+      if (followersDoc.exists) {
+        await followersDocRef.update({
+          'followerUsers': FieldValue.arrayUnion([userId]),
+        });
+      } else {
+        await followersDocRef.set({
+          'followerUsers': [userId],
+        });
+      }
 
       print('Successfully followed user: $targetUserId');
     } catch (e) {
@@ -150,5 +172,38 @@ Future<void> unfollowUser(String targetUserId) async {
     print('Invalid user ID or target user ID.');
   }
 }
+
+Future<String> loadImageFromFirebase(String profileImageUrl) async {
+  try {
+    
+    // Parse the URL
+    print("Profile Image URL: $profileImageUrl");
+    Uri uri = Uri.parse(profileImageUrl);
+
+    // Extract the path from the URL (Firebase path starts after the "o/" part)
+    String firebasePath = uri.pathSegments.skip(1).join('/'); // Skip the version part, like "v0"
+
+    // Decode the path (in case it's URL-encoded with %2F)
+    String decodedPath = Uri.decodeComponent(firebasePath);
+
+    // Extract the actual file path, which is after the 'o/' segment in Firebase URLs
+    int startIndex = decodedPath.indexOf('o/') + 2;  // The 'o/' part is included in the URL structure
+    String filePath = decodedPath.substring(startIndex);
+
+    print("Extracted Firebase file path: $filePath");
+
+    // Reference to the image in Firebase Storage using the extracted full path
+    Reference ref = FirebaseStorage.instance.ref().child(filePath);
+
+    // Get the download URL for the specific file
+    String downloadURL = await ref.getDownloadURL();
+    return downloadURL; // Return the download URL
+  } catch (e) {
+    print('Error retrieving image: $e');
+    return ''; // Return an empty string if there's an error
+  }
+}
+
+
 
 }

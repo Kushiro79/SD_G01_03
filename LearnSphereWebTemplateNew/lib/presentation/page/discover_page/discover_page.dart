@@ -80,6 +80,8 @@ class DiscoverPage extends GetView<DiscoverController> {
 
 usersLists(RxList<DocumentSnapshot> usersList) {
   RxMap<String, bool> isFollowingMap = RxMap<String, bool>();
+  RxMap<String, String> userImageUrls = RxMap<String, String>(); // Store each user's image URL
+
 
   return ListView.builder(
     padding: EdgeInsets.zero, // Remove default padding
@@ -88,31 +90,48 @@ usersLists(RxList<DocumentSnapshot> usersList) {
       String userId = usersList[index].id;
 
       // Initialize following status if not already set
-      if (!isFollowingMap.containsKey(userId)) {
-        isFollowingMap[userId] =
-            controller.followedUsers.value.any((doc) {
-          return doc.id == userId;
-        });
-      }
+        if (!isFollowingMap.containsKey(userId)) {
+              isFollowingMap[userId] =
+                  controller.followedUsers.value.any((doc) {
+                return doc.id == userId;
+              });
+            }
+
+            // Initialize image URL for each user
+            if (!userImageUrls.containsKey(userId)) {
+              final profileImagePath = usersList[index]['profileImageUrl'];
+              if (profileImagePath != null && !profileImagePath.startsWith('http')) {
+                // Fetch image from Firebase Storage asynchronously
+                controller.loadImageFromFirebase(profileImagePath).then((url) {
+                  userImageUrls[userId] = url; // Store URL when loaded
+                });
+              } else {
+                // Direct URL or no image
+                userImageUrls[userId] = profileImagePath ?? '';
+              }
+            }
 
       return ListTile(
         dense: false,
         contentPadding: EdgeInsets.all(10),
-        leading: usersList[index]['profileImageUrl'] != null
-            ? SizedBox(
-                height: 40,
-                width: 40,
-                child: ClipOval(
-                  child: Image.network(
-                    usersList[index]['profileImageUrl'],
-                    fit: BoxFit.fill,
+        leading: Obx(() {
+          // Observe changes to the userImageUrls
+          final imageUrl = userImageUrls[userId];
+          return imageUrl != null && imageUrl.isNotEmpty
+              ? SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: ClipOval(
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.person, size: 40),
+                    ),
                   ),
-                ),
-              )
-            : const Icon(
-                Icons.person,
-                size: 40,
-              ),
+                )
+              : const Icon(Icons.person, size: 40); // Fallback icon
+        }),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -139,7 +158,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                       child: Text(isFollowingMap[userId]! ? 'Following' : 'Follow'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue, // Change button background color here
-                       foregroundColor: Colors.white, // Change text color here
+                        foregroundColor: Colors.white, // Change text color here
                         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
