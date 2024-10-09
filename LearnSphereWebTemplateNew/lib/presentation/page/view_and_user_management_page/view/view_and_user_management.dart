@@ -217,30 +217,46 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                             ),
                           ],
                         ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 16 ),
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListView.separated(
-                        itemCount: _filteredUsers.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(color: Colors.grey, thickness: 1.0),
-                        itemBuilder: (context, index) {
-                          final userDoc = _filteredUsers[index];
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,  // Enable vertical scrolling
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.75, // Adjust width to occupy 70% of the screen
+                        margin: const EdgeInsets.all(16.0),  // Similar margin to "b"
+                        padding: const EdgeInsets.all(16.0),  // Consistent padding as in "b"
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(16.0),  // Use a 16.0 radius like in "b"
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                      
+                      child: DataTable(
+                        
+                        columns: const [
+                          DataColumn(label: Text('Username')),
+                          DataColumn(label: Text('Role')),
+                          DataColumn(label: Text('UID')),
+                          DataColumn(label: Text('Email')),
+                          DataColumn(label: Text('Actions')),
+                        ],
+                        rows: _filteredUsers.map((userDoc) {
                           final user = userDoc.data() as Map<String, dynamic>;
-                          return ListTile(
-                            title: Text(user['username'] ?? 'Unknown'),
-                            subtitle: Text(
-                                '${user['role']}\nUID: ${user['uid']}\nEmail: ${user['email']}'),
-                            trailing: _buildActionDropdown(context, userDoc),
-                          );
-                        },
+                          return DataRow(cells: [
+                            DataCell(Text(user['username'] ?? 'Unknown')),
+                            DataCell(Text(user['role'] ?? 'Unknown')),
+                            DataCell(Text(user['uid'] ?? 'Unknown')),
+                            DataCell(Text(user['email'] ?? 'Unknown')),
+                            DataCell(_buildActionDropdown(context, userDoc)),
+                          ]);
+                        }).toList(),
                       ),
                     ),
                   ),
+                ),
+                ),
                 ],
               ),
             ),
