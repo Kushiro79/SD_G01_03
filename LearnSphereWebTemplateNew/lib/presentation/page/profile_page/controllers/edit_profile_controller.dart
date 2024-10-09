@@ -23,6 +23,7 @@ class EditProfileController extends GetxController {
   final bannerImageUrl = ''.obs;
 
   RxList certificates = <Map<String, dynamic>>[].obs;
+  RxList rejectedCertificates = <Map<String, dynamic>>[].obs;
 
 
   RxBool _isHovering = false.obs;
@@ -124,6 +125,7 @@ class EditProfileController extends GetxController {
     loadProfile(); // Load profile data when the controller is initialized
     loadPfp();
     fetchCertificates();
+    fetchRejectedQualifications();
   }
 
   Future<void> pickAndUploadPfp(BuildContext context) async {
@@ -286,6 +288,33 @@ class EditProfileController extends GetxController {
     print('Error downloading certificate: $e');
   }
 }
+
+Future<void> fetchRejectedQualifications() async {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  try {
+    // Fetching rejected qualifications for the current user
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('qualificationRequests')
+        .doc('rejectedCertificates') // Assuming this is the collection path
+        .collection('users')
+        .doc(uid)
+        .collection('certificates') // Assuming this is the sub-collection name
+        .get();
+
+    // Map through the documents and add them to the list
+    rejectedCertificates.value = snapshot.docs.map((doc) {
+      return {
+        'id': doc.id, // Document ID
+        ...doc.data() as Map<String, dynamic>,
+      };
+    }).toList();
+
+    print('Rejected: $rejectedCertificates'); // Print the fetched qualifications for debugging
+  } catch (e) {
+    print('Error fetching rejected qualifications: $e');
+  }
+}
+
 
 Future<void> deleteCertificate(String certificateId) async {
   String uid = FirebaseAuth.instance.currentUser!.uid;

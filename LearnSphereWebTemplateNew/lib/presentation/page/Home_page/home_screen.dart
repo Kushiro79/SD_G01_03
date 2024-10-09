@@ -27,9 +27,9 @@ class MyHomePage extends GetView<HomeController> {
           toolbarHeight: 80,
           title: Row(children: <Widget>[
             Image(
-              image: AssetImage(ProjectAssets.learnSpherelogo.path),
-              width: screenwidth ? 250 : 80,
-              height: screenwidth ? 250 : 80,
+              image: AssetImage(ProjectAssets.learnSphereLogo.path),
+              width: 60,
+              height: 60,
             ),
           ]),
         ),
@@ -78,8 +78,8 @@ Widget _buildSidebar(BuildContext context) {
                       ? ClipOval(
                           child: Image.network(
                             editController.profileImageUrl.value,
-                            height: screenwidth ? 120 : 70,
-                            width: screenwidth ? 120 : 70,
+                            height: screenwidth ? 120 : 50,
+                            width: screenwidth ? 120 : 50,
                             fit: BoxFit.cover,
                           ),
                         )
@@ -185,14 +185,7 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         // Add the Give Feedback button here
-        ListTile(
-          leading: const Icon(Icons.feedback), // You can customize the icon
-          title: screenwidth ? const Text('Give Feedback') : null,
-          onTap: () {
-            // Navigate to the GiveFeedbackPage when tapped
-            context.router.push(GiveFeedbackRoute());
-          },
-        ),
+        
       ],
     ),
   );

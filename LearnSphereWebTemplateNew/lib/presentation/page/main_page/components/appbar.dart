@@ -7,9 +7,10 @@ class _AppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     EditProfileController controller = Get.put(EditProfileController());
     return  SizedBox(
-      height: 80,
+      height: 60,
       child: Row(
         children: <Widget>[
+          
           const Spacer(),
           const SizedBox(width: 34),
           Obx(() {
@@ -17,14 +18,14 @@ class _AppBar extends StatelessWidget {
                                 ? ClipOval(
                                     child: Image.network(
                                       controller.profileImageUrl.value,
-                                      height: 60,
-                                      width: 60,
+                                      height: 40,
+                                      width: 40,
                                       fit: BoxFit.cover,
                                     ),
                                   )
                                 : Container(
-                                    height: 60,
-                                    width: 60,
+                                    height: 40,
+                                    width: 40,
                                     alignment: Alignment.topLeft,
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,

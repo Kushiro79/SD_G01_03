@@ -47,7 +47,7 @@ class MainPage extends StatelessWidget {
             ],
           ),
           const Positioned(
-            top: 80,
+            top: 60,
             left: 0,
             right: 0,
             child: Divider(

@@ -39,12 +39,12 @@ class _NavigationMenuState extends State<_NavigationMenu> {
             children: <Widget>[
               Center(
                   child: Image(
-                    image: AssetImage(ProjectAssets.learnSpherelogo.path),
-                    width:  screenwidth ? 300 : 100,
-                    height: screenwidth ? 100 : 100,
+                    image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                    width:  60,
+                    height: 60,
                   ),
                 ),
-              const SizedBox(height: 70),
+              const SizedBox(height: 20),
               _MenuItem(
                 iconPath: ProjectAssets.icons.home.path,
                 isSelected: currentUrl == '/dashboard',

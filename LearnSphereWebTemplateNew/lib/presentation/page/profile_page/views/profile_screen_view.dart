@@ -108,7 +108,7 @@ class ProfileScreenPage extends StatelessWidget {
                             TextStyle(fontSize: 12, color: Color(0xff64748B))),
                   ],
                 ),
-              Column(
+                Column(
                   children: [
                     Obx(() => Text(profileController.followersCountString,
                         style: const TextStyle(
@@ -128,68 +128,70 @@ class ProfileScreenPage extends StatelessWidget {
                             TextStyle(fontSize: 12, color: Color(0xff64748B))),
                   ],
                 ),
-                Card(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width *
-                          0.5, // Constrain width to screen size
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Obx(() {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment
-                              .start, // Aligns the title to the left
-                          children: [
-                            const Row(
-                              children: [
-                                Icon(
-                                  Icons.verified_user,
-                                  color: Colors.greenAccent,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'Verified Qualifications',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                                height:
-                                    16), // Adds some spacing between the title and list
-                            ...editController.certificates.map((certificate) {
-                              return ListTile(
-                                title: Text(certificate['fieldOfStudy'] ??
-                                    'Unknown Field of Study'),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        certificate['levelOfEducation'] ??
-                                            'Unknown Level of Education',
-                                        style: TextStyle(
-                                            color: profileController.getColorBasedOnContent(certificate['levelOfEducation'])),
-                                        ),
-                                    Text(certificate['institutionName'] ??
-                                        'Unknown Institution'),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                        );
-                      }),
-                    ),
-                  ),
-                )
               ],
             ),
           ),
+          Card(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth:  MediaQuery.of(context).size.width > 850 ?MediaQuery.of(context).size.width *0.5 :
+                        MediaQuery.of(context).size.width * 0.9, // Constrain width to screen size
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Obx(() {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment
+                        .start, // Aligns the title to the left
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.verified_user,
+                            color: Colors.greenAccent,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'Verified Qualifications',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                          height:
+                              16), // Adds some spacing between the title and list
+                      ...editController.certificates.map((certificate) {
+                        return ListTile(
+                          title: Text(certificate['fieldOfStudy'] ??
+                              'Unknown Field of Study'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                certificate['levelOfEducation'] ??
+                                    'Unknown Level of Education',
+                                style: TextStyle(
+                                    color: profileController
+                                        .getColorBasedOnContent(
+                                            certificate['levelOfEducation'])),
+                              ),
+                              Text(certificate['institutionName'] ??
+                                  'Unknown Institution'),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  );
+                }),
+              ),
+            ),
+          )
         ]));
 
     /* List post = [

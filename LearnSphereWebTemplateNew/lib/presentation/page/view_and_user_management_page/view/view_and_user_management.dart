@@ -150,126 +150,142 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final screenwidth = MediaQuery.of(context).size.width > 850;
-    return Scaffold(
-      body: Stack(
-        children: [
-          Padding(
-            padding: screenwidth ? const EdgeInsets.all(50) : const EdgeInsets.all(10),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'User List',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Search by username',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      ),
-                      prefixIcon: Icon(Icons.search),
+ @override
+Widget build(BuildContext context) {
+  final screenwidth = MediaQuery.of(context).size.width > 850;
+  return Scaffold(
+    body: Stack(
+      children: [
+        Padding(
+          padding: screenwidth
+              ? const EdgeInsets.all(50)
+              : const EdgeInsets.all(10),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'User List',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Search by username',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        searchQuery = value;
-                        _filterUsers();
-                      });
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                      _filterUsers();
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                // Filter by Role
+                _currentUserRole == 'staff'
+                    ? Container()
+                    : Row(
+                        children: [
+                          const Text(
+                            'Filter by role:',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 16),
+                          DropdownButton<String>(
+                            value: selectedRole,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedRole = newValue!;
+                                _filterUsers(); // Reapply filter on dropdown change
+                              });
+                            },
+                            items: [
+                              'All',
+                              'user',
+                              'admin',
+                              'staff'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: constraints.maxWidth, // Container width adapts
+                            minHeight: constraints.maxHeight, // Set height to max allowed
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: IntrinsicHeight(
+                              child: Container(
+                                margin: const EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  border: Border.all(
+                                      color: Colors.grey.shade300),
+                                ),
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Username')),
+                                    DataColumn(label: Text('Role')),
+                                    DataColumn(label: Text('UID')),
+                                    DataColumn(label: Text('Email')),
+                                    DataColumn(label: Text('Actions')),
+                                  ],
+                                  rows: _filteredUsers.map((userDoc) {
+                                    final user =
+                                        userDoc.data() as Map<String, dynamic>;
+                                    return DataRow(cells: [
+                                      DataCell(
+                                          Text(user['username'] ?? 'Unknown')),
+                                      DataCell(Text(user['role'] ?? 'Unknown')),
+                                      DataCell(Text(user['uid'] ?? 'Unknown')),
+                                      DataCell(Text(user['email'] ?? 'Unknown')),
+                                      DataCell(_buildActionDropdown(
+                                          context, userDoc)),
+                                    ]);
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   ),
-                  const SizedBox(height: 16),
-                  // Filter by Role
-                  _currentUserRole == 'staff'
-                      ? Container()
-                      : Row(
-                          children: [
-                            const Text(
-                              'Filter by role:',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(width: 16),
-                            DropdownButton<String>(
-                              value: selectedRole,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedRole = newValue!;
-                                  _filterUsers(); // Reapply filter on dropdown change
-                                });
-                              },
-                              items: [
-                                'All',
-                                'user',
-                                'admin',
-                                'staff'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                  const SizedBox(height: 16 ),
-                  Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,  // Enable vertical scrolling
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.75, // Adjust width to occupy 70% of the screen
-                        margin: const EdgeInsets.all(16.0),  // Similar margin to "b"
-                        padding: const EdgeInsets.all(16.0),  // Consistent padding as in "b"
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(16.0),  // Use a 16.0 radius like in "b"
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                      
-                      child: DataTable(
-                        
-                        columns: const [
-                          DataColumn(label: Text('Username')),
-                          DataColumn(label: Text('Role')),
-                          DataColumn(label: Text('UID')),
-                          DataColumn(label: Text('Email')),
-                          DataColumn(label: Text('Actions')),
-                        ],
-                        rows: _filteredUsers.map((userDoc) {
-                          final user = userDoc.data() as Map<String, dynamic>;
-                          return DataRow(cells: [
-                            DataCell(Text(user['username'] ?? 'Unknown')),
-                            DataCell(Text(user['role'] ?? 'Unknown')),
-                            DataCell(Text(user['uid'] ?? 'Unknown')),
-                            DataCell(Text(user['email'] ?? 'Unknown')),
-                            DataCell(_buildActionDropdown(context, userDoc)),
-                          ]);
-                        }).toList(),
-                      ),
-                    ),
-                  ),
                 ),
-                ),
-                ],
-              ),
+              ],
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addStaff,
-        tooltip: 'Add Staff',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: _addStaff,
+      tooltip: 'Add Staff',
+      child: const Icon(Icons.add),
+    ),
+  );
+}
+
 
 //DROPDDOWN
 Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {

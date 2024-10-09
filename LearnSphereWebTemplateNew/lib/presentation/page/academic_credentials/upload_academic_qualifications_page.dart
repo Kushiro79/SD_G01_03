@@ -21,7 +21,7 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
         body: LayoutBuilder(builder: (context, constraints) {
           return Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: constraints.maxWidth * 0.22, vertical: 10),
+                  horizontal: constraints.maxWidth >850 ?constraints.maxWidth *0.22 :constraints.maxWidth *0.05 , vertical: 10),
               child: Form(
                 key: controller.formKey,
                 child: Padding(
@@ -80,6 +80,8 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                             hintText: 'University of LearnSphere'),
                       ),
                       const SizedBox(height: 20),
+                      MediaQuery.of(context).size.width > 850 
+                      ?
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -111,6 +113,37 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                           }),
                         ],
                       )
+                      :
+                      Column(
+                        children: [
+                          Obx(() {
+                            if (controller.isUploading.value) {
+                              return const CircularProgressIndicator(); // Show progress indicator during upload
+                            }
+                            return ElevatedButton(
+                              onPressed: () async {
+                                await controller.pickAndUploadCertificate(context); // Upload the file after picking
+                              },
+                              child: const Text('Upload Certificate'),
+                            );
+                          }),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Obx(() {
+                            // Disable the Submit button while uploading or if no file is uploaded
+                            return ElevatedButton(
+                              onPressed: controller.isUploading.value ||
+                                      controller.certificateUrl.isEmpty
+                                  ? null // Disable the button
+                                  : () async {
+                                      await controller.submitInfo(context); // Submit form after upload
+                                    },
+                              child: const Text('Submit'),
+                            );
+                          }),
+                        ],
+                      ),
                     ],
                   ),
                 ),

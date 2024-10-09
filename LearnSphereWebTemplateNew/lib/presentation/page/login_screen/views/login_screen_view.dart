@@ -44,9 +44,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
                     Row(
                       children: [
                         Image(
-                          image: AssetImage(ProjectAssets.learnSpherelogo.path),
-                          width:  250 ,
-                          height:  250 ,
+                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                          width:  150 ,
+                          height:  150 ,
                         ),
                       ]
                     ),
@@ -59,9 +59,9 @@ class LoginScreenView extends GetView<LoginScreenController> {
                   Row(
                       children: [
                         Image(
-                          image: AssetImage(ProjectAssets.learnSpherelogo.path),
-                          width: 80,
-                          height: 80,
+                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                          width: 60,
+                          height: 60,
                         ),
                       ]
                     ),

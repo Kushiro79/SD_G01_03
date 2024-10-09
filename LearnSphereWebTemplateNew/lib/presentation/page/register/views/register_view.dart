@@ -45,9 +45,9 @@ class RegisterScreenView extends GetView<RegisterController> {
                     Row(
                       children: [
                         Image(
-                          image: AssetImage(ProjectAssets.learnSpherelogo.path),
-                          width: screenwidth ? 250 : 80,
-                          height: screenwidth ? 250 : 80,
+                          image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                          width: screenwidth ? 150 : 60,
+                          height: screenwidth ? 150 : 60,
                         ),
                       ]
                     ),
@@ -214,8 +214,12 @@ class RegisterScreenView extends GetView<RegisterController> {
                   width: constraints.maxWidth * 0.9,
                   child: Column(
                     children: [
-                      _signInButton(context),
-                      _menuItem(title: 'Sign Up', isActive: true),
+                      Row(
+                        children: [
+                          _signInButton(context),
+                          _menuItem(title: 'Sign Up', isActive: true),
+                        ]
+                      ),
                       _buildForm(context),
                       const SizedBox(height: 20),
                       _buildSignUpButton(context),

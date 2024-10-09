@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 class DiscoverController extends GetxController {
@@ -9,6 +10,15 @@ class DiscoverController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   RxList<DocumentSnapshot> users = RxList<DocumentSnapshot>([]);
   RxList<DocumentSnapshot> followedUsers = RxList<DocumentSnapshot>([]);
+  var imageUrl = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    discoverList();
+    followingList();
+    loadImageFromFirebase(imageUrl.value);
+  }
 
   Future<void> discoverList() async {
   final userId = _auth.currentUser?.uid;
@@ -164,5 +174,21 @@ Future<void> unfollowUser(String targetUserId) async {
     print('Invalid user ID or target user ID.');
   }
 }
+
+Future<String> loadImageFromFirebase(String profileImageUrl) async {
+  try {
+    // Reference to the image in Firebase Storage
+    Reference ref = FirebaseStorage.instance.ref().child(profileImageUrl);
+
+    // Get the download URL
+    String downloadURL = await ref.getDownloadURL();
+    return downloadURL; // Return the URL
+  } catch (e) {
+    print('Error retrieving image: $e');
+    return ''; // Return an empty string if there's an error
+  }
+}
+
+
 
 }
