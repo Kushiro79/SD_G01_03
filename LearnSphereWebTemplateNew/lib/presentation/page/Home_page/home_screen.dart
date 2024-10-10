@@ -9,6 +9,8 @@ import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
 import '../../utils/color_extension.dart';
 import 'showimage_view.dart';
+import '../../page/discover_page/discover_page.dart';
+
 
 @RoutePage()
 class MyHomePage extends GetView<HomeController> {
@@ -126,17 +128,25 @@ Widget _buildSidebar(BuildContext context) {
             // Handle tap on Home
           },
         ),
-        ListTile(
-          leading: Image.asset(
-            'assets/profile-2user.png',
-            width: 25,
-            color: Colors.black,
-          ),
-          title: screenwidth ? const Text('Follows') : null,
-          onTap: () {
-            context.router.push(DiscoverRoute());
-          },
-        ),
+         ListTile(
+  leading: Image.asset(
+    'assets/profile-2user.png',
+    width: 25,
+    color: Colors.black,
+  ),
+  title: screenwidth ? const Text('Follows') : null,
+  onTap: () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent, // Transparent background for floating window
+          child: DiscoverPage(), // Show the DiscoverPage as a floating window
+        );
+      },
+    );
+  },
+),
         ListTile(
           leading: Image.asset(
             'assets/notification.png',
