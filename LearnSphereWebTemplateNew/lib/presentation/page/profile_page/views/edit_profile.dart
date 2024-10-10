@@ -260,7 +260,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                                     0.5, // Constrain width to screen size
                               ),
                               child: Padding(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment
                                       .start, // Aligns the title to the left
@@ -379,7 +379,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                                           ],
                                         ),
                                       );
-                                    }).toList(),
+                                    }),
                                   ],
                                 ),
                               ),
@@ -458,7 +458,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                         MediaQuery.of(context).size.width * 0.9, // Constrain width to screen size
                               ),
                               child: Padding(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment
                                       .start, // Aligns the title to the left
@@ -577,7 +577,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                                           ],
                                         ),
                                       );
-                                    }).toList(),
+                                    }),
                                   ],
                                 ),
                               ),
@@ -595,7 +595,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                         MediaQuery.of(context).size.width * 0.9, // Constrain width to screen size
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment
                               .start, // Aligns the title to the left

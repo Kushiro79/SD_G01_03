@@ -92,7 +92,7 @@ Future<void> followingList() async {
               usersQuery.docs.map((doc) => doc as DocumentSnapshot).toList();
         } else {
           followedUsers.value = [];
-          Text('No User Followed',);
+          const Text('No User Followed',);
         }
       } else {
         _firestore.collection('following').doc(userId).set({
@@ -177,7 +177,7 @@ Future<String> loadImageFromFirebase(String profileImageUrl) async {
   try {
     
     // Parse the URL
-    print("Profile Image URL: $profileImageUrl");
+    print('Profile Image URL: $profileImageUrl');
     Uri uri = Uri.parse(profileImageUrl);
 
     // Extract the path from the URL (Firebase path starts after the "o/" part)
@@ -190,7 +190,7 @@ Future<String> loadImageFromFirebase(String profileImageUrl) async {
     int startIndex = decodedPath.indexOf('o/') + 2;  // The 'o/' part is included in the URL structure
     String filePath = decodedPath.substring(startIndex);
 
-    print("Extracted Firebase file path: $filePath");
+    print('Extracted Firebase file path: $filePath');
 
     // Reference to the image in Firebase Storage using the extracted full path
     Reference ref = FirebaseStorage.instance.ref().child(filePath);

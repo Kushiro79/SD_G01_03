@@ -108,7 +108,7 @@ class ProfileScreenController extends GetxController {
       if (data != null && data.containsKey('followerUsers')) {
         followersCount.value = data['followerUsers'].length;
         print('followers: ${followersCount.value}');
-        print('follower String : ${followersCountString}');
+        print('follower String : $followersCountString');
       } else {
         followersCount.value = 0;
       }

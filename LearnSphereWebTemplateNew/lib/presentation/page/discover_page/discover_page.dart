@@ -10,16 +10,18 @@ import 'discover_page_controller.dart';
 class DiscoverPage extends GetView<DiscoverController> {
   DiscoverPage({super.key});
 
+  @override
   final DiscoverController controller = Get.put(DiscoverController());
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4, // Floating window size
-        padding: const EdgeInsets.all(16),
+        height: MediaQuery.of(context).size.height * 0.95,
+        width: MediaQuery.of(context).size.width > 850 ?  MediaQuery.of(context).size.width *0.5 :  MediaQuery.of(context).size.width *0.9, // Floating window size
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.95), // Floating window background
+          color: Colors.white.withOpacity(0.90), // Floating window background
           borderRadius: BorderRadius.circular(20), // Rounded corners
         ),
         child: DefaultTabController(
@@ -113,7 +115,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
 
       return ListTile(
         dense: false,
-        contentPadding: EdgeInsets.all(10),
+        contentPadding: const EdgeInsets.all(10),
         leading: Obx(() {
           // Observe changes to the userImageUrls
           final imageUrl = userImageUrls[userId];
@@ -155,15 +157,15 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                           isFollowingMap[userId] = true; // Update state to followed
                         }
                       },
-                      child: Text(isFollowingMap[userId]! ? 'Following' : 'Follow'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue, // Change button background color here
                         foregroundColor: Colors.white, // Change text color here
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
                         ),
                       ),
+                      child: Text(isFollowingMap[userId]! ? 'Following' : 'Follow'),
                     )),
               ],
             ),

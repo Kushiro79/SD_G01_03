@@ -66,10 +66,10 @@ Widget _buildSidebar(BuildContext context) {
     child: ListView(
       padding: EdgeInsets.zero,
       children: [
-        Container(
+        SizedBox(
           height: screenwidth ? 200 : 100,
           child: Padding(
-            padding: EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

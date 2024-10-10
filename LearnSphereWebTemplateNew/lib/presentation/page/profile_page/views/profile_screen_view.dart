@@ -98,12 +98,12 @@ class ProfileScreenPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
+                const Column(
                   children: [
-                    const Text('89',
+                    Text('89',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    const Text('Posts',
+                    Text('Posts',
                         style:
                             TextStyle(fontSize: 12, color: Color(0xff64748B))),
                   ],
@@ -138,7 +138,7 @@ class ProfileScreenPage extends StatelessWidget {
                         MediaQuery.of(context).size.width * 0.9, // Constrain width to screen size
               ),
               child: Padding(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: Obx(() {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment
@@ -185,7 +185,7 @@ class ProfileScreenPage extends StatelessWidget {
                             ],
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   );
                 }),
