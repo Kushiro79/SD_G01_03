@@ -110,6 +110,10 @@ class ProjectAssets {
   static const AssetGenImage images09 = AssetGenImage('assets/Images 09.png');
   static const AssetGenImage instaStory =
       AssetGenImage('assets/InstaStory.png');
+  static const AssetGenImage lS2Transparent =
+      AssetGenImage('assets/LS2_transparent.png');
+  static const AssetGenImage lS3Transparent =
+      AssetGenImage('assets/LS3_transparent.png');
   static const AssetGenImage messager = AssetGenImage('assets/Messager.png');
   static const AssetGenImage onboarding1 =
       AssetGenImage('assets/Onboarding1.png');
@@ -282,6 +286,9 @@ class ProjectAssets {
   static const AssetGenImage login = AssetGenImage('assets/login.png');
   static const AssetGenImage loginUi = AssetGenImage('assets/login_ui.png');
   static const AssetGenImage loginUi2 = AssetGenImage('assets/login_ui2.png');
+  static const AssetGenImage ls2t = AssetGenImage('assets/ls2t.png');
+  static const AssetGenImage ls3 = AssetGenImage('assets/ls3.png');
+  static const AssetGenImage ls3t = AssetGenImage('assets/ls3t.png');
   static const AssetGenImage maximize3 = AssetGenImage('assets/maximize-3.png');
   static const AssetGenImage message = AssetGenImage('assets/message.png');
   static const AssetGenImage messages = AssetGenImage('assets/messages.png');
@@ -422,6 +429,8 @@ class ProjectAssets {
         images08,
         images09,
         instaStory,
+        lS2Transparent,
+        lS3Transparent,
         messager,
         onboarding1,
         onboarding2,
@@ -557,6 +566,9 @@ class ProjectAssets {
         login,
         loginUi,
         loginUi2,
+        ls2t,
+        ls3,
+        ls3t,
         maximize3,
         message,
         messages,

@@ -17,9 +17,7 @@ class DiscoverPage extends GetView<DiscoverController> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.95,
-        width: MediaQuery.of(context).size.width > 850 ?  MediaQuery.of(context).size.width *0.5 :  MediaQuery.of(context).size.width *0.9, // Floating window size
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.90), // Floating window background
           borderRadius: BorderRadius.circular(20), // Rounded corners
@@ -44,7 +42,7 @@ class DiscoverPage extends GetView<DiscoverController> {
               ),
             ),
             body: Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: TabBarView(
                 children: [
                   discoverTab(),

@@ -11,7 +11,6 @@ import '../../utils/color_extension.dart';
 import 'showimage_view.dart';
 import '../../page/discover_page/discover_page.dart';
 
-
 @RoutePage()
 class MyHomePage extends GetView<HomeController> {
   MyHomePage({super.key});
@@ -59,7 +58,7 @@ Widget _buildSidebar(BuildContext context) {
   var screenwidth = MediaQuery.of(context).size.width >= 800;
 
   return Container(
-    width: screenwidth ? 300 : 100,
+    width: screenwidth ? 300 : 80,
     decoration: const BoxDecoration(
       border: Border(
         right: BorderSide(width: 1, color: Colors.grey),
@@ -128,25 +127,27 @@ Widget _buildSidebar(BuildContext context) {
             // Handle tap on Home
           },
         ),
-         ListTile(
-  leading: Image.asset(
-    'assets/profile-2user.png',
-    width: 25,
-    color: Colors.black,
-  ),
-  title: screenwidth ? const Text('Follows') : null,
-  onTap: () {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent, // Transparent background for floating window
-          child: DiscoverPage(), // Show the DiscoverPage as a floating window
-        );
-      },
-    );
-  },
-),
+        ListTile(
+          leading: Image.asset(
+            'assets/profile-2user.png',
+            width: 25,
+            color: Colors.black,
+          ),
+          title: screenwidth ? const Text('Follows') : null,
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                    insetPadding: MediaQuery.of(context).size.width >850 ? EdgeInsets.symmetric(      horizontal: MediaQuery.of(context).size.width * 0.3 , vertical:15) :  EdgeInsets.symmetric(horizontal:15 , vertical:15),
+                    backgroundColor: Colors.transparent,
+                    child:  DiscoverPage() // Transparent background for floating window
+                    // Show the DiscoverPage as a floating window
+                    );
+              },
+            );
+          },
+        ),
         ListTile(
           leading: Image.asset(
             'assets/notification.png',
@@ -195,7 +196,6 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         // Add the Give Feedback button here
-        
       ],
     ),
   );

@@ -9,6 +9,7 @@ class ViewAcademicQualificationController extends GetxController {
   void onInit() {
     super.onInit();
     viewAcademicQualifications();
+    FirebaseAuth.instance.currentUser!.uid;
   }
 
   Future<void> viewAcademicQualifications() async {

@@ -478,10 +478,13 @@ class ViewAndManageUsersRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ViewFeedbackPage]
-class ViewFeedbackRoute extends PageRouteInfo<void> {
-  const ViewFeedbackRoute({List<PageRouteInfo>? children})
-      : super(
+class ViewFeedbackRoute extends PageRouteInfo<ViewFeedbackRouteArgs> {
+  ViewFeedbackRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           ViewFeedbackRoute.name,
+          args: ViewFeedbackRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -490,9 +493,22 @@ class ViewFeedbackRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const ViewFeedbackPage();
+      final args = data.argsAs<ViewFeedbackRouteArgs>(
+          orElse: () => const ViewFeedbackRouteArgs());
+      return ViewFeedbackPage(key: args.key);
     },
   );
+}
+
+class ViewFeedbackRouteArgs {
+  const ViewFeedbackRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ViewFeedbackRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for

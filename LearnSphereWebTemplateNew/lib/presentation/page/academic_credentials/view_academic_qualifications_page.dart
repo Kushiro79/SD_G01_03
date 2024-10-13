@@ -27,7 +27,8 @@ class ViewAcademicQualificationsPage
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            Expanded(
+            Obx((){
+             return Expanded(
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.6),
@@ -62,7 +63,8 @@ class ViewAcademicQualificationsPage
                   },
                 ),
               ),
-            ),
+            );
+            }),
           ],
         ),
       ),
@@ -88,6 +90,7 @@ class ViewAcademicQualificationsPage
                     onPressed: () async {
                       final urlString = qualification['certificateUrl'];
                       Uri url = Uri.parse(urlString);
+                      print(url);
                       await launchUrl(url);
                                         },
                     child: const Text('View Certificate'),

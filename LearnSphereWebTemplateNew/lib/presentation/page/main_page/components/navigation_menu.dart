@@ -60,7 +60,7 @@ class _NavigationMenuState extends State<_NavigationMenu> {
               _MenuItem(
                 iconPath: ProjectAssets.feedback.path,
                 isSelected: currentUrl == '/view-feedback',
-                onTap: () => _onTabTap(const ViewFeedbackRoute()),
+                onTap: () => _onTabTap( ViewFeedbackRoute()),
                 text: 'User Feedback',
               ),
               _MenuItem(
@@ -117,9 +117,9 @@ class _MenuItem extends StatelessWidget {
                     ),
                   )
                 : null,
-            child: screenwidth
-                ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            child:  screenwidth
+                ? Padding(padding: EdgeInsets.only(left: 15) ,child:Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       iconPath.endsWith('.svg')
                           ? SvgPicture.asset(
@@ -139,15 +139,16 @@ class _MenuItem extends StatelessWidget {
                         text,
                         style: isSelected
                             ? TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
-                                fontSize: 16,
+                                fontSize: 14,
                               )
                             : TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
                                 color: Palette.dirtyWhite.withOpacity(0.8),
-                                fontSize: 16,
+                                fontSize: 14,
                               ),
                       ),
                     ],
                   )
+                )
                 : Center(
                     // Center the icon when text is hidden
                     child: iconPath.endsWith('.svg')
@@ -165,6 +166,7 @@ class _MenuItem extends StatelessWidget {
                           ),
                   ),
           ),
+          
         );
   }
 }
