@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../discussion_page/discussion_screen.dart';
 import 'home_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,8 @@ import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 
 @RoutePage()
 class MyHomePage extends GetView<HomeController> {
@@ -164,6 +167,11 @@ Widget _buildSidebar(BuildContext context) {
           leading: Image.asset('assets/people.png', width: 25),
           title: screenwidth ? const Text('Discussion') : null,
           onTap: () {
+                    // print('ListTile tapped!');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DiscussionPage()),
+            );
             // Handle tap on Messages
           },
         ),

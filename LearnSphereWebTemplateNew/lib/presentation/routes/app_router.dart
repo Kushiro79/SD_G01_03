@@ -20,6 +20,7 @@ import '../page/settings_page/settings.dart';
 import '../page/profile_page/views/edit_profile.dart';
 import '../page/view_and_user_management_page/view/view_and_user_management.dart';
 import '../page/verification_screen/views/verification_screen_view.dart';
+import '../page/discussion_page/discussion_screen.dart';
 
 
 part 'app_router.gr.dart';
@@ -154,6 +155,8 @@ class AppRouter extends RootStackRouter {
           CustomRoute(
             path: '/discover-and-follows',
             page: DiscoverRoute.page,
-            )
+            ),
+
+    
   ];
 } 
