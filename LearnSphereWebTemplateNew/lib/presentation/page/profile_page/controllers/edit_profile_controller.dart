@@ -18,7 +18,7 @@ class EditProfileController extends GetxController {
   final email = ''.obs;
   final profileImageUrl = ''.obs;
   final credentials = ''.obs; // Changed from bio to credentials
-  final certificate = ''.obs; // For user certification level (e.g., Newbie)
+  final certificate = ''.obs; 
   final bannerImageUrl = ''.obs;
 
   RxList certificates = <Map<String, dynamic>>[].obs;
@@ -40,23 +40,40 @@ class EditProfileController extends GetxController {
 
   // Method to fetch profile data from Firebase
   Future<void> loadProfile() async {
-    try {
-      User? user = _auth.currentUser;
-      if (user != null) {
-        var profileData =
-            await _firestore.collection('users').doc(user.uid).get();
-        username.value = profileData['username'] ?? '';
-        email.value = user.email ?? '';
-        profileImageUrl.value = profileData['profileImageUrl'] ?? '';
-        bannerImageUrl.value = profileData['bannerImageUrl'] ?? '';
-        credentials.value =
-            profileData['credentials'] ?? ''; // Changed from bio to credentials
-        certificate.value = profileData['certificate'] ?? 'Newbie';
+  try {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      var profileData = await _firestore.collection('users').doc(user.uid).get();
+      var certificateSnapshot = await _firestore
+          .collection('qualicationRequests')
+          .doc('approvedCertificates')
+          .collection('users')
+          .doc(user.uid)
+          .collection('certificates')
+          .get();
+
+      username.value = profileData['username'] ?? '';
+      email.value = user.email ?? '';
+      profileImageUrl.value = profileData['profileImageUrl'] ?? '';
+      bannerImageUrl.value = profileData['bannerImageUrl'] ?? '';
+      credentials.value = profileData['credentials'] ?? '';
+
+      // Extract all certificate data
+      List<String> certificatesList = [];
+      for (var doc in certificateSnapshot.docs) {
+        var certificateData = doc.data();
+        String levelOfEducation = certificateData['levelOfEducation'] ?? 'Unknown';
+        certificatesList.add(levelOfEducation);
       }
-    } catch (e) {
-      print('Error fetching profile data: $e');
+
+      // Optionally, you can store the list of certificates in a reactive variable
+      certificates.value = certificatesList.isNotEmpty ? certificatesList : ['Newbie'];
     }
+  } catch (e) {
+    print('Error fetching profile data: $e');
   }
+}
+
 
   bool isEmail(String email) {
     final emailRegex = RegExp(

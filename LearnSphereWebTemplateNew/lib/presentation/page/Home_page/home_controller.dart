@@ -1,10 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rxdart/rxdart.dart' as rxdart;
+
+
+import '../profile_page/controllers/edit_profile_controller.dart';
 
 
 class HomeController extends GetxController {
+  final postText = TextEditingController();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+
+
   @override
   void onReady() {
     super.onReady();
@@ -97,10 +107,12 @@ class HomeController extends GetxController {
     Colors.red,
     Colors.red,
   ];
-  Future<void> userUsername() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final firestore = FirebaseFirestore.instance;
 
+  void changeText(String value) {
+  postText.text = value; // Update the controller's text
+}
+
+  Future<void> userUsername() async {
     User? user = auth.currentUser; // Use currentUser property directly
     if (user != null) {
       final userId = user.uid; // Get the current user's ID
@@ -114,9 +126,73 @@ class HomeController extends GetxController {
        username.value = data?['username']; // Retrieve username
 
       print('Username: $username'); // Handle the retrieved username
-   
     } else {
       print('No current user');
     }
+  }
+  //post message
+  void postMessage(){
+    EditProfileController editController = Get.put(EditProfileController());
+    User? user = auth.currentUser;
+    final userId = user!.uid;
+    if(postText.text.isNotEmpty){
+      FirebaseFirestore.instance.collection('posts').doc(userId).collection('myPosts').add({
+        'profileImageUrl' : editController.profileImageUrl.value,
+        'Username': username.value,
+        'Text': postText.text,
+        'certificate': editController.certificate.value,
+        'Timestamp': Timestamp.now(),
+      });
+      print('username : ${username.value}' 
+      'Text : ${postText.text}'
+      'Timestamp : ${Timestamp.now()}'
+      );
+    }else{
+      print('Please enter some text');
+    }
+  }
+
+  Stream<List<DocumentSnapshot>> getPostsStream(String userId) async* {
+    // Step 1: Get the list of user IDs the current user is following
+    DocumentSnapshot followingDoc = await FirebaseFirestore.instance
+        .collection('following')
+        .doc(userId)
+        .get();
+    
+    List<String> followingList = List<String>.from(followingDoc['followedUsers'] ?? []);
+
+    // Step 2: Create a list to hold streams of posts
+    List<Stream<List<DocumentSnapshot>>> streams = [];
+
+    // Add the current user's posts to the list of streams
+    streams.add(
+      FirebaseFirestore.instance
+          .collection("posts")
+          .doc(userId)
+          .collection('myPosts')
+          .orderBy("Timestamp", descending: false)
+          .snapshots()
+
+          .map((snapshot) => snapshot.docs)
+    );
+
+    // Step 3: For each followed user, get their posts
+    for (String followingUserId in followingList) {
+      streams.add(
+        FirebaseFirestore.instance
+            .collection("posts")
+            .doc(followingUserId)
+            .collection('myPosts')
+            .orderBy("Timestamp", descending: false)
+            .snapshots()
+            .map((snapshot) => snapshot.docs)
+      );
+    }
+
+    // Step 4: Combine all the streams into a single stream
+    yield* rxdart.Rx.combineLatest(streams, (values) {
+      // Flatten the list of lists into a single list
+      return values.expand((list) => list).toList();
+    });
   }
 }
