@@ -201,10 +201,28 @@ Widget _buildSidebar(BuildContext context) {
           ),
           title: screenwidth ? const Text('Settings') : null,
           onTap: () {
-            context.router.push(const SettingsRoute());
+            context.router.push(SettingsRoute());
           },
         ),
-        // Add the Give Feedback button here
+        homeController.isStaffOrAdmin
+            ? ListTile(
+                leading: const Icon(
+                  Icons.swap_calls,
+                  color: Colors.black,
+                ),
+                title: screenwidth? const Text(
+                  'Change Mode',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  )
+                ):
+                null,
+                onTap: () {
+                  // Navigate to homepage if currently in main page
+                  context.router.push(MainRoute());
+                })
+            : const SizedBox.shrink(),
       ],
     ),
   );
@@ -938,8 +956,7 @@ Widget _ThePost({
               Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Text(DateFormat('dd-MM-yyyy \nhh:mm:ss')
-                      .format(timestamp.toDate())
-                      )),
+                      .format(timestamp.toDate()))),
             ],
           ),
         ],

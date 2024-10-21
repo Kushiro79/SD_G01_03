@@ -13,12 +13,15 @@ class HomeController extends GetxController {
   final postText = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
+  bool isStaffOrAdmin = false;
+
 
 
   @override
   void onReady() {
     super.onReady();
     userUsername();
+    checkUserRole();
   }
 
 
@@ -194,5 +197,30 @@ class HomeController extends GetxController {
       // Flatten the list of lists into a single list
       return values.expand((list) => list).toList();
     });
+  }
+
+    Future<void> checkUserRole() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final firestore = FirebaseFirestore.instance;
+
+      try {
+        final userData = await firestore.collection('users').doc(userId).get();
+        final userRole = userData['role'];
+
+        if (userRole == 'staff' || userRole == 'admin') {
+          // User is a staff or admin
+          isStaffOrAdmin = true;
+          print('isStaffOrAdmin: $isStaffOrAdmin');
+        } else {
+          // User is not a staff or admin
+          isStaffOrAdmin = false;
+          print('isStaffOrAdmin: $isStaffOrAdmin');
+        }
+      } catch (e) {
+        print('Error checking user role: $e');
+      }
+    }
   }
 }

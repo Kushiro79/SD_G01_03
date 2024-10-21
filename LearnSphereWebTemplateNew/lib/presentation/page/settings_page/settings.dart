@@ -4,10 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../../routes/app_router.dart';
+import '../Home_page/home_screen.dart';
 
 @RoutePage()
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  SettingsPageState createState() => SettingsPageState();
+}
+
+class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +40,8 @@ class SettingsPage extends StatelessWidget {
                   child: Container(
                     width: containerWidth,
                     padding: const EdgeInsets.all(10.0),
-                    margin: const EdgeInsets.only(top: 20), // Margin to push it down a bit
+                    margin: const EdgeInsets.only(
+                        top: 20), // Margin to push it down a bit
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.6), // More transparent
                       borderRadius: BorderRadius.circular(20),
@@ -122,7 +130,7 @@ class SettingsPage extends StatelessWidget {
                           ),
                           onTap: () => context.router.push(GiveFeedbackRoute()),
                         ),
-                        const Divider(), 
+                        const Divider(),
                         //Delete Account
                         ListTile(
                           leading: Icon(
@@ -192,70 +200,67 @@ class SettingsPage extends StatelessWidget {
   }
 
   Future<void> deleteUserAndCleanUp(BuildContext context) async {
-  final user = FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
 
-  if (user != null) {
-    final userId = user.uid;
-    final firestore = FirebaseFirestore.instance;
+    if (user != null) {
+      final userId = user.uid;
+      final firestore = FirebaseFirestore.instance;
 
-    try {
-      // Show confirmation dialog before proceeding
-      bool confirmed = await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Confirm Deletion'),
-            content: const Text(
-                'Are you sure you want to delete your account? This action cannot be undone.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
+      try {
+        // Show confirmation dialog before proceeding
+        bool confirmed = await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Confirm Deletion'),
+              content: const Text(
+                  'Are you sure you want to delete your account? This action cannot be undone.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          },
+        );
 
-      if (!confirmed) return; // If the user cancels, stop the deletion process     
+        if (!confirmed)
+          return; // If the user cancels, stop the deletion process
 
-      // Step 1: Delete the user's data from the 'users', 'followers', and 'following' collections
-      await firestore.collection('users').doc(userId).delete();
+        // Step 1: Delete the user's data from the 'users', 'followers', and 'following' collections
+        await firestore.collection('users').doc(userId).delete();
 
+        // Step 2: Delete the user's Firebase Auth account
+        await user.delete();
 
-      // Step 2: Delete the user's Firebase Auth account
-      await user.delete();
+        // Step 3: Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Account deleted successfully'),
+            duration: Duration(seconds: 2),
+          ),
+        );
 
-      // Step 3: Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account deleted successfully'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+        Get.reset(); // Reset app state if using GetX
 
-      Get.reset(); // Reset app state if using GetX
+        // Wait for the SnackBar to display before navigating away
+        await Future.delayed(const Duration(seconds: 2));
 
-      // Wait for the SnackBar to display before navigating away
-      await Future.delayed(const Duration(seconds: 2));
-
-      // Navigate to login page
-      context.router.replace(LoginRouteView());
-    } catch (e) {
-      print('Error deleting account: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error deleting account. Please try again.'),
-        ),
-      );
+        // Navigate to login page
+        context.router.replace(LoginRouteView());
+      } catch (e) {
+        print('Error deleting account: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error deleting account. Please try again.'),
+          ),
+        );
+      }
     }
   }
-}
-
-
-  
 }

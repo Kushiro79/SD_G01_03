@@ -9,6 +9,38 @@ class _NavigationMenu extends StatefulWidget {
 
 class _NavigationMenuState extends State<_NavigationMenu> {
   bool _isListenerAdded = false;
+  bool isStaffOrAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserRole();
+  }
+
+  Future<void> _checkUserRole() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      final firestore = FirebaseFirestore.instance;
+
+      try {
+        final userData = await firestore.collection('users').doc(userId).get();
+        final userRole = userData['role'];
+
+        if (userRole == 'staff' || userRole == 'admin') {
+          // User is a staff or admin
+          isStaffOrAdmin = true;
+          print('isStaffOrAdmin: $isStaffOrAdmin');
+        } else {
+          // User is not a staff or admin
+          isStaffOrAdmin = false;
+          print('isStaffOrAdmin: $isStaffOrAdmin');
+        }
+      } catch (e) {
+        print('Error checking user role: $e');
+      }
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -33,51 +65,74 @@ class _NavigationMenuState extends State<_NavigationMenu> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                  child: Image(
-                    image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                    width:  60,
-                    height: 60,
-                  ),
-                ),
-              const SizedBox(height: 20),
-              _MenuItem(
-                iconPath: ProjectAssets.icons.home.path,
-                isSelected: currentUrl == '/dashboard',
-                onTap: () => _onTabTap(const DashboardRoute()),
-                text: 'Dashboard',
+            child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: Image(
+                image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                width: 60,
+                height: 60,
               ),
-              _MenuItem(
-                iconPath: ProjectAssets.graduate.path,
-                isSelected: currentUrl == '/view-academic-qualifications',
-                onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
-                text: 'User Academic\n Qualifications',
-              ),
-              _MenuItem(
-                iconPath: ProjectAssets.feedback.path,
-                isSelected: currentUrl == '/view-feedback',
-                onTap: () => _onTabTap( ViewFeedbackRoute()),
-                text: 'User Feedback',
-              ),
-              _MenuItem(
-                iconPath: ProjectAssets.tagUser1.path,
-                isSelected: currentUrl == '/user-management',
-                onTap: () => _onTabTap(const ViewAndManageUsersRoute()),
-                text: 'User & Staff Management',
-              ),
-              _MenuItem(
-                iconPath: ProjectAssets.icons.setting2.path,
-                isSelected: currentUrl == '/settings',
-                onTap: () => _onTabTap(const SettingsRoute()),
-                text: 'Settings',
-              ),
-            ],
-          ),
-        );
+            ),
+            const SizedBox(height: 20),
+            _MenuItem(
+              iconPath: ProjectAssets.icons.home.path,
+              isSelected: currentUrl == '/dashboard',
+              onTap: () => _onTabTap(const DashboardRoute()),
+              text: 'Dashboard',
+            ),
+            _MenuItem(
+              iconPath: ProjectAssets.graduate.path,
+              isSelected: currentUrl == '/view-academic-qualifications',
+              onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
+              text: 'User Academic\n Qualifications',
+            ),
+            _MenuItem(
+              iconPath: ProjectAssets.feedback.path,
+              isSelected: currentUrl == '/view-feedback',
+              onTap: () => _onTabTap(ViewFeedbackRoute()),
+              text: 'User Feedback',
+            ),
+            _MenuItem(
+              iconPath: ProjectAssets.tagUser1.path,
+              isSelected: currentUrl == '/user-management',
+              onTap: () => _onTabTap(const ViewAndManageUsersRoute()),
+              text: 'User & Staff Management',
+            ),
+            _MenuItem(
+              iconPath: ProjectAssets.icons.setting2.path,
+              isSelected: currentUrl == '/settings',
+              onTap: () => _onTabTap(SettingsRoute()),
+              text: 'Settings',
+            ),
+            const Spacer(),
+            isStaffOrAdmin
+                ? Column(
+                    children: [
+                      ListTile(
+                          leading: const Icon(
+                            Icons.swap_calls,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
+                          title: const Text(
+                            'Change Mode',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onTap: () {
+                              // Navigate to homepage if currently in main page
+                              context.router.push(MyHomeRoute());
+                            
+                          }),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+          ],
+        ));
       },
     );
   }
@@ -102,56 +157,28 @@ class _MenuItem extends StatelessWidget {
     final iconsize = screenwidth ? 20.0 : 24.0;
 
     return InkWell(
-        onTap: onTap,
-          child: Container(
-            height: 42,
-            margin: const EdgeInsets.only(
-              bottom: 25,
-            ),
-            decoration: isSelected
-                ? const BoxDecoration(
-                    color: Palette.lightBlue,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                  )
-                : null,
-            child:  screenwidth
-                ? Padding(padding: EdgeInsets.only(left: 15) ,child:Row(
+      onTap: onTap,
+      child: Container(
+        height: 42,
+        margin: const EdgeInsets.only(
+          bottom: 25,
+        ),
+        decoration: isSelected
+            ? const BoxDecoration(
+                color: Palette.lightBlue,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+              )
+            : null,
+        child: screenwidth
+            ? Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      iconPath.endsWith('.svg')
-                          ? SvgPicture.asset(
-                              iconPath,
-                              width: iconsize,
-                              height: iconsize,
-                              colorFilter: Palette.dirtyWhite.toColorFilter,
-                            )
-                          : Image.asset(
-                              iconPath,
-                              width: iconsize,
-                              height: iconsize,
-                              color: Palette.dirtyWhite,
-                            ),
-                      const SizedBox(width: 8),
-                      Text(
-                        text,
-                        style: isSelected
-                            ? TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
-                                fontSize: 14,
-                              )
-                            : TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
-                                color: Palette.dirtyWhite.withOpacity(0.8),
-                                fontSize: 14,
-                              ),
-                      ),
-                    ],
-                  )
-                )
-                : Center(
-                    // Center the icon when text is hidden
-                    child: iconPath.endsWith('.svg')
+                  children: <Widget>[
+                    iconPath.endsWith('.svg')
                         ? SvgPicture.asset(
                             iconPath,
                             width: iconsize,
@@ -164,9 +191,37 @@ class _MenuItem extends StatelessWidget {
                             height: iconsize,
                             color: Palette.dirtyWhite,
                           ),
-                  ),
-          ),
-          
-        );
+                    const SizedBox(width: 8),
+                    Text(
+                      text,
+                      style: isSelected
+                          ? TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
+                              fontSize: 14,
+                            )
+                          : TextStyles.myriadProSemiBold12DirtyWhite.copyWith(
+                              color: Palette.dirtyWhite.withOpacity(0.8),
+                              fontSize: 14,
+                            ),
+                    ),
+                  ],
+                ))
+            : Center(
+                // Center the icon when text is hidden
+                child: iconPath.endsWith('.svg')
+                    ? SvgPicture.asset(
+                        iconPath,
+                        width: iconsize,
+                        height: iconsize,
+                        colorFilter: Palette.dirtyWhite.toColorFilter,
+                      )
+                    : Image.asset(
+                        iconPath,
+                        width: iconsize,
+                        height: iconsize,
+                        color: Palette.dirtyWhite,
+                      ),
+              ),
+      ),
+    );
   }
 }
