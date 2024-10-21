@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart' as rxdart;
 
 
 class ProfileScreenController extends GetxController {
@@ -12,10 +13,12 @@ class ProfileScreenController extends GetxController {
   var certificate = 'Newbie'.obs; // Added observable property for certificate
   final followingCount = 0.obs;
   final followersCount = 0.obs;
+  final postCount = 0.obs;
 
 
   String get followingCountString => followingCount.toString();
   String get followersCountString => followersCount.toString();
+  String get postCountString => postCount.toString();
 
   @override
   void onInit() {
@@ -24,6 +27,7 @@ class ProfileScreenController extends GetxController {
     loadPfp();
     getFollowersCount();
     getFollowingCount();
+    getPostCount();
   }
 
   loadPfp() {
@@ -142,4 +146,33 @@ class ProfileScreenController extends GetxController {
       });
     }
   }
+
+  Future<void> getPostCount() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore firebasefirestore = FirebaseFirestore.instance;
+
+    final postList = await firebasefirestore
+        .collection('posts')
+        .doc(uid)
+        .collection('myPosts')
+        .get();
+
+    if (postList.docs.isNotEmpty) {
+      postCount.value = postList.docs.length;
+      print('posts: ${postCount.value}');
+    } else {
+      print('No posts');
+    }
+  }
+
+  
+Stream<List<QueryDocumentSnapshot>> getPostsStream(String userId) {
+  return FirebaseFirestore.instance
+      .collection("posts")
+      .doc(userId)
+      .collection('myPosts')
+      .orderBy("Timestamp", descending: false)
+      .snapshots()
+      .map((snapshot) => snapshot.docs);
+}
 }

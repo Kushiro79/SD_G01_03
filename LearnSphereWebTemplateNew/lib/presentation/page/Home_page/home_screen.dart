@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'home_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../profile_page/controllers/edit_profile_controller.dart';
-import '../../theme/palette.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
-import '../../utils/color_extension.dart';
-import 'showimage_view.dart';
 import '../../page/discover_page/discover_page.dart';
 
 @RoutePage()
@@ -24,25 +22,27 @@ class MyHomePage extends GetView<HomeController> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor:Colors.white,
-          elevation: 2,
-          toolbarHeight: 80,
-          title: Row(children: <Widget>[
-            Image(
-              image: AssetImage(ProjectAssets.learnSphereLogo.path),
-              width: 60,
-              height: 60,
-            ),
-          ]),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          toolbarHeight: 50,
+          title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image(
+                  image: AssetImage(ProjectAssets.learnSphereLogo.path),
+                  width: screenwidth ? 60 : 40,
+                  height: screenwidth ? 60 : 40,
+                ),
+              ]),
         ),
         body: Container(
-            decoration: const BoxDecoration(color:Colors.white,), // add this to avoid errors
-            child: 
-              Row(children: [
-                _buildSidebar(context),
-                Expanded(child: _buildPost())
-              ])));
-            
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ), // add this to avoid errors
+            child: Row(children: [
+              _buildSidebar(context),
+              Expanded(child: _buildPost())
+            ])));
   }
 }
 
@@ -53,7 +53,7 @@ Widget _buildSidebar(BuildContext context) {
   var screenwidth = MediaQuery.of(context).size.width >= 800;
 
   return Container(
-    width: screenwidth ? 300 : 80,
+    width: screenwidth ? 300 : 70,
     decoration: const BoxDecoration(
       border: Border(
         right: BorderSide(width: 1, color: Colors.grey),
@@ -63,7 +63,6 @@ Widget _buildSidebar(BuildContext context) {
       padding: EdgeInsets.zero,
       children: [
         SizedBox(
-          height: screenwidth ? 200 : 100,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Column(
@@ -74,15 +73,15 @@ Widget _buildSidebar(BuildContext context) {
                       ? ClipOval(
                           child: Image.network(
                             editController.profileImageUrl.value,
-                            height: screenwidth ? 120 : 50,
-                            width: screenwidth ? 120 : 50,
+                            height: screenwidth ? 120 : 40,
+                            width: screenwidth ? 120 : 40,
                             fit: BoxFit.cover,
                           ),
                         )
                       : Container(
                           margin: const EdgeInsets.only(top: 16),
-                          height: screenwidth ? 120 : 70,
-                          width: screenwidth ? 120 : 70,
+                          height: screenwidth ? 120 : 40,
+                          width: screenwidth ? 120 : 40,
                           alignment: Alignment.topLeft,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
@@ -96,17 +95,19 @@ Widget _buildSidebar(BuildContext context) {
                         );
                 }),
                 const SizedBox(height: 10),
-                Obx(() {
-                  return Text(
-                    '@ ${editController.username.value}',
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Urbanist-semibold',
-                        fontWeight: FontWeight.w600),
-                    softWrap: true,
-                    overflow: TextOverflow.visible,
-                  );
-                }),
+                screenwidth
+                    ? Obx(() {
+                        return Text(
+                          '@ ${editController.username.value}',
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Urbanist-semibold',
+                              fontWeight: FontWeight.w600),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                        );
+                      })
+                    : const SizedBox()
               ],
             ),
           ),
@@ -282,30 +283,35 @@ Widget _buildPost() {
                 ),
               ),
               Expanded(
-      child: StreamBuilder(
-        stream: homeController.getPostsStream(homeController.auth.currentUser!.uid),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var posts = snapshot.data as List<DocumentSnapshot>;
-            return ListView.builder(
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return _ThePost(
-                  text: post['Text'],
-                  user: post['Username'],
-                  imageUrl: post['profileImageUrl'],
-                  context: context,
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          return const CircularProgressIndicator();
-        },
-      ),
-    )
+                child: StreamBuilder(
+                  stream: homeController
+                      .getPostsStream(homeController.auth.currentUser!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var posts = snapshot.data as List<DocumentSnapshot>;
+                      return ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          final post = posts[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: _ThePost(
+                              text: post['Text'],
+                              user: post['Username'],
+                              imageUrl: post['profileImageUrl'],
+                              timestamp: post['Timestamp'],
+                              context: context,
+                            ),
+                          );
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                ),
+              )
 
               /*ListView.builder(
                 itemCount: homeController.pic.length,
@@ -860,57 +866,76 @@ Widget _ThePost({
   required String text,
   required String user,
   required String imageUrl,
+  required Timestamp timestamp,
   required BuildContext context,
-}){
+}) {
   return Container(
-    
     decoration: BoxDecoration(
       color: const Color.fromARGB(206, 255, 255, 255),
-      border: Border.all(color: Colors.grey, ),
+      border: Border.all(
+        color: Colors.grey,
+      ),
       borderRadius: BorderRadius.circular(15),
     ),
-    child: Row(children: [
-      Padding(padding: const EdgeInsets.all(20),child: 
-      Column(
+    child: Padding(
+      padding: const EdgeInsets.only(top: 10, left: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const SizedBox(width: 10),
-              imageUrl.isNotEmpty
+          imageUrl.isNotEmpty
               ? ClipOval(
-                child: Image.network(
-                  imageUrl,
-                  height: 50,
-                  width: 50,
-                  fit: BoxFit.cover,
-                ),
-              )
+                  child: Image.network(
+                    imageUrl,
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
+                )
               : Container(
-                          margin: const EdgeInsets.only(top: 16),
-                          height: MediaQuery.of(context).size.height >850 ? 50 : 20,
-                          width: MediaQuery.of(context).size.height >850 ? 50 : 20,
-                          alignment: Alignment.topLeft,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors
-                                .grey, // Use a default color or your AppColor.Secondary
-                          ),
-                          child: const Center(
-                              child: Icon(Icons.person,
-                                  color:
-                                      Colors.white)), // Optional: Add an icon
-                        ),
-              const SizedBox(width: 10),
-              Column(children: [
-                Text(user, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              ],)
-              
+                  margin: const EdgeInsets.only(top: 16),
+                  height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                  width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                  alignment: Alignment.topLeft,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors
+                        .grey, // Use a default color or your AppColor.Secondary
+                  ),
+                  child: const Icon(Icons.person,
+                      color: Colors.white), // Optional: Add an icon
+                ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(user,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Text(text),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Text(DateFormat('dd-MM-yyyy \nhh:mm:ss')
+                      .format(timestamp.toDate())
+                      )),
             ],
           ),
-          Text(text),
         ],
       ),
-      ),
-    ],),
+    ),
   );
 }
