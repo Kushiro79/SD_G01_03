@@ -19,16 +19,8 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/background.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // Settings content
+      backgroundColor: Colors.black87,
+      body: 
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: LayoutBuilder(
@@ -43,7 +35,6 @@ class SettingsPageState extends State<SettingsPage> {
                     margin: const EdgeInsets.only(
                         top: 20), // Margin to push it down a bit
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6), // More transparent
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
@@ -58,7 +49,7 @@ class SettingsPageState extends State<SettingsPage> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -66,66 +57,78 @@ class SettingsPageState extends State<SettingsPage> {
                         const Divider(), // Line separator
                         // Account section
                         ListTile(
-                          leading: Icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hoverColor: Colors.white.withOpacity(0.1),
+                          leading: const Icon(
                             Icons.person_2_rounded,
-                            color: Colors.grey[700],
+                            color: Colors.white,
                           ),
                           title: const Text(
                             'View Profile ',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             'View your profile details',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () => context.router.push(ProfileRouteRoute()),
                         ),
                         const Divider(), // Line separator
                         ListTile(
-                          leading: Icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hoverColor: Colors.white.withOpacity(0.1),
+                          leading: const Icon(
                             Icons.lock,
-                            color: Colors.grey[700],
+                            color: Colors.white,
                           ),
                           title: const Text(
                             'Edit Profile ',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             'Edit your profile details',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () => context.router.push(EditProfileRoute()),
                         ),
                         const Divider(), // Line separator
                         ListTile(
-                          leading: Icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hoverColor: Colors.white.withOpacity(0.1),
+                          leading: const Icon(
                             Icons.lock,
-                            color: Colors.grey[700],
+                            color: Colors.white,
                           ),
                           title: const Text(
                             'Give Feedback ',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             'Give feedback on the app',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () => context.router.push(GiveFeedbackRoute()),
@@ -133,22 +136,26 @@ class SettingsPageState extends State<SettingsPage> {
                         const Divider(),
                         //Delete Account
                         ListTile(
-                          leading: Icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hoverColor: Colors.white.withOpacity(0.1),
+                          leading: const Icon(
                             Icons.delete,
-                            color: Colors.grey[700],
+                            color: Colors.white,
                           ),
                           title: const Text(
                             'Delete Account',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             'Delete your account permanently',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () async {
@@ -158,22 +165,26 @@ class SettingsPageState extends State<SettingsPage> {
                         const Divider(),
                         // Sign out section
                         ListTile(
-                          leading: Icon(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hoverColor: Colors.white.withOpacity(0.1),
+                          leading: const Icon(
                             Icons.logout,
-                            color: Colors.grey[700],
+                            color: Colors.white,
                           ),
                           title: const Text(
                             'Sign out',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             'Sign out of your account',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () async {
@@ -194,8 +205,8 @@ class SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-        ],
-      ),
+        
+      
     );
   }
 

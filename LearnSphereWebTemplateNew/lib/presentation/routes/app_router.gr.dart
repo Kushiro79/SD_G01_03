@@ -395,7 +395,7 @@ class SettingsRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return SettingsPage();
+      return const SettingsPage();
     },
   );
 }

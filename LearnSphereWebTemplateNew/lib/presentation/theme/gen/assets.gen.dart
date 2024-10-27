@@ -114,6 +114,8 @@ class ProjectAssets {
       AssetGenImage('assets/LS2_transparent.png');
   static const AssetGenImage lS3Transparent =
       AssetGenImage('assets/LS3_transparent.png');
+  static const AssetGenImage learnSphereLogo =
+      AssetGenImage('assets/LearnSphereLogo.png');
   static const AssetGenImage messager = AssetGenImage('assets/Messager.png');
   static const AssetGenImage onboarding1 =
       AssetGenImage('assets/Onboarding1.png');
@@ -264,8 +266,6 @@ class ProjectAssets {
   static const AssetGenImage invite5 = AssetGenImage('assets/invite5.png');
   static const AssetGenImage invite6 = AssetGenImage('assets/invite6.png');
   static const AssetGenImage key = AssetGenImage('assets/key.png');
-  static const AssetGenImage learnSphereLogo =
-      AssetGenImage('assets/learnSphereLogo.png');
   static const AssetGenImage like = AssetGenImage('assets/like.png');
   static const AssetGenImage live = AssetGenImage('assets/live.png');
   static const AssetGenImage live1 = AssetGenImage('assets/live1.png');
@@ -431,6 +431,7 @@ class ProjectAssets {
         instaStory,
         lS2Transparent,
         lS3Transparent,
+        learnSphereLogo,
         messager,
         onboarding1,
         onboarding2,
@@ -548,7 +549,6 @@ class ProjectAssets {
         invite5,
         invite6,
         key,
-        learnSphereLogo,
         like,
         live,
         live1,

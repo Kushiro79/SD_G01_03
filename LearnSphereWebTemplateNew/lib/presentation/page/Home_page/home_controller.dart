@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
+import 'package:file_picker/file_picker.dart';
 
 
 import '../profile_page/controllers/edit_profile_controller.dart';
@@ -13,6 +16,7 @@ class HomeController extends GetxController {
   final postText = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
+  var pickedImageBytes = <Uint8List>[].obs;
   bool isStaffOrAdmin = false;
 
 
@@ -114,6 +118,74 @@ class HomeController extends GetxController {
   void changeText(String value) {
   postText.text = value; // Update the controller's text
 }
+
+Widget buildHoverableImages(HomeController homeController) {
+  return Obx(() {
+    if (homeController.pickedImageBytes.isEmpty) {
+      return const SizedBox(); // No images to display
+    }
+
+    return Wrap(
+      spacing: 8.0, // Spacing between images
+      runSpacing: 8.0,
+      children: homeController.pickedImageBytes
+          .asMap()
+          .entries
+          .map((entry) {
+            int index = entry.key;
+            Uint8List imageData = entry.value;
+            final hover = false.obs;
+
+            return MouseRegion(
+              onEnter: (_) => hover.value = true,
+              onExit: (_) => hover.value = false,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Display the image
+                  ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child:  Image.memory(
+                    imageData,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),),
+                  // Display the overlay 'X' button on hover
+                  Obx(() => Visibility(
+                        visible: hover.value,
+                        child: Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              // Remove the image from the list
+                              homeController.pickedImageBytes.removeAt(index);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                ],
+              ),
+            );
+          })
+          .toList(),
+    );
+  });
+}
+
+
 
   Future<void> userUsername() async {
     User? user = auth.currentUser; // Use currentUser property directly
