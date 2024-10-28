@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
 
 import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../theme/gen/assets.gen.dart';
@@ -41,18 +42,18 @@ class MyHomePage extends GetView<HomeController> {
                   height: screenwidth ? 80 : 60,
                 ),
                 const SizedBox(width: 20),
-                              Text("Learn",
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 30,
-                                      color: Colors.white)),
-                              Text(
-                                "Sphere",
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF004ff9),
-                                    fontSize: 30),
-                              )
+                Text("Learn",
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.white)),
+                Text(
+                  "Sphere",
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF004ff9),
+                      fontSize: 30),
+                )
               ]),
         ),
         body: Container(
@@ -309,10 +310,10 @@ Widget _buildPost() {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Container(
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.white,
-                    width:1.5,
+                    width: 1.5,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   color: Colors.transparent,
@@ -338,10 +339,15 @@ Widget _buildPost() {
                               obscureText: false,
                             ),
                           ),
-                          const SizedBox(width: 10,),
+                          const SizedBox(
+                            width: 10,
+                          ),
                           IconButton(
                             onPressed: homeController.postMessage,
-                            icon: const Icon(Icons.send, color: Colors.white,),
+                            icon: const Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -357,12 +363,17 @@ Widget _buildPost() {
                             // Handle photos action
                             final result = await FilePicker.platform.pickFiles(
                               type: FileType.custom,
-                              allowedExtensions: ['jpg', 'png', 'jpeg'],
+                              allowedExtensions: ['jpg', 'png', 'jpeg', 'mp4'],
                             );
                             if (result == null) return;
-                            for (var file in result.files){
-                              if(file.bytes != null){
-                                homeController.pickedImageBytes.add(file.bytes!);
+
+                            for (var file in result.files) {
+                              if (file.bytes != null) {
+                                // Determine if file is image or video based on extension
+                                final isImage = ['jpg', 'png', 'jpeg']
+                                    .contains(file.extension);
+                                homeController.addFile(
+                                    file.bytes!, isImage ? 'image' : 'video');
                               }
                             }
                           },
@@ -379,9 +390,14 @@ Widget _buildPost() {
                               allowedExtensions: ['mp4'],
                             );
                             if (result == null) return;
-                            for (var file in result.files){
-                              if(file.bytes != null){
-                                homeController.pickedImageBytes.add(file.bytes!);
+
+                            for (var file in result.files) {
+                              if (file.bytes != null) {
+                                // Determine if file is image or video based on extension
+                                final isImage = ['jpg', 'png', 'jpeg']
+                                    .contains(file.extension);
+                                homeController.addFile(
+                                    file.bytes!, isImage ? 'image' : 'video');
                               }
                             }
                           },
@@ -416,6 +432,10 @@ Widget _buildPost() {
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         final post = posts[index];
+                        List<String> mediaUrls = List<String>.from(
+                            (post['mediaUrls'] ?? []).map((url) =>
+                                url.toString()) // Ensure each URL is a string
+                            );
                         return Column(
                           children: [
                             Padding(
@@ -426,6 +446,7 @@ Widget _buildPost() {
                                 imageUrl: post['profileImageUrl'],
                                 timestamp: post['Timestamp'],
                                 context: context,
+                                mediaUrls: mediaUrls,
                               ),
                             ),
                             if (index < posts.length - 1)
@@ -441,7 +462,10 @@ Widget _buildPost() {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   }
-                  return const Center(child: CircularProgressIndicator(color: Colors.white,));
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ));
                 },
               ),
             )
@@ -487,6 +511,7 @@ Widget _ThePost({
   required String user,
   required String imageUrl,
   required Timestamp timestamp,
+  required List<String> mediaUrls, // Accept media URLs as a parameter
   required BuildContext context,
 }) {
   return Container(
@@ -515,30 +540,54 @@ Widget _ThePost({
                   alignment: Alignment.topLeft,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors
-                        .grey, // Use a default color or your AppColor.Secondary
+                    color: Colors.grey,
                   ),
-                  child: const Icon(Icons.person,
-                      color: Colors.white), // Optional: Add an icon
+                  child: const Icon(Icons.person, color: Colors.white),
                 ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(user,
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.white)),
-                  ],
-                ),
-                const SizedBox(height: 30),
+                Text(user,
+                    style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
                 Text(
                   text,
                   style: const TextStyle(color: Colors.white),
                 ),
+                const SizedBox(height: 10),
+                // Display the media
+                mediaUrls.isNotEmpty
+                    ? Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: mediaUrls.map((url) {
+                          return url.contains('.mp4')
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: SizedBox(
+                                  width: MediaQuery.of(context).size.width > 800
+                                      ? MediaQuery.of(context).size.width * 0.3
+                                      : MediaQuery.of(context).size.width *
+                                          0.50,
+                                  child: VideoPlayerWidget(videoUrl: url),
+                                ))
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    url,
+                                    width: MediaQuery.of(context).size.width > 800
+                                      ? MediaQuery.of(context).size.width * 0.3
+                                      : MediaQuery.of(context).size.width *
+                                          0.50,
+                                    height: 300,
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                        }).toList(),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
           ),
@@ -549,9 +598,10 @@ Widget _ThePost({
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                    style: const TextStyle(color: Colors.white),
-                    DateFormat('dd-MM-yyyy \nhh:mm:ss')
-                        .format(timestamp.toDate())),
+                  DateFormat('dd-MM-yyyy \nhh:mm:ss')
+                      .format(timestamp.toDate()),
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -559,4 +609,77 @@ Widget _ThePost({
       ),
     ),
   );
+}
+
+class VideoPlayerWidget extends StatefulWidget {
+  final String videoUrl;
+
+  const VideoPlayerWidget({Key? key, required this.videoUrl}) : super(key: key);
+
+  @override
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+}
+
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized.
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Display the video
+        _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+            : Center(child: CircularProgressIndicator()), // Loading indicator
+
+        // Add play/pause buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                });
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.stop, color: Colors.white),
+              onPressed: () {
+                setState(() {
+                  _controller.pause();
+                  _controller.seekTo(Duration.zero); // Reset to start
+                });
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
