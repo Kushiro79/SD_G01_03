@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../theme/gen/assets.gen.dart';
@@ -28,22 +29,35 @@ class MyHomePage extends GetView<HomeController> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black87,
+          backgroundColor: Color(0xFF1A1F3B),
           elevation: 0,
           toolbarHeight: 100,
           title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Image(
                   image: AssetImage(ProjectAssets.learnSphereLogo.path),
                   width: screenwidth ? 80 : 60,
                   height: screenwidth ? 80 : 60,
                 ),
+                const SizedBox(width: 20),
+                              Text("Learn",
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                      color: Colors.white)),
+                              Text(
+                                "Sphere",
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004ff9),
+                                    fontSize: 30),
+                              )
               ]),
         ),
         body: Container(
             decoration: const BoxDecoration(
-              color: Colors.black87,
+              color: Color(0xFF1A1F3B),
             ), // add this to avoid errors
             child: Row(children: [
               _buildSidebar(context),
@@ -295,7 +309,12 @@ Widget _buildPost() {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Container(
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width:1.5,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                   color: Colors.transparent,
                 ),
                 padding: const EdgeInsets.all(
@@ -319,9 +338,10 @@ Widget _buildPost() {
                               obscureText: false,
                             ),
                           ),
+                          const SizedBox(width: 10,),
                           IconButton(
                             onPressed: homeController.postMessage,
-                            icon: const Icon(Icons.send),
+                            icon: const Icon(Icons.send, color: Colors.white,),
                           ),
                         ],
                       ),
@@ -421,7 +441,7 @@ Widget _buildPost() {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   }
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(color: Colors.white,));
                 },
               ),
             )
@@ -446,16 +466,16 @@ Widget _buildTextField({
       hintText: hintText,
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: Colors.white70,
+      fillColor: Colors.white,
       labelStyle: const TextStyle(fontSize: 12),
       contentPadding:
           const EdgeInsets.only(left: 30, right: 15, top: 10, bottom: 10),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.blueGrey[50]!),
+        borderSide: BorderSide(color: Colors.white),
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.blueGrey[50]!),
+        borderSide: BorderSide(color: Colors.white),
         borderRadius: BorderRadius.circular(15),
       ),
     ),
