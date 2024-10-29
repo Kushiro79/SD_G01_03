@@ -25,17 +25,19 @@ class ProfileScreenPage extends StatelessWidget {
     var screenwidth = MediaQuery.of(context).size.width >= 800;
     //String bannerImageUrl = editController.bannerImageUrl.value;
     return Scaffold(
+      backgroundColor: Colors.black87,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black87,
           elevation: 0,
           title: const Text(
             'Profile',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(color: 
+            Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(Icons.edit, color: Colors.black),
+              icon: const Icon(Icons.edit, color: Color.fromARGB(255, 255, 255, 255)),
               onPressed: () {
                 // Navigate to the Edit Profile screen
                 AutoRouter.of(context).push(EditProfileRoute());
@@ -54,7 +56,7 @@ class ProfileScreenPage extends StatelessWidget {
                   child: Obx(() {
                     return editController.bannerImageUrl.isNotEmpty
                         ? Opacity(
-                            opacity: 0.9,
+                            opacity: 0.7,
                             child: Image.network(
                               editController.bannerImageUrl.value,
                               fit: BoxFit.cover,
@@ -102,245 +104,211 @@ class ProfileScreenPage extends StatelessWidget {
                 // Profile content
               ],
             ),
-            const SizedBox(height: 20),
-            screenwidth
-                ? Card(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+           const SizedBox(height: 20),
+screenwidth
+    ? Card(
+        color: Color.fromARGB(150, 0, 0, 0), // Black with some transparency
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5, bottom: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Column(
+                children: [
+                  Text('89',
+                      style: TextStyle(
+                          fontSize: 18, color: Color.fromARGB(255, 255, 255, 255) ,fontWeight: FontWeight.bold)),
+                  Text('Posts',
+                      style: TextStyle(
+                          fontSize: 12, color: Color.fromARGB(255, 255, 255, 255))),
+                ],
+              ),
+              Column(
+                children: [
+                  Obx(() => Text(
+                      profileController.followersCountString,
+                      style: const TextStyle(
+                          fontSize: 18, color: Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold))),
+                  const Text('Followers',
+                      style: TextStyle(
+                          fontSize: 12, color: Color.fromARGB(255, 255, 255, 255))),
+                ],
+              ),
+              Column(
+                children: [
+                  Obx(() => Text(
+                      profileController.followingCountString,
+                      style: const TextStyle(
+                          fontSize: 18, color: Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold))),
+                  const Text('Following',
+                      style: TextStyle(
+                          fontSize: 12, color: Color.fromARGB(255, 255, 255, 255))),
+                ],
+              ),
+              Card(
+                color: Color.fromARGB(150, 0, 0, 0), // Black with some transparency
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width > 800
+                        ? MediaQuery.of(context).size.width * 0.4
+                        : MediaQuery.of(context).size.width * 0.8,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Obx(() {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Column(
+                          const Row(
                             children: [
-                              Text('89',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                              Text('Posts',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xff64748B))),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Obx(() => Text(
-                                  profileController.followersCountString,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold))),
-                              const Text('Followers',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xff64748B))),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Obx(() => Text(
-                                  profileController.followingCountString,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold))),
-                              const Text('Following',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xff64748B))),
-                            ],
-                          ),
-                          Card(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: MediaQuery.of(context).size.width >
-                                        800
-                                    ? MediaQuery.of(context).size.width * 0.4
-                                    : MediaQuery.of(context).size.width *
-                                        0.8, // Constrain width to screen size
+                              Icon(
+                                Icons.verified_user,
+                                color: Colors.greenAccent,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Obx(() {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // Aligns the title to the left
-                                    children: [
-                                      const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.verified_user,
-                                            color: Colors.greenAccent,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            'Verified Qualifications',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                          height:
-                                              16), // Adds some spacing between the title and list
-                                      ...editController.certificates
-                                          .map((certificate) {
-                                        return ListTile(
-                                          title: Text(
-                                              certificate['fieldOfStudy'] ??
-                                                  'Unknown Field of Study'),
-                                          subtitle: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                certificate[
-                                                        'levelOfEducation'] ??
-                                                    'Unknown Level of Education',
-                                                style: TextStyle(
-                                                    color: profileController
-                                                        .getColorBasedOnContent(
-                                                            certificate[
-                                                                'levelOfEducation'])),
-                                              ),
-                                              Text(certificate[
-                                                      'institutionName'] ??
-                                                  'Unknown Institution'),
-                                            ],
-                                          ),
-                                        );
-                                      }),
-                                    ],
-                                  );
-                                }),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                : Column(children: [
-                    Card(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width > 850
-                              ? MediaQuery.of(context).size.width * 0.5
-                              : MediaQuery.of(context).size.width *
-                                  0.9, // Constrain width to screen size
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Obx(() => Text(
-                                    profileController.postCountString,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold))),
-                                Text('Posts',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xff64748B))),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Obx(() => Text(
-                                    profileController.followersCountString,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold))),
-                                const Text('Followers',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xff64748B))),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Obx(() => Text(
-                                    profileController.followingCountString,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold))),
-                                const Text('Following',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xff64748B))),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Card(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width > 850
-                              ? MediaQuery.of(context).size.width * 0.5
-                              : MediaQuery.of(context).size.width *
-                                  0.9, // Constrain width to screen size
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Obx(() {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment
-                                  .start, // Aligns the title to the left
-                              children: [
-                                const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.verified_user,
-                                      color: Colors.greenAccent,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Verified Qualifications',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                              SizedBox(width: 5),
+                              Text(
+                                'Verified Qualifications',
+                                style: TextStyle(
+                                  fontSize: 18, color: Color.fromARGB(255, 255, 255, 255),
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const SizedBox(
-                                    height:
-                                        16), // Adds some spacing between the title and list
-                                ...editController.certificates
-                                    .map((certificate) {
-                                  return ListTile(
-                                    title: Text(certificate['fieldOfStudy'] ??
-                                        'Unknown Field of Study'),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          certificate['levelOfEducation'] ??
-                                              'Unknown Level of Education',
-                                          style: TextStyle(
-                                              color: profileController
-                                                  .getColorBasedOnContent(
-                                                      certificate[
-                                                          'levelOfEducation'])),
-                                        ),
-                                        Text(certificate['institutionName'] ??
-                                            'Unknown Institution'),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                              ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          ...editController.certificates.map((certificate) {
+                            return ListTile(
+                              title: Text(
+                                  certificate['fieldOfStudy'] ?? 'Unknown Field of Study'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    certificate['levelOfEducation'] ?? 'Unknown Level of Education',
+                                    style: TextStyle(
+                                        color: profileController.getColorBasedOnContent(
+                                            certificate['levelOfEducation'])),
+                                  ),
+                                  Text(certificate['institutionName'] ?? 'Unknown Institution'),
+                                ],
+                              ),
                             );
                           }),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      )
+    : Column(children: [
+        Card(
+          color: Color.fromARGB(150, 0, 0, 0), // Black with some transparency
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width > 850
+                  ? MediaQuery.of(context).size.width * 0.5
+                  : MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Obx(() => Text(
+                        profileController.postCountString,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))),
+                    Text('Posts',
+                        style: TextStyle(
+                            fontSize: 12, color: Color.fromARGB(255, 255, 255, 255))),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Obx(() => Text(
+                        profileController.followersCountString,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))),
+                    const Text('Followers',
+                        style: TextStyle(
+                            fontSize: 12, color: Color.fromARGB(255, 255, 255, 255))),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Obx(() => Text(
+                        profileController.followingCountString,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))),
+                    const Text('Following',
+                        style: TextStyle(
+                            fontSize: 12, color: Color.fromARGB(255, 255, 255, 255))),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Card(
+          color: Color.fromARGB(150, 0, 0, 0), // Black with some transparency
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width > 850
+                  ? MediaQuery.of(context).size.width * 0.5
+                  : MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Obx(() {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.verified_user,
+                          color: Colors.greenAccent,
                         ),
-                      ),
-                    )
-                  ]),
+                        SizedBox(width: 5),
+                        Text(
+                          'Verified Qualifications',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ...editController.certificates.map((certificate) {
+                      return ListTile(
+                        title: Text(certificate['fieldOfStudy'] ?? 'Unknown Field of Study'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              certificate['levelOfEducation'] ?? 'Unknown Level of Education',
+                              style: TextStyle(
+                                  color: profileController.getColorBasedOnContent(
+                                      certificate['levelOfEducation'])),
+                            ),
+                            Text(certificate['institutionName'] ?? 'Unknown Institution'),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                );
+              }),
+            ),
+          ),
+        ),
+      ]),
+     
             //current user posts
             Expanded(
                 child: StreamBuilder(
@@ -376,6 +344,7 @@ class ProfileScreenPage extends StatelessWidget {
         ));
   }
 }
+
 Widget _ThePost({
   required String text,
   required String user,
@@ -383,67 +352,75 @@ Widget _ThePost({
   required Timestamp timestamp,
   required BuildContext context,
 }) {
-  return Container(
-    decoration: BoxDecoration(
-      color: const Color.fromARGB(206, 255, 255, 255),
-      border: Border.all(
-        color: Colors.grey,
+  return Padding( // Added Padding widget here
+    padding: const EdgeInsets.only(top: 20), // Adjust the top padding value as needed
+    child: Container(
+      width: double.infinity, // Make the width stretch to fill the available space
+      decoration: BoxDecoration(
+        color: Colors.black87, 
+        border: Border.all(
+          color: const Color.fromARGB(255, 140, 136, 136),
+        ),
+        borderRadius: BorderRadius.circular(15),
       ),
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.only(top: 10, left: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          imageUrl.isNotEmpty
-              ? ClipOval(
-                  child: Image.network(
-                    imageUrl,
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10, left: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            imageUrl.isNotEmpty
+                ? ClipOval(
+                    child: Image.network(
+                      imageUrl,
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                    width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                    alignment: Alignment.topLeft,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey, // Use a default color or your AppColor.Secondary
+                    ),
+                    child: const Icon(Icons.person,
+                        color: Colors.white), // Optional: Add an icon
                   ),
-                )
-              : Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                  width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                  alignment: Alignment.topLeft,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors
-                        .grey, // Use a default color or your AppColor.Secondary
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(user,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)), // User name in white
+                    ],
                   ),
-                  child: const Icon(Icons.person,
-                      color: Colors.white), // Optional: Add an icon
-                ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(user,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Text(text),
-              ],
+                  const SizedBox(height: 30),
+                  Text(
+                    text,
+                    style: const TextStyle(color: Colors.white), // Text color set to white
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Spacer(),
-          Padding(
+            const Spacer(),
+            Padding(
               padding: const EdgeInsets.only(right: 10),
-              child: Text(DateFormat('dd-MM-yyyy \nhh:mm:ss')
-                  .format(timestamp.toDate())
-                  )),
-        ],
+              child: Text(
+                DateFormat('dd-MM-yyyy \nhh:mm:ss').format(timestamp.toDate()),
+                style: const TextStyle(color: Colors.white), // Date text in white
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );

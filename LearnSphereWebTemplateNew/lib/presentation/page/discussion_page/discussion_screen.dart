@@ -3,19 +3,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_discussion_page.dart'; // Import the CreateDiscussionPage
 
 class DiscussionPage extends StatelessWidget {
-
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black87,
       appBar: AppBar(
-        title: Text('Discussion Rooms'),
+        backgroundColor: Colors.black87, // Match header color to page color
+        iconTheme: IconThemeData(color: Colors.white), // Set back arrow icon to white
+        title: Text(
+          'Discussion Rooms',
+          style: TextStyle(color: Colors.white), // Set title font to white
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add, color: Colors.white), // Set icon color to white
             onPressed: () {
-              // Navigate to the CreateDiscussionPage
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CreateDiscussionPage()),
@@ -24,80 +28,91 @@ class DiscussionPage extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: firestore.collection('discussions').orderBy('createdAt', descending: true).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: Padding(
+        padding: const EdgeInsets.only(top: 16.0), // Add padding between header and content
+        child: StreamBuilder<QuerySnapshot>(
+          stream: firestore.collection('discussions').orderBy('createdAt', descending: true).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}', style: TextStyle(color: Colors.white)));
+            }
 
-          final discussions = snapshot.data?.docs;
+            final discussions = snapshot.data?.docs;
 
-          return ListView.builder(
-            itemCount: discussions?.length ?? 0,
-            itemBuilder: (context, index) {
-              final discussion = discussions![index];
-              return Card(
-                margin: EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text(discussion['title']),
-                  subtitle: Text(discussion['content']),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implement joining the discussion room logic here
-                          joinDiscussionRoom(discussion['title']);
-                        },
-                        child: Text('Join'),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          // Show a confirmation dialog before deletion
-                          showDeleteConfirmationDialog(context, discussion.id);
-                        },
-                      ),
-                    ],
+            return ListView.builder(
+              itemCount: discussions?.length ?? 0,
+              itemBuilder: (context, index) {
+                final discussion = discussions![index];
+                return Card(
+                  color: Colors.grey[800], // Optional: Darken card background
+                  margin: EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(
+                      discussion['title'],
+                      style: TextStyle(color: Colors.white), // White title font
+                    ),
+                    subtitle: Text(
+                      discussion['content'],
+                      style: TextStyle(color: Colors.white70), // White subtitle font with slight opacity
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.cyan, // Set button color to cyan
+                            foregroundColor: Colors.white, // Keep text color white
+                          ),
+                          onPressed: () {
+                            joinDiscussionRoom(discussion['title']);
+                          },
+                          child: Text('Join'),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            showDeleteConfirmationDialog(context, discussion.id);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
 
   void joinDiscussionRoom(String roomName) {
-    // Implement the logic to join the discussion room
     print('Joined $roomName');
   }
 
-  // Function to display the confirmation dialog before deleting
   void showDeleteConfirmationDialog(BuildContext context, String discussionId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Discussion'),
-          content: Text('Are you sure you want to delete this discussion?'),
+          backgroundColor: Colors.black87,
+          title: Text('Delete Discussion', style: TextStyle(color: Colors.white)),
+          content: Text('Are you sure you want to delete this discussion?', style: TextStyle(color: Colors.white70)),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                deleteDiscussionRoom(discussionId, context); // Call delete function
+                Navigator.of(context).pop();
+                deleteDiscussionRoom(discussionId, context);
               },
               child: Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -107,36 +122,29 @@ class DiscussionPage extends StatelessWidget {
     );
   }
 
-  // Function to delete the discussion room and show AlertDialog for success or error
   Future<void> deleteDiscussionRoom(String discussionId, BuildContext context) async {
     try {
       await firestore.collection('discussions').doc(discussionId).delete();
-      print('Deleted discussion room with ID: $discussionId');
-      
-      // Show success dialog
       showAlertDialog(context, 'Success', 'Discussion room deleted successfully!');
     } catch (e) {
-      print('Error deleting discussion room: $e');
-      
-      // Show error dialog
       showAlertDialog(context, 'Error', 'Failed to delete discussion room.');
     }
   }
 
-  // Function to display AlertDialog for success or error messages
   void showAlertDialog(BuildContext context, String title, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
-          content: Text(message),
+          backgroundColor: Colors.black87,
+          title: Text(title, style: TextStyle(color: Colors.white)),
+          content: Text(message, style: TextStyle(color: Colors.white70)),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the alert dialog
+                Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: Text('OK', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
