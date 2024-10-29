@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 import 'package:file_picker/file_picker.dart';
 
@@ -16,10 +17,12 @@ class HomeController extends GetxController {
   final postText = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
-  var pickedImageBytes = <Uint8List>[].obs;
+  var pickedMedia = <Map<String, dynamic>>[].obs;
   bool isStaffOrAdmin = false;
 
-
+void addFile(Uint8List bytes, String type) {
+    pickedMedia.add({"bytes": bytes, "type": type});
+  }
 
   @override
   void onReady() {
@@ -121,19 +124,20 @@ class HomeController extends GetxController {
 
 Widget buildHoverableImages(HomeController homeController) {
   return Obx(() {
-    if (homeController.pickedImageBytes.isEmpty) {
-      return const SizedBox(); // No images to display
+    if (homeController.pickedMedia.isEmpty) {
+      return const SizedBox(); // No media to display
     }
 
     return Wrap(
-      spacing: 8.0, // Spacing between images
+      spacing: 8.0, // Spacing between items
       runSpacing: 8.0,
-      children: homeController.pickedImageBytes
+      children: homeController.pickedMedia
           .asMap()
           .entries
           .map((entry) {
             int index = entry.key;
-            Uint8List imageData = entry.value;
+            Uint8List mediaData = entry.value["bytes"];
+            String mediaType = entry.value["type"];
             final hover = false.obs;
 
             return MouseRegion(
@@ -142,15 +146,27 @@ Widget buildHoverableImages(HomeController homeController) {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Display the image
+                  // Display the image or video icon
                   ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child:  Image.memory(
-                    imageData,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),),
+                    borderRadius: BorderRadius.circular(10),
+                    child: mediaType == 'image'
+                        ? Image.memory(
+                            mediaData,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            width: 100,
+                            height: 100,
+                            color: Colors.grey[800],
+                            child: Icon(
+                              Icons.videocam,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                  ),
                   // Display the overlay 'X' button on hover
                   Obx(() => Visibility(
                         visible: hover.value,
@@ -159,8 +175,8 @@ Widget buildHoverableImages(HomeController homeController) {
                           right: 8,
                           child: GestureDetector(
                             onTap: () {
-                              // Remove the image from the list
-                              homeController.pickedImageBytes.removeAt(index);
+                              // Remove the media from the list
+                              homeController.pickedMedia.removeAt(index);
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -186,7 +202,6 @@ Widget buildHoverableImages(HomeController homeController) {
 }
 
 
-
   Future<void> userUsername() async {
     User? user = auth.currentUser; // Use currentUser property directly
     if (user != null) {
@@ -206,70 +221,96 @@ Widget buildHoverableImages(HomeController homeController) {
     }
   }
   //post message
-  void postMessage(){
-    EditProfileController editController = Get.put(EditProfileController());
-    User? user = auth.currentUser;
-    final userId = user!.uid;
-    if(postText.text.isNotEmpty){
-      FirebaseFirestore.instance.collection('posts').doc(userId).collection('myPosts').add({
-        'profileImageUrl' : editController.profileImageUrl.value,
-        'Username': username.value,
-        'Text': postText.text,
-        'certificate': editController.certificate.value,
-        'Timestamp': Timestamp.now(),
-      });
-      print('username : ${username.value}' 
-      'Text : ${postText.text}'
-      'Timestamp : ${Timestamp.now()}'
-      );
-    }else{
-      print('Please enter some text');
+  void postMessage() async {
+  EditProfileController editController = Get.put(EditProfileController());
+  User? user = auth.currentUser;
+  final userId = user!.uid;
+  
+  if (postText.text.isNotEmpty) {
+    // Create a list to hold the download URLs of the uploaded media
+    List<String> mediaUrls = [];
+
+    for (var media in pickedMedia) {
+      Uint8List mediaBytes = media["bytes"];
+      String mediaType = media["type"];
+
+      // Generate a unique file name
+      String fileName = '${userId}_${DateTime.now().millisecondsSinceEpoch}.${mediaType == 'image' ? 'jpg' : 'mp4'}';
+
+      // Upload to Firebase Storage
+      Reference storageRef = FirebaseStorage.instance.ref().child('uploads/$fileName');
+
+      UploadTask uploadTask = storageRef.putData(mediaBytes);
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      // Get the download URL after successful upload
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      mediaUrls.add(downloadUrl);
     }
+
+    // Add the post document to Firestore with media URLs
+    await FirebaseFirestore.instance.collection('posts').doc(userId).collection('myPosts').add({
+      'profileImageUrl': editController.profileImageUrl.value,
+      'Username': username.value,
+      'Text': postText.text,
+      'certificate': editController.certificate.value,
+      'Timestamp': Timestamp.now(),
+      'mediaUrls': mediaUrls, // Store the list of media URLs
+    });
+
+    print('Post created with username: ${username.value}, Text: ${postText.text}, Timestamp: ${Timestamp.now()}, mediaUrls: $mediaUrls');
+    
+    // Optionally clear the picked media after posting
+    pickedMedia.clear();
+  } else {
+    print('Please enter some text');
   }
+}
+
 
   Stream<List<DocumentSnapshot>> getPostsStream(String userId) async* {
-    // Step 1: Get the list of user IDs the current user is following
-    DocumentSnapshot followingDoc = await FirebaseFirestore.instance
-        .collection('following')
+  // Step 1: Get the list of user IDs the current user is following
+  DocumentSnapshot followingDoc = await FirebaseFirestore.instance
+      .collection('following')
+      .doc(userId)
+      .get();
+  
+  List<String> followingList = List<String>.from(followingDoc['followedUsers'] ?? []);
+
+  // Step 2: Create a list to hold streams of posts
+  List<Stream<List<DocumentSnapshot>>> streams = [];
+
+  // Add the current user's posts to the list of streams
+  streams.add(
+    FirebaseFirestore.instance
+        .collection("posts")
         .doc(userId)
-        .get();
-    
-    List<String> followingList = List<String>.from(followingDoc['followedUsers'] ?? []);
+        .collection('myPosts')
+        .orderBy("Timestamp", descending: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs)
+  );
 
-    // Step 2: Create a list to hold streams of posts
-    List<Stream<List<DocumentSnapshot>>> streams = [];
-
-    // Add the current user's posts to the list of streams
+  // Step 3: For each followed user, get their posts
+  for (String followingUserId in followingList) {
     streams.add(
       FirebaseFirestore.instance
           .collection("posts")
-          .doc(userId)
+          .doc(followingUserId)
           .collection('myPosts')
           .orderBy("Timestamp", descending: false)
           .snapshots()
-
           .map((snapshot) => snapshot.docs)
     );
-
-    // Step 3: For each followed user, get their posts
-    for (String followingUserId in followingList) {
-      streams.add(
-        FirebaseFirestore.instance
-            .collection("posts")
-            .doc(followingUserId)
-            .collection('myPosts')
-            .orderBy("Timestamp", descending: false)
-            .snapshots()
-            .map((snapshot) => snapshot.docs)
-      );
-    }
-
-    // Step 4: Combine all the streams into a single stream
-    yield* rxdart.Rx.combineLatest(streams, (values) {
-      // Flatten the list of lists into a single list
-      return values.expand((list) => list).toList();
-    });
   }
+
+  // Step 4: Combine all the streams into a single stream
+  yield* rxdart.Rx.combineLatest(streams, (values) {
+    // Flatten the list of lists into a single list
+    return values.expand((list) => list).toList();
+  });
+}
+
 
     Future<void> checkUserRole() async {
     final user = FirebaseAuth.instance.currentUser;
