@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../routes/app_router.dart';
@@ -17,31 +18,58 @@ part 'components/appbar.dart';
 part 'components/navigation_menu.dart';
 
 @RoutePage()
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget  {
   const MainPage({super.key});
 
   @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  bool _isMenuVisible = false;
+
+  void _toggleMenuVisibility() {
+    setState(() {
+      _isMenuVisible = !_isMenuVisible;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Stack(
         children: <Widget>[
           Row(
             children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.15,
-                height: double.infinity,
-                child: const ColoredBox(
-                  color: AppColor.Secondary,
-                  child: _NavigationMenu(),
+              if (_isMenuVisible)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  height: double.infinity,
+                  child: const ColoredBox(
+                    color: Color(0xFF1A1F3B),
+                    child: _NavigationMenu(),
+                  ),
                 ),
-              ),
-              const Expanded(
+              Expanded(
                 child: ColoredBox(
-                  color:AppColor.Secondary,
+                  color: Color(0xFF1A1F3B),
                   child: Column(
                     children: [
-                      _AppBar(),
-                      Expanded(child: AutoRouter()),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              _isMenuVisible ? Icons.arrow_back_ios : Icons.menu,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed: _toggleMenuVisibility,
+                          ),
+                          const SizedBox(width: 10,),
+                          const Expanded(child: _AppBar()),
+                        ],
+                      ),
+                      const Expanded(child: AutoRouter()),
                     ],
                   ),
                 ),
@@ -49,14 +77,10 @@ class MainPage extends StatelessWidget {
             ],
           ),
           const Positioned(
-            top: 60,
+            top: 100,
             left: 0,
             right: 0,
-            child: Divider(
-              color: Palette.lightBlueGrey38,
-              thickness: 1,
-              height: 1,
-            ),
+            child: SizedBox.shrink(),
           ),
         ],
       ),

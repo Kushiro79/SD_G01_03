@@ -11,8 +11,7 @@ class DashboardPage extends StatelessWidget {
     try {
       final staffSnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('role', whereIn: ['staff', 'admin'])
-          .get();
+          .where('role', whereIn: ['staff', 'admin']).get();
       return staffSnapshot.docs.length;
     } catch (e) {
       print('Error in get staff & admin: $e');
@@ -23,7 +22,8 @@ class DashboardPage extends StatelessWidget {
   Future<int> getUserRegisteredLastMonth() async {
     try {
       final now = DateTime.now();
-      final lastMonth = DateTime(now.year, now.month == 1 ? 12 : now.month - 1, now.day);
+      final lastMonth =
+          DateTime(now.year, now.month == 1 ? 12 : now.month - 1, now.day);
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
           .where('registrationDate', isGreaterThan: lastMonth)
@@ -37,7 +37,8 @@ class DashboardPage extends StatelessWidget {
 
   Future<double> getAveragePostsPerUser() async {
     try {
-      final postsSnapshot = await FirebaseFirestore.instance.collection('posts').get();
+      final postsSnapshot =
+          await FirebaseFirestore.instance.collection('posts').get();
       final userPostCounts = <String, int>{};
 
       for (var post in postsSnapshot.docs) {
@@ -95,91 +96,89 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-        'Dashboard',
-        style: TextStyle(
-          fontSize: 24, // Bigger font size
-          fontWeight: FontWeight.bold, // Bold text
-        ),
-        )
-      ),
-      body: Stack(
-        children: [
+      backgroundColor: Colors.transparent,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title
+            const Text(
+              'Dashboard',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            // Foreground content
+            FutureBuilder(
+              future: Future.wait([
+                getAmountofStaffAndAdmin(),
+                getUserRegisteredLastMonth(),
+                getAveragePostsPerUser(),
+                getUserDeviceUsage(),
+                getTotalActiveUsers(),
+              ]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
 
-          // Foreground content
-          FutureBuilder(
-            future: Future.wait([
-              getAmountofStaffAndAdmin(),
-              getUserRegisteredLastMonth(),
-              getAveragePostsPerUser(),
-              getUserDeviceUsage(),
-              getTotalActiveUsers(),
-            ]),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
+                final data = snapshot.data as List<dynamic>;
+                final amountofStaffAndAdmin = data[0] as int;
+                final userRegisteredLastMonth = data[1] as int;
+                final averagePostsPerUser = data[2] as double;
+                final deviceUsage = data[3] as Map<String, int>;
+                final totalActiveUsers = data[4] as int;
 
-              final data = snapshot.data as List<dynamic>;
-              final amountofStaffAndAdmin = data[0] as int;
-              final userRegisteredLastMonth = data[1] as int;
-              final averagePostsPerUser = data[2] as double;
-              final deviceUsage = data[3] as Map<String, int>;
-              final totalActiveUsers = data[4] as int;
-
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5), // Increased transparency
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildMetricCard(
-                          title: 'Staff and Admin',
-                          value: amountofStaffAndAdmin.toString(),
-                        ),
-                        const Divider(height: 24),
-                        _buildMetricCard(
-                          title: 'Users Registered Last Month',
-                          value: userRegisteredLastMonth.toString(),
-                        ),
-                        const Divider(height: 24),
-                        _buildMetricCard(
-                          title: 'Avg. Posts per User',
-                          value: averagePostsPerUser.toStringAsFixed(2),
-                        ),
-                        const Divider(height: 24),
-                        _buildDeviceUsageChart(deviceUsage),
-                        const Divider(height: 24),
-                        _buildMetricCard(
-                          title: 'Total Active Users',
-                          value: totalActiveUsers.toString(),
-                        ),
-                      ],
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.black
+                            .withOpacity(0.13), // Increased transparency
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildMetricCard(
+                            title: 'Staff and Admin',
+                            value: amountofStaffAndAdmin.toString(),
+                            
+                          ),
+                          const Divider(height: 24),
+                          _buildMetricCard(
+                            title: 'Users Registered Last Month',
+                            value: userRegisteredLastMonth.toString(),
+                          ),
+                          const Divider(height: 24),
+                          _buildMetricCard(
+                            title: 'Avg. Posts per User',
+                            value: averagePostsPerUser.toStringAsFixed(2),
+                          ),
+                          const Divider(height: 24),
+                          _buildDeviceUsageChart(deviceUsage),
+                          const Divider(height: 24),
+                          _buildMetricCard(
+                            title: 'Total Active Users',
+                            value: totalActiveUsers.toString(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -188,9 +187,9 @@ class DashboardPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         const SizedBox(height: 8),
-        Text(value, style: const TextStyle(fontSize: 24)),
+        Text(value, style: const TextStyle(fontSize: 24, color: Colors.white)),
       ],
     );
   }
@@ -199,19 +198,20 @@ class DashboardPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Device Usage', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Device Usage',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         SizedBox(
           height: 200,
           child: PieChart(
             PieChartData(
               sections: [
                 PieChartSectionData(
-                  value: deviceUsage['Android']!.toDouble() ,
+                  value: deviceUsage['Android']!.toDouble(),
                   title: 'Android: ${deviceUsage['Android'] ?? 0}',
                   color: const Color.fromARGB(255, 168, 229, 169),
                 ),
                 PieChartSectionData(
-                  value: deviceUsage['Web']!.toDouble() ,
+                  value: deviceUsage['Web']!.toDouble(),
                   title: 'Web: ${deviceUsage['Web'] ?? 0}',
                   color: const Color.fromARGB(255, 125, 197, 255),
                 )

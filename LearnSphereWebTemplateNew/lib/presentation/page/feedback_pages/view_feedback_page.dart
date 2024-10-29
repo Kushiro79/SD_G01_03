@@ -15,12 +15,13 @@ class ViewFeedbackPage extends GetView<ViewFeedbackController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
         body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text(
         'View Feedback',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
       ),
       Obx(() {
         if (feedbackController.feedbackDocs.isEmpty) {
@@ -43,16 +44,14 @@ class ViewFeedbackPage extends GetView<ViewFeedbackController> {
                 padding:
                     const EdgeInsets.all(16.0), // Padding inside the container
                 decoration: BoxDecoration(
-                  color: Colors.white, // Background color of the container
+                  color: Colors.black.withOpacity(0.13), // Background color of the container
                   borderRadius: BorderRadius.circular(16.0), // Rounded corners
-                  border:
-                      Border.all(color: Colors.grey.shade300), // Border color
                 ),
                 child: DataTable(
                   columns: const [
-                    DataColumn(label: Text('UID')),
-                    DataColumn(label: Text('Feedback')),
-                    DataColumn(label: Text('Submitted On')),
+                    DataColumn(label: Text('UID', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Feedback', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Submitted On', style: TextStyle(color: Colors.white))),
                   ],
                   rows: feedbackController.feedbackDocs.map((feedbackData) {
                     String feedbackMessage =
@@ -64,11 +63,11 @@ class ViewFeedbackPage extends GetView<ViewFeedbackController> {
                     DateTime? feedbackTime = timestamp?.toDate();
 
                     return DataRow(cells: [
-                      DataCell(Text(userId)), // User ID
-                      DataCell(Text(feedbackMessage)), // Feedback message
+                      DataCell(Text(userId, style: TextStyle(color: Colors.white))), // User ID
+                      DataCell(Text(feedbackMessage, style: TextStyle(color: Colors.white))), // Feedback message
                       DataCell(Text(feedbackTime != null
                           ? feedbackTime.toLocal().toString()
-                          : 'Unknown')), // Submission time
+                          : 'Unknown', style: TextStyle(color: Colors.white))), // Submission time
                     ]);
                   }).toList(),
                 ),

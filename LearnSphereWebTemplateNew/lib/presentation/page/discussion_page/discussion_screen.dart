@@ -11,23 +11,27 @@ class DiscussionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor:const Color(0xFF1A1F3B),
       appBar: AppBar(
-        backgroundColor: Colors.black87, // Match header color to page color
-        iconTheme: IconThemeData(color: Colors.white), // Set back arrow icon to white
-        title: Text(
+        toolbarHeight: 100,
+        backgroundColor:const Color(0xFF1A1F3B), // Match header color to page color
+        iconTheme: const IconThemeData(color: Colors.white), // Set back arrow icon to white
+        title: const Text(
           'Discussion Rooms',
           style: TextStyle(color: Colors.white), // Set title font to white
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.add, color: Colors.white), // Set icon color to white
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CreateDiscussionPage()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: IconButton(
+              icon: const Icon(Icons.add_rounded, color: Colors.white, size: 30,), // Set icon color to white
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateDiscussionPage()),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -51,7 +55,7 @@ class DiscussionPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final discussion = discussions![index];
                 return Card(
-                  color: Colors.grey[800], // Optional: Darken card background
+                  color: Colors.transparent.withOpacity(0.13), // Optional: Darken card background
                   margin: EdgeInsets.all(8.0),
                   child: ListTile(
                     title: Text(

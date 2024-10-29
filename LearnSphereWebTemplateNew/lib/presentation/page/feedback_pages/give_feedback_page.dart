@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 @RoutePage()
 class GiveFeedbackPage extends StatelessWidget {
@@ -55,17 +56,17 @@ class GiveFeedbackPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Give Feedback'),
-      ),
+      backgroundColor: const Color(0xFF1A1F3B),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const Text('Give Feedback' , style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),),
+            const SizedBox(height: 16.0),
             const Text(
               'We would love to hear your thoughts!',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 16.0),
 
@@ -73,20 +74,24 @@ class GiveFeedbackPage extends StatelessWidget {
             TextField(
               controller: _feedbackController,
               maxLines: 5,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration:  InputDecoration(
+                border: const OutlineInputBorder(),
                 hintText: 'Enter your feedback here...',
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
               ),
             ),
             const SizedBox(height: 16.0),
 
             // Submit button
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF117aca), // Button color
+              ),
               onPressed: () {
                 // Handle feedback submission
                 submitFeedback(context); // Call the function to submit feedback
               },
-              child: const Text('Submit'),
+              child: const Text('Submit', style: TextStyle(color:  Colors.white)),
             ),
           ],
         ),

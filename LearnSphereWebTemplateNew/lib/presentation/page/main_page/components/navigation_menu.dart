@@ -9,7 +9,8 @@ class _NavigationMenu extends StatefulWidget {
 
 class _NavigationMenuState extends State<_NavigationMenu> {
   bool _isListenerAdded = false;
-  bool isStaffOrAdmin = false;
+  bool isStaffOrAdmin = true;
+  bool _isMenuExpanded = false;
 
   @override
   void initState() {
@@ -67,16 +68,9 @@ class _NavigationMenuState extends State<_NavigationMenu> {
         return SizedBox(
             child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(
-              child: Image(
-                image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                width: 60,
-                height: 60,
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 120,),
             _MenuItem(
               iconPath: ProjectAssets.icons.home.path,
               isSelected: currentUrl == '/dashboard',
@@ -116,17 +110,18 @@ class _NavigationMenuState extends State<_NavigationMenu> {
                             Icons.swap_calls,
                             color: Color.fromARGB(255, 255, 255, 255),
                           ),
-                          title: const Text(
+                          title: screenwidth ?  
+                          const Text(
                             'Change Mode',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,
                             ),
-                          ),
+                          )
+                          : const SizedBox.shrink(),
                           onTap: () {
-                              // Navigate to homepage if currently in main page
-                              context.router.push(MyHomeRoute());
-                            
+                            // Navigate to homepage if currently in main page
+                            context.router.push(MyHomeRoute());
                           }),
                     ],
                   )

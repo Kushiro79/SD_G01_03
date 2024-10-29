@@ -25,26 +25,7 @@ class ProfileScreenPage extends StatelessWidget {
     var screenwidth = MediaQuery.of(context).size.width >= 800;
     //String bannerImageUrl = editController.bannerImageUrl.value;
     return Scaffold(
-      backgroundColor: Colors.black87,
-        appBar: AppBar(
-          backgroundColor: Colors.black87,
-          elevation: 0,
-          title: const Text(
-            'Profile',
-            style: TextStyle(color: 
-            Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.edit, color: Color.fromARGB(255, 255, 255, 255)),
-              onPressed: () {
-                // Navigate to the Edit Profile screen
-                AutoRouter.of(context).push(EditProfileRoute());
-              },
-            ),
-          ],
-        ),
+      backgroundColor: const Color(0xFF1A1F3B),
         body: Column(
           children: [
             Stack(
@@ -107,7 +88,7 @@ class ProfileScreenPage extends StatelessWidget {
            const SizedBox(height: 20),
 screenwidth
     ? Card(
-        color: Color.fromARGB(150, 0, 0, 0), // Black with some transparency
+        color: Colors.transparent, // Black with some transparency
         child: Padding(
           padding: const EdgeInsets.only(top: 5, bottom: 5),
           child: Row(
@@ -146,7 +127,7 @@ screenwidth
                 ],
               ),
               Card(
-                color: Color.fromARGB(150, 0, 0, 0), // Black with some transparency
+                color: Colors.transparent, // Black with some transparency
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width > 800
@@ -179,7 +160,7 @@ screenwidth
                           ...editController.certificates.map((certificate) {
                             return ListTile(
                               title: Text(
-                                  certificate['fieldOfStudy'] ?? 'Unknown Field of Study'),
+                                  certificate['fieldOfStudy'] ?? 'Unknown Field of Study', style: const TextStyle(color: Colors.white)),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -189,7 +170,7 @@ screenwidth
                                         color: profileController.getColorBasedOnContent(
                                             certificate['levelOfEducation'])),
                                   ),
-                                  Text(certificate['institutionName'] ?? 'Unknown Institution'),
+                                  Text(certificate['institutionName'] ?? 'Unknown Institution', style: const TextStyle(color: Colors.white)),
                                 ],
                               ),
                             );

@@ -79,9 +79,22 @@ class LoginScreenView extends GetView<LoginScreenController> {
                               Image(
                                 image: AssetImage(
                                     ProjectAssets.learnSphereLogo.path),
-                                width: 60,
-                                height: 60,
+                                width: 80,
+                                height: 80,
                               ),
+                              const SizedBox(width: 20),
+                              Text("Learn",
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                      color: Colors.white)),
+                              Text(
+                                "Sphere",
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF004ff9),
+                                    fontSize: 30),
+                              )
                             ]),
                           ],
                         )),
@@ -222,16 +235,23 @@ class LoginScreenView extends GetView<LoginScreenController> {
           //mobile layout
           return Column(
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
-                  'Welcome to LearnSphere, Buddy!',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                        'Welcome back to LearnSphere! Ready to dive back into learning?',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 30,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                offset:
+                                Offset(2.0, 2.0), // position of the shadow
+                                blurRadius: 4.0, // how "soft" the shadow is
+                                color: Colors.black.withOpacity(
+                                    0.5), // shadow color and opacity
+                              )
+                            ]),
+                      ),
               ),
               Image.asset(
                 'assets/login_ui2.png',
@@ -300,7 +320,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               child: const Text(
                 'Forgot Password?',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF23235E),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -342,7 +362,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
             const Text(
               "Don't have an account? Join us",
               style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.white, ),
             ),
             TextButton(
               onPressed: () {

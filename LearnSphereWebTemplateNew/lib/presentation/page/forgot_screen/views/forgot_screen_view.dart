@@ -6,6 +6,7 @@ import '../../../config/app_contents.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../utils/custom_toast.dart';
 import '../controllers/forgot_screen_controller.dart';
+import "package:google_fonts/google_fonts.dart";
 
 @RoutePage()
 class ForgotScreenView extends GetView<ForgotScreenController> {
@@ -17,8 +18,6 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
     _email.text = value;
   }
 
-  
-
   Future<void> passwordReset(BuildContext context) async {
     try {
       await FirebaseAuth.instance
@@ -27,8 +26,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
     } on FirebaseAuthException catch (e) {
       if (_email.text.isEmpty) {
         showCustomToast(context, 'Please enter an email');
-      }
-      else{
+      } else {
         showCustomToast(context, e.message.toString());
       }
     }
@@ -40,10 +38,18 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
       body: Stack(
         children: [
           // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/background4.jpg',
-              fit: BoxFit.cover,
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF117aca),
+                  Color(0xFF000000),
+                  
+                ],
+                stops: [0.2, 0.9],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
           ),
           // Content
@@ -83,7 +89,8 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             const SizedBox(height: 6),
             isActive
                 ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.deepPurple,
                       borderRadius: BorderRadius.circular(30),
@@ -160,14 +167,21 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           child: Text(
             'Forgot Password?',
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-            ),
+            style: GoogleFonts.montserrat(
+                fontSize: 35,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: const Offset(2.0, 2.0), // position of the shadow
+                    blurRadius: 4.0, // how "soft" the shadow is
+                    color: Colors.black
+                        .withOpacity(0.5), // shadow color and opacity
+                  )
+                ]),
           ),
         ),
         const Padding(
@@ -207,8 +221,8 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             boxShadow: [
               BoxShadow(
                 color: Colors.deepPurple[100]!,
-                spreadRadius: 10,
-                blurRadius: 20,
+                spreadRadius: 5,
+                blurRadius: 10,
               ),
             ],
           ),
@@ -224,7 +238,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             child: const SizedBox(
               width: double.infinity,
               height: 50,
-              child: Center(child: Text('Reset Password')),
+              child: Center(child: Text('Reset Password', style: TextStyle(color: Color(0xFF23235E)))),
             ),
           ),
         ),
@@ -235,8 +249,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
             const Text(
               'Already remember?',
               style: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             const SizedBox(width: 5),
@@ -247,7 +260,7 @@ class ForgotScreenView extends GetView<ForgotScreenController> {
               child: const Text(
                 'Sign In',
                 style: TextStyle(
-                  color: Colors.deepPurple,
+                  color: Color(0xFF117aca),
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -17,21 +17,22 @@ class ViewAcademicQualificationsPage
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'List of Qualifications',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Academic Qualifications Requests',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 16),
             Obx((){
-             return Expanded(
+            return Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.black.withOpacity(0.13),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: controller.qualifications.isEmpty
@@ -50,11 +51,11 @@ class ViewAcademicQualificationsPage
                   itemBuilder: (context, index) {
                     final qualification = controller.qualifications[index];
                     return ListTile(
-                      title: Text(qualification['name'] ?? 'Unknown Name'),
+                      title: Text(qualification['name'] ?? 'Unknown Name', style: const TextStyle(color: Colors.white) ,),
                       subtitle: Text(
-                          'Education: ${qualification['levelOfEducation']}\nField of Study: ${qualification['fieldOfStudy']}'),
+                          'Education: ${qualification['levelOfEducation']}\nField of Study: ${qualification['fieldOfStudy']}', style: const TextStyle(color: Colors.white) ,),
                       trailing: IconButton(
-                        icon: const Icon(Icons.menu_rounded),
+                        icon: const Icon(Icons.menu_rounded, color: Colors.white),
                         onPressed: () {
                           _showQualificationDetails(context, qualification);
                         },

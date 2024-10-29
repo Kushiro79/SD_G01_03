@@ -30,8 +30,7 @@ class MyHomePage extends GetView<HomeController> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF1A1F3B),
-          elevation: 0,
+          backgroundColor:const Color(0xFF1A1F3B),
           toolbarHeight: 100,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -272,25 +271,33 @@ Widget _buildSidebar(BuildContext context) {
             context.router.push(SettingsRoute());
           },
         ),
-        homeController.isStaffOrAdmin
-            ? ListTile(
-                hoverColor: Colors.white.withOpacity(0.1),
-                leading: const Icon(
-                  Icons.swap_calls,
-                  color: Colors.white,
-                ),
-                title: screenwidth
-                    ? const Text('Change Mode',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ))
-                    : null,
-                onTap: () {
-                  // Navigate to homepage if currently in main page
-                  context.router.push(MainRoute());
-                })
-            : const SizedBox.shrink(),
+        Obx(() {
+          if (homeController.isStaffOrAdmin.value) {
+            return ListTile(
+              hoverColor: Colors.white.withOpacity(0.1),
+              leading: const Icon(
+                Icons.swap_calls,
+                color: Colors.white,
+              ),
+              title:
+                  screenwidth // Ensure `screenwidth` is a boolean or has a boolean check
+                      ? const Text(
+                          'Change Mode',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        )
+                      : null,
+              onTap: () {
+                // Navigate to homepage if currently in main page
+                context.router.push(MainRoute());
+              },
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        }),
       ],
     ),
   );
@@ -550,7 +557,10 @@ Widget _ThePost({
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(user,
-                    style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Text(
                   text,
@@ -567,20 +577,24 @@ Widget _ThePost({
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
                                   child: SizedBox(
-                                  width: MediaQuery.of(context).size.width > 800
-                                      ? MediaQuery.of(context).size.width * 0.3
-                                      : MediaQuery.of(context).size.width *
-                                          0.50,
-                                  child: VideoPlayerWidget(videoUrl: url),
-                                ))
+                                    width: MediaQuery.of(context).size.width >
+                                            800
+                                        ? MediaQuery.of(context).size.width *
+                                            0.3
+                                        : MediaQuery.of(context).size.width *
+                                            0.50,
+                                    child: VideoPlayerWidget(videoUrl: url),
+                                  ))
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
                                     url,
-                                    width: MediaQuery.of(context).size.width > 800
-                                      ? MediaQuery.of(context).size.width * 0.3
-                                      : MediaQuery.of(context).size.width *
-                                          0.50,
+                                    width: MediaQuery.of(context).size.width >
+                                            800
+                                        ? MediaQuery.of(context).size.width *
+                                            0.3
+                                        : MediaQuery.of(context).size.width *
+                                            0.50,
                                     height: 300,
                                     fit: BoxFit.cover,
                                   ),

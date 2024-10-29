@@ -18,7 +18,7 @@ class HomeController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
   var pickedMedia = <Map<String, dynamic>>[].obs;
-  bool isStaffOrAdmin = false;
+  RxBool isStaffOrAdmin = false.obs;
 
 void addFile(Uint8List bytes, String type) {
     pickedMedia.add({"bytes": bytes, "type": type});
@@ -324,11 +324,11 @@ Widget buildHoverableImages(HomeController homeController) {
 
         if (userRole == 'staff' || userRole == 'admin') {
           // User is a staff or admin
-          isStaffOrAdmin = true;
+          isStaffOrAdmin.value = true;
           print('isStaffOrAdmin: $isStaffOrAdmin');
         } else {
           // User is not a staff or admin
-          isStaffOrAdmin = false;
+          isStaffOrAdmin.value = false;
           print('isStaffOrAdmin: $isStaffOrAdmin');
         }
       } catch (e) {

@@ -19,7 +19,7 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor:const Color(0xFF1A1F3B),
       body: 
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -31,11 +31,13 @@ class SettingsPageState extends State<SettingsPage> {
                   alignment: Alignment.topCenter,
                   child: Container(
                     width: containerWidth,
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(20.0),
                     margin: const EdgeInsets.only(
                         top: 20), // Margin to push it down a bit
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent.withOpacity(0.13),
+
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min, // Box ends after content

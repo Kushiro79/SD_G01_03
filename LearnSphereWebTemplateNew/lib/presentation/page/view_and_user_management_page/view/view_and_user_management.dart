@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 
 @RoutePage()
@@ -153,6 +154,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
   body: Stack(
     children: [
       Padding(
@@ -164,12 +166,13 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
             children: [
               const Text(
                 'User List',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 16),
               TextField(
                 decoration: const InputDecoration(
                   labelText: 'Search by username',
+                  labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
                   ),
@@ -191,7 +194,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                         const Text(
                           'Filter by role:',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
                         ),
                         const SizedBox(width: 16),
                         DropdownButton<String>(
@@ -206,9 +209,10 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(value, style: const TextStyle(color: Colors.white)),
                             );
                           }).toList(),
+                          dropdownColor: Colors.transparent.withOpacity(0.5),
                         ),
                       ],
                     ),
@@ -225,25 +229,24 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
                       child: Container(
                         padding: const EdgeInsets.all(16.0), // Consistent padding
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.black.withOpacity(0.13),
                           borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(color: Colors.grey.shade300),
                         ),
                         child: DataTable(
                           columns: const [
-                            DataColumn(label: Text('Username')),
-                            DataColumn(label: Text('Role')),
-                            DataColumn(label: Text('UID')),
-                            DataColumn(label: Text('Email')),
-                            DataColumn(label: Text('Actions')),
+                            DataColumn(label: Text('Username', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('Role', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('UID', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('Email', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('Actions', style: TextStyle(color: Colors.white))),
                           ],
                           rows: _filteredUsers.map((userDoc) {
                             final user = userDoc.data() as Map<String, dynamic>;
                             return DataRow(cells: [
-                              DataCell(Text(user['username'] ?? 'Unknown')),
-                              DataCell(Text(user['role'] ?? 'Unknown')),
-                              DataCell(Text(user['uid'] ?? 'Unknown')),
-                              DataCell(Text(user['email'] ?? 'Unknown')),
+                              DataCell(Text(user['username'] ?? 'Unknown', style: TextStyle(color: Colors.white))),
+                              DataCell(Text(user['role'] ?? 'Unknown', style: TextStyle(color: Colors.white))),
+                              DataCell(Text(user['uid'] ?? 'Unknown', style: TextStyle(color: Colors.white))),
+                              DataCell(Text(user['email'] ?? 'Unknown', style: TextStyle(color: Colors.white))),
                               DataCell(_buildActionDropdown(context, userDoc)),
                             ]);
                           }).toList(),

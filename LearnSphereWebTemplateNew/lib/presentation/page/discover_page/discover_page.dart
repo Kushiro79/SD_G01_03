@@ -19,7 +19,7 @@ class DiscoverPage extends GetView<DiscoverController> {
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.90), // Floating window background
+          color: Color(0xFF1A1F3B).withOpacity(0.90), // Floating window background
           borderRadius: BorderRadius.circular(20), // Rounded corners
         ),
         child: DefaultTabController(
@@ -32,13 +32,16 @@ class DiscoverPage extends GetView<DiscoverController> {
               centerTitle: true,
               title: const Text(
                 'Discover',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               bottom: const TabBar(
                 tabs: [
-                  Tab(text: 'Discover'),
+                  Tab(text: 'Discover', ),
                   Tab(text: 'Following'),
                 ],
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Color(0xFF117aca) ,
               ),
             ),
             body: Container(
@@ -71,7 +74,7 @@ class DiscoverPage extends GetView<DiscoverController> {
     return Obx(() {
       controller.followingList();
       if (controller.followedUsers.isEmpty) {
-        return const Text('No users followed yet');
+        return const Center(child:Text('No users followed yet', style: TextStyle(color: Colors.white , fontSize: 30, fontWeight: FontWeight.bold),));
       } else {
         return usersLists(controller.followedUsers);
       }
@@ -143,6 +146,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color : Colors.white,
                         ))
                     : const Text('Unknown User'),
                 Obx(() => ElevatedButton(
@@ -156,7 +160,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue, // Change button background color here
+                        backgroundColor: const Color(0xFF117aca), // Change button background color here
                         foregroundColor: Colors.white, // Change text color here
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
                         shape: RoundedRectangleBorder(

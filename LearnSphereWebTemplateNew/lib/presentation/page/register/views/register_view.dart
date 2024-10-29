@@ -150,7 +150,7 @@ class RegisterScreenView extends GetView<RegisterController> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(),
+                  _buildHeader(context),
                   Image.asset(
                     'assets/register4.png',
                     width: 500,
@@ -217,7 +217,7 @@ class RegisterScreenView extends GetView<RegisterController> {
           // Narrow layout (Column)
           return Column(
             children: [
-              _buildHeader(),
+              _buildHeader(context),
               Image.asset(
                 'assets/register4.png',
                 width: constraints.maxWidth *
@@ -230,10 +230,13 @@ class RegisterScreenView extends GetView<RegisterController> {
                   width: constraints.maxWidth * 0.9,
                   child: Column(
                     children: [
-                      Row(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                         _signInButton(context),
                         _menuItem(title: 'Sign Up', isActive: true),
                       ]),
+                      const SizedBox(height: 20),
                       _buildForm(context),
                       const SizedBox(height: 20),
                       _buildSignUpButton(context),
@@ -271,14 +274,30 @@ class RegisterScreenView extends GetView<RegisterController> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    var screenwidth = MediaQuery.of(context).size.width > 850;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Come on Join Us!\nIts Free :D',
+        screenwidth 
+        ?Text(
+          'Come on, Join Us!\nIt\'s Free :D',
           style: GoogleFonts.montserrat(
               fontSize: 45,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  offset: Offset(2.0, 2.0), // position of the shadow
+                  blurRadius: 4.0, // how "soft" the shadow is
+                  color:
+                      Colors.black.withOpacity(0.5), // shadow color and opacity
+                )
+              ]),
+        )
+        :Text(
+          'Come on, Join Us!\nIt\'s Free :D',
+          style: GoogleFonts.montserrat(
+              fontSize: 30,
               color: Colors.white,
               shadows: [
                 Shadow(
