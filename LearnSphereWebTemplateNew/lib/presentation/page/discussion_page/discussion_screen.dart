@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_discussion_page.dart'; // Import the CreateDiscussionPage
 import 'package:firebase_auth/firebase_auth.dart';
+import 'join_discussion_screen.dart';
 
 class DiscussionPage extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+
+  final Set<String> joinedRooms = {}; // Track joined rooms
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +78,7 @@ class DiscussionPage extends StatelessWidget {
                             foregroundColor: Colors.white, // Keep text color white
                           ),
                           onPressed: () {
-                            joinDiscussionRoom(discussion['title']);
+                            joinDiscussionRoom(context,discussion.id);
                           },
                           child: Text('Join'),
                         ),
@@ -97,9 +100,36 @@ class DiscussionPage extends StatelessWidget {
     );
   }
 
-  void joinDiscussionRoom(String roomName) {
-    print('Joined $roomName');
+void joinDiscussionRoom(BuildContext context, String roomId) {
+  print('Joined $roomId');
+
+   // Check if the room has already been joined
+  if (!joinedRooms.contains(roomId)) {
+    // Show success dialog since it's the first time joining
+    showAlertDialog(context, 'Success', 'You have successfully joined the discussion room.');
+
+    // Add to the set of joined rooms
+    joinedRooms.add(roomId);
+
+    // Delay navigation to allow the user to see the dialog
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => JoinDiscussionScreen(roomId: roomId),
+        ),
+      );
+    });
+  } else {
+    // Directly navigate to JoinDiscussionScreen without showing the dialog
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JoinDiscussionScreen(roomId: roomId),
+      ),
+    );
   }
+}
 
   void showDeleteConfirmationDialog(BuildContext context, String discussionId) {
     showDialog(
@@ -140,102 +170,6 @@ Future<void> deleteDiscussionRoom(String discussionId, BuildContext context) asy
       showAlertDialog(context, 'Error', 'Failed to delete discussion room.');
     }
   }
-//---------------REPORT ENTIRE ROOM------------------------------------------------------
-  void showReportConfirmationDialog(BuildContext context, String discussionId) {
-    TextEditingController reasonController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Report Discussion'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Please provide a reason for reporting this discussion:'),
-              TextField(
-                controller: reasonController,
-                decoration: InputDecoration(hintText: 'Enter reason here'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                reportDiscussion(discussionId, reasonController.text.trim(), context);
-              },
-              child: Text('Report', style: TextStyle(color: Colors.orange)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-Future<void> reportDiscussion(String discussionId, String reason, BuildContext context) async {
-  // Check if the reason is empty and show an error dialog if it is
-  if (reason.isEmpty) {
-    showAlertDialog(context, 'Error', 'Please enter a reason for reporting the discussion.');
-    return;
-  }
-
-  // Get the current user's UID
-  final User? currentUser = auth.currentUser;
-
-  if (currentUser == null) {
-    showAlertDialog(context, 'Error', 'You must be logged in to report a discussion.');
-    return;
-  }
-
-  String username = 'Unknown User';
-
-  try {
-    // Fetch the user's document from the Firestore collection
-    DocumentSnapshot userDoc = await firestore.collection('users').doc(currentUser.uid).get();
-    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?; 
-    username = userData?['username'] ?? 'Unknown User'; 
-  } catch (e) {
-    // Show error dialog if fetching user data fails
-    if (context.mounted) {  // Check if the widget is still mounted
-      showAlertDialog(context, 'Error', 'Failed to retrieve user data.');
-    }
-    return;
-  }
-
-  // Check if the username is not empty
-  if (username.isNotEmpty) {
-    try {
-      await firestore.collection('report_discussion').add({
-        'discussionId': discussionId,
-        'reportedAt': DateTime.now(),
-        'reason': reason,
-        'reportedBy': username,
-      });
-
-      // Show success message using showAlertDialog
-      if (context.mounted) {  // Check if the widget is still mounted
-        showAlertDialog(context, 'Success', 'Discussion room reported successfully!');
-      }
-    } catch (e) {
-      // Show error dialog in case of failure
-      if (context.mounted) {  // Check if the widget is still mounted
-        showAlertDialog(context, 'Error', 'Failed to report discussion room.');
-      }
-    }
-  } else {
-    // Show error dialog if username is empty
-    if (context.mounted) {  // Check if the widget is still mounted
-      showAlertDialog(context, 'Error', 'Failed to retrieve username for reporting.');
-    }
-  }
-}
 
 void showAlertDialog(BuildContext context, String title, String message) {
     showDialog(
@@ -257,6 +191,5 @@ void showAlertDialog(BuildContext context, String title, String message) {
       },
     );
   }
-
 
 }

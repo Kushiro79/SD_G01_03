@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // Import this package for date formatting
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
+import 'package:intl/intl.dart'; // For date formatting
+import 'package:firebase_auth/firebase_auth.dart'; // For Firebase Auth
 
 class JoinDiscussionScreen extends StatefulWidget {
-  final String roomName;
+  final String roomId; // Changed from roomName to roomId
 
-  JoinDiscussionScreen({Key? key, required this.roomName}) : super(key: key);
+  JoinDiscussionScreen({Key? key, required this.roomId}) : super(key: key);
 
   @override
   _JoinDiscussionScreenState createState() => _JoinDiscussionScreenState();
@@ -19,10 +19,15 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
   String? username; // Variable to store the username
   bool isSending = false; // Track sending state
 
+  String? roomTitle; // Variable to store the room title
+
   @override
   void initState() {
     super.initState();
     _getCurrentUserName(); // Call to retrieve the current user's username
+
+    _getRoomTitle(); // Call to retrieve the room title
+    
   }
 
   Future<void> _getCurrentUserName() async {
@@ -38,21 +43,37 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
     }
   }
 
+ Future<void> _getRoomTitle() async {
+    try {
+      DocumentSnapshot roomDoc = await firestore.collection('discussions').doc(widget.roomId).get();
+      if (roomDoc.exists) {
+        setState(() {
+          roomTitle = roomDoc['title']; // Assuming title is a field in the document
+        });
+        print('Room title fetched: $roomTitle'); // Debug print
+      } else {
+        print('Room document does not exist for ID: ${widget.roomId}');
+      }
+    } catch (e) {
+      print('Error fetching room title: $e'); // Print any error that occurs
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.roomName),
+        title: Text(roomTitle ?? 'Loading...'), // Display the roomId
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: firestore
-                  .collection('discussions')
-                  .doc(widget.roomName)
-                  .collection('messages')
-                  .orderBy('timestamp')
+                  .collection('discussion_group')
+                  .doc(widget.roomId)
+                  .collection('messages') // Access the messages subcollection
+                  .orderBy('timestamp') // Order messages by timestamp
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -69,37 +90,41 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
                   itemCount: messages?.length ?? 0,
                   itemBuilder: (context, index) {
                     final message = messages![index];
-                    
-                    // Get the timestamp and check if it's null
-                    Timestamp? timestamp = message['timestamp'];
-                    String formattedTime = '';
 
-                    if (timestamp != null) {
-                      // Format the timestamp only if it is not null
-                      formattedTime = DateFormat('yyyy-MM-dd – kk:mm').format(timestamp.toDate());
-                    } else {
-                      formattedTime = 'Unknown time'; // Handle the null case
-                    }
+                    // Get the timestamp and format it
+                    Timestamp? timestamp = message['timestamp'];
+                    String formattedTime = timestamp != null
+                        ? DateFormat('yyyy-MM-dd – kk:mm').format(timestamp.toDate())
+                        : 'Unknown time'; // Handle the null case
 
                     return ListTile(
                       title: Text(message['sender']),
                       subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distribute space between elements
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Text(
                               message['text'],
-                              maxLines: 2, // Limit to 2 lines for better display
-                              overflow: TextOverflow.ellipsis, // Ellipsis for overflow
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          SizedBox(width: 8), // Add some space between message and time
+                          SizedBox(width: 8),
                           Text(
                             formattedTime,
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                         ],
                       ),
+
+                       trailing: IconButton(
+                        icon: Icon(Icons.report_problem),
+                        onPressed: () {
+                          reportMessage(message.id); // Pass the message ID to report
+                        },
+                      ),
+
+
                     );
                   },
                 );
@@ -137,21 +162,19 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
       setState(() {
         isSending = true; // Set sending state to true
       });
-      
+
       try {
-        await firestore
-            .collection('discussions')
-            .doc(widget.roomName)
-            .collection('messages')
+        await firestore.collection('discussion_group')
+            .doc(widget.roomId) // Specify the room document
+            .collection('messages') // Access the messages subcollection
             .add({
-          'text': _messageController.text,
           'sender': username, // Use the retrieved username
+          'text': _messageController.text,
           'timestamp': FieldValue.serverTimestamp(),
         });
 
         _messageController.clear();
       } catch (e) {
-        // Handle the error appropriately, e.g. show a message to the user
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error sending message: $e')),
         );
@@ -166,4 +189,53 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
       );
     }
   }
+
+
+
+
+
+  void reportMessage(String messageId) async {
+    String? reason = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController reasonController = TextEditingController();
+        return AlertDialog(
+          title: Text('Report Message'),
+          content: TextField(
+            controller: reasonController,
+            decoration: InputDecoration(hintText: 'Enter the reason for reporting'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Submit'),
+              onPressed: () {
+                Navigator.of(context).pop(reasonController.text); // Return the reason
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog without action
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (reason != null && reason.isNotEmpty) {
+      // Add the report to the report_discussion collection
+      await firestore.collection('report_discussion').add({
+        'messageId': messageId,
+        'reason': reason,
+        'reportedAt': FieldValue.serverTimestamp(),
+        'username': username, // Capture the user ID of the reporter
+        'roomId': widget.roomId, // Optionally store the room ID for context
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Report submitted successfully!')),
+      );
+    }
+  }
+
 }
