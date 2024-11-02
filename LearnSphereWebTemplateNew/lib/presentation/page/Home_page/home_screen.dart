@@ -15,6 +15,8 @@ import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
+import '../comment_post/comment_screen.dart';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -74,7 +76,6 @@ Widget _buildSidebar(BuildContext context) {
   final EditProfileController editController = Get.put(EditProfileController());
 
   var screenwidth = MediaQuery.of(context).size.width >= 800;
-
   return Container(
     width: screenwidth ? 300 : 70,
     decoration: const BoxDecoration(
@@ -183,7 +184,7 @@ Widget _buildSidebar(BuildContext context) {
                     );
               },
             );
-          },
+        },
         ),
         ListTile(
           hoverColor: Colors.white.withOpacity(0.1),
@@ -280,7 +281,7 @@ Widget _buildSidebar(BuildContext context) {
                 color: Colors.white,
               ),
               title:
-                  screenwidth // Ensure `screenwidth` is a boolean or has a boolean check
+                  screenwidth // Ensure screenwidth is a boolean or has a boolean check
                       ? const Text(
                           'Change Mode',
                           style: TextStyle(
@@ -374,6 +375,7 @@ Widget _buildPost() {
                             );
                             if (result == null) return;
 
+
                             for (var file in result.files) {
                               if (file.bytes != null) {
                                 // Determine if file is image or video based on extension
@@ -439,10 +441,13 @@ Widget _buildPost() {
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         final post = posts[index];
+                        String postId = post.id;
+                      
                         List<String> mediaUrls = List<String>.from(
                             (post['mediaUrls'] ?? []).map((url) =>
                                 url.toString()) // Ensure each URL is a string
                             );
+                            // String userId = homeController.auth.currentUser!.uid; // Get user ID here
                         return Column(
                           children: [
                             Padding(
@@ -454,14 +459,15 @@ Widget _buildPost() {
                                 timestamp: post['Timestamp'],
                                 context: context,
                                 mediaUrls: mediaUrls,
+                                postId: postId,
+                                //userId: userId,
                               ),
                             ),
                             if (index < posts.length - 1)
                               const Divider(
                                 thickness: 1,
-                                color: Colors
-                                    .grey, // Customize the divider's appearance if needed
-                              ),
+                                color: Colors.grey,
+        ),
                           ],
                         );
                       },
@@ -513,13 +519,15 @@ Widget _buildTextField({
   );
 }
 
+
 Widget _ThePost({
   required String text,
   required String user,
   required String imageUrl,
   required Timestamp timestamp,
-  required List<String> mediaUrls, // Accept media URLs as a parameter
+  required List<String> mediaUrls,
   required BuildContext context,
+  required String postId, // Pass the post ID to the widget
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -527,95 +535,127 @@ Widget _ThePost({
     ),
     child: Padding(
       padding: const EdgeInsets.only(top: 10, left: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          imageUrl.isNotEmpty
-              ? ClipOval(
-                  child: Image.network(
-                    imageUrl,
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                  width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                  alignment: Alignment.topLeft,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey,
-                  ),
-                  child: const Icon(Icons.person, color: Colors.white),
-                ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(user,
-                    style: const TextStyle(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              imageUrl.isNotEmpty
+                  ? ClipOval(
+                      child: Image.network(
+                        imageUrl,
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                      width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                      alignment: Alignment.topLeft,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey,
+                      ),
+                      child: const Icon(Icons.person, color: Colors.white),
+                    ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user,
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text(
-                  text,
-                  style: const TextStyle(color: Colors.white),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      text,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 10),
+                    // Display the media
+                    mediaUrls.isNotEmpty
+                        ? Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: mediaUrls.map((url) {
+                              return url.contains('.mp4')
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width > 800
+                                            ? MediaQuery.of(context).size.width * 0.3
+                                            : MediaQuery.of(context).size.width * 0.50,
+                                        child: VideoPlayerWidget(videoUrl: url),
+                                      ),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        url,
+                                        width: MediaQuery.of(context).size.width > 800
+                                            ? MediaQuery.of(context).size.width * 0.3
+                                            : MediaQuery.of(context).size.width * 0.50,
+                                        height: 300,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                            }).toList(),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                // Display the media
-                mediaUrls.isNotEmpty
-                    ? Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: mediaUrls.map((url) {
-                          return url.contains('.mp4')
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width >
-                                            800
-                                        ? MediaQuery.of(context).size.width *
-                                            0.3
-                                        : MediaQuery.of(context).size.width *
-                                            0.50,
-                                    child: VideoPlayerWidget(videoUrl: url),
-                                  ))
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    url,
-                                    width: MediaQuery.of(context).size.width >
-                                            800
-                                        ? MediaQuery.of(context).size.width *
-                                            0.3
-                                        : MediaQuery.of(context).size.width *
-                                            0.50,
-                                    height: 300,
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                        }).toList(),
-                      )
-                    : const SizedBox.shrink(),
-              ],
-            ),
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Text(
+                      DateFormat('dd-MM-yyyy \nhh:mm:ss').format(timestamp.toDate()),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const Spacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          const SizedBox(height: 10), // Space between the post and buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Text(
-                  DateFormat('dd-MM-yyyy \nhh:mm:ss')
-                      .format(timestamp.toDate()),
-                  style: const TextStyle(color: Colors.white),
-                ),
+              IconButton(
+                icon: const Icon(Icons.comment, color: Colors.white),
+                onPressed: () {
+                  // Navigate to the CommentScreen when the comment button is pressed
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CommentScreen(postId: postId), // Pass the postId
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.thumb_up, color: Colors.white),
+                onPressed: () {
+                  // Handle like action
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.share, color: Colors.white),
+                onPressed: () {
+                  // Handle share action
+                },
               ),
             ],
           ),
@@ -624,6 +664,9 @@ Widget _ThePost({
     ),
   );
 }
+
+
+
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
