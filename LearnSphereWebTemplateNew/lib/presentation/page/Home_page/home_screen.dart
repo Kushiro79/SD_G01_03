@@ -17,7 +17,6 @@ import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
 import '../comment_post/comment_screen.dart';
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 @RoutePage()
@@ -32,7 +31,7 @@ class MyHomePage extends GetView<HomeController> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor:const Color(0xFF1A1F3B),
+          backgroundColor: const Color(0xFF1A1F3B),
           toolbarHeight: 100,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -184,7 +183,7 @@ Widget _buildSidebar(BuildContext context) {
                     );
               },
             );
-        },
+          },
         ),
         ListTile(
           hoverColor: Colors.white.withOpacity(0.1),
@@ -375,7 +374,6 @@ Widget _buildPost() {
                             );
                             if (result == null) return;
 
-
                             for (var file in result.files) {
                               if (file.bytes != null) {
                                 // Determine if file is image or video based on extension
@@ -433,19 +431,20 @@ Widget _buildPost() {
                       itemBuilder: (context, index) {
                         final post = posts[index];
                         String postId = post.id;
-                      
+
                         List<String> mediaUrls = List<String>.from(
                             (post['mediaUrls'] ?? []).map((url) =>
                                 url.toString()) // Ensure each URL is a string
                             );
-                            // String userId = homeController.auth.currentUser!.uid; // Get user ID here
+                        // String userId = homeController.auth.currentUser!.uid; // Get user ID here
                         return Column(
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: _ThePost(
+                              child: thePost(
                                 text: post['Text'],
                                 user: post['Username'],
+                                uid: post['uid'],
                                 imageUrl: post['profileImageUrl'],
                                 timestamp: post['Timestamp'],
                                 context: context,
@@ -458,7 +457,7 @@ Widget _buildPost() {
                               const Divider(
                                 thickness: 1,
                                 color: Colors.grey,
-        ),
+                              ),
                           ],
                         );
                       },
@@ -510,16 +509,18 @@ Widget _buildTextField({
   );
 }
 
-
-Widget _ThePost({
+Widget thePost({
   required String text,
   required String user,
+  required String uid,
   required String imageUrl,
   required Timestamp timestamp,
   required List<String> mediaUrls,
   required BuildContext context,
   required String postId, // Pass the post ID to the widget
 }) {
+  HomeController homeController = Get.put(HomeController());
+
   return Container(
     decoration: BoxDecoration(
       color: Colors.transparent,
@@ -544,7 +545,8 @@ Widget _ThePost({
                     )
                   : Container(
                       margin: const EdgeInsets.only(top: 16),
-                      height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
+                      height:
+                          MediaQuery.of(context).size.height > 850 ? 50 : 20,
                       width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
                       alignment: Alignment.center,
                       decoration: const BoxDecoration(
@@ -582,9 +584,17 @@ Widget _ThePost({
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(5),
                                       child: SizedBox(
-                                        width: MediaQuery.of(context).size.width > 800
-                                            ? MediaQuery.of(context).size.width * 0.3
-                                            : MediaQuery.of(context).size.width * 0.50,
+                                        width:
+                                            MediaQuery.of(context).size.width >
+                                                    800
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.50,
                                         child: VideoPlayerWidget(videoUrl: url),
                                       ),
                                     )
@@ -592,9 +602,17 @@ Widget _ThePost({
                                       borderRadius: BorderRadius.circular(10),
                                       child: Image.network(
                                         url,
-                                        width: MediaQuery.of(context).size.width > 800
-                                            ? MediaQuery.of(context).size.width * 0.3
-                                            : MediaQuery.of(context).size.width * 0.50,
+                                        width:
+                                            MediaQuery.of(context).size.width >
+                                                    800
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.50,
                                         height: 300,
                                         fit: BoxFit.cover,
                                       ),
@@ -609,11 +627,63 @@ Widget _ThePost({
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  
+                  Obx(() {
+                    return homeController.isStaffOrAdmin.value || homeController.isAtProfilePage.value
+                        ? PopupMenuButton<String>(
+                            icon: const Icon(Icons.more_vert,
+                                color: Colors.white),
+                            onSelected: (value) {
+                              // Handle the selection
+                              if (value == 'Delete') {
+                                // Show confirmation dialog
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Confirm Deletion'),
+                                      content: const Text(
+                                          'Are you sure you want to delete this post?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            homeController.deletePost(
+                                                uid, postId.trim());
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                const PopupMenuItem<String>(
+                                  value: 'Delete',
+                                  child: Text('Delete Post'),
+                                ),
+                              ];
+                            },
+                          )
+                        : const SizedBox.shrink(); // If not staff/admin, display nothing
+                  }),
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: Text(
-                      DateFormat('dd-MM-yyyy \nhh:mm:ss').format(timestamp.toDate()),
-                      style: const TextStyle(color: Colors.white),
+                      DateFormat('dd-MM-yyyy hh:mm:ss')
+                          .format(timestamp.toDate()),
+                      style: const TextStyle(color: Colors.white60, fontSize: 10),
                     ),
                   ),
                 ],
@@ -631,7 +701,8 @@ Widget _ThePost({
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CommentScreen(postId: postId), // Pass the postId
+                      builder: (context) =>
+                          CommentScreen(postId: postId), // Pass the postId
                     ),
                   );
                 },
@@ -655,9 +726,6 @@ Widget _ThePost({
     ),
   );
 }
-
-
-
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;

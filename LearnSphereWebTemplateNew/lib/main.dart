@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       // Add title and theme if desired
       builder: FToastBuilder(),
 
-      title: 'My App',
+      title: 'LearnSphere',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -47,20 +47,6 @@ class _MyAppState extends State<MyApp> {
 
       // Add debugShowCheckedModeBanner false to remove the debug banner if needed
       debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MyApps extends StatelessWidget {
-  final _appRouter = AppRouter();
-
-  MyApps({super.key}); // Instantiate the generated router
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerDelegate: _appRouter.delegate(),
-      routeInformationParser: _appRouter.defaultRouteParser(),
     );
   }
 }
