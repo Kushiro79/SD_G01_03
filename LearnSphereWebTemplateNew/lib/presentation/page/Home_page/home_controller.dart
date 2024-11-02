@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 import 'package:file_picker/file_picker.dart';
 
+import 'package:share_plus/share_plus.dart';
 import '../profile_page/controllers/edit_profile_controller.dart';
 
 class HomeController extends GetxController {
@@ -356,5 +357,15 @@ class HomeController extends GetxController {
   }
 
 
+void sharePost(String postText, List<String> mediaUrls) {
+    String content = postText; // Prepare the content to share
 
+    if (mediaUrls.isNotEmpty) {
+      content += '\nCheck this out: ${mediaUrls.join(', ')}';
+    }
+
+    Share.share(content, subject: 'Check out this post!');
+  }
+
+  
 }

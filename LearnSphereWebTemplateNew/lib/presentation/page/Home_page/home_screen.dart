@@ -17,6 +17,8 @@ import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
 import '../comment_post/comment_screen.dart';
 
+import 'package:share_plus/share_plus.dart';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -308,63 +310,31 @@ Widget _buildPost() {
   HomeController homeController = Get.put(HomeController());
   return LayoutBuilder(builder: (context, constraints) {
     return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width > 850
-              ? MediaQuery.of(context).size.width * 0.5
-              : MediaQuery.of(context).size.width * 0.85,
-        ),
-        child: Center(
-          child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.transparent,
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width > 850
+            ? MediaQuery.of(context).size.width * 0.5
+            : MediaQuery.of(context).size.width * 0.85,
+      ),
+      child: Center(
+        child: Column(children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 1.5,
                 ),
-                padding: const EdgeInsets.all(
-                    10), // Optional padding for the container
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start, // Align children to the start
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
-                        children: [
-                          // Post Text field
-                          Expanded(
-                            child: _buildTextField(
-                              hintText: 'What\'s on your mind?',
-                              controller: homeController.postText,
-                              onChanged: (value) {
-                                homeController.changeText(value);
-                              },
-                              obscureText: false,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          IconButton(
-                            onPressed: homeController.postMessage,
-                            icon: const Icon(
-                              Icons.send,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    homeController.buildHoverableImages(homeController),
-                    // Row for multiple icons (e.g., pictures, videos)
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, // Space evenly
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                color: Colors.transparent,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
                       children: [
                         IconButton(
                           onPressed: () async {
@@ -391,92 +361,122 @@ Widget _buildPost() {
                             color: Colors.white,
                           ),
                         ),
+                        const SizedBox(width: 10),
                         IconButton(
-                          onPressed: () async {
-                            // Handle videos action
-                            final result = await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ['mp4'],
-                            );
-                            if (result == null) return;
-
-                            for (var file in result.files) {
-                              if (file.bytes != null) {
-                                // Determine if file is image or video based on extension
-                                final isImage = ['jpg', 'png', 'jpeg']
-                                    .contains(file.extension);
-                                homeController.addFile(
-                                    file.bytes!, isImage ? 'image' : 'video');
-                              }
-                            }
-                          },
+                          onPressed: homeController.postMessage,
                           icon: const Icon(
-                            Icons.videocam,
+                            Icons.send,
                             color: Colors.white,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  homeController.buildHoverableImages(homeController),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          // Handle photos action
+                          final result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['jpg', 'png', 'jpeg', 'mp4'],
+                          );
+                          if (result == null) return;
+
+                          for (var file in result.files) {
+                            if (file.bytes != null) {
+                              final isImage =
+                                  ['jpg', 'png', 'jpeg'].contains(file.extension);
+                              homeController.addFile(
+                                  file.bytes!, isImage ? 'image' : 'video');
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.photo, color: Colors.white),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          // Handle videos action
+                          final result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['mp4'],
+                          );
+                          if (result == null) return;
+
+                          for (var file in result.files) {
+                            if (file.bytes != null) {
+                              final isImage =
+                                  ['jpg', 'png', 'jpeg'].contains(file.extension);
+                              homeController.addFile(
+                                  file.bytes!, isImage ? 'image' : 'video');
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.videocam, color: Colors.white),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          // Handle other media action
+                        },
+                        icon: const Icon(Icons.attach_file, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              child: StreamBuilder(
-                stream: homeController
-                    .getPostsStream(homeController.auth.currentUser!.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var posts = snapshot.data as List<DocumentSnapshot>;
-                    return ListView.builder(
-                      itemCount: posts.length,
-                      itemBuilder: (context, index) {
-                        final post = posts[index];
-                        String postId = post.id;
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: homeController.getPostsStream(homeController.auth.currentUser!.uid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var posts = snapshot.data as List<DocumentSnapshot>;
+                  return ListView.builder(
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      final post = posts[index];
+                      String postId = post.id;
+                      List<String> mediaUrls = List<String>.from(
+                          (post['mediaUrls'] ?? []).map((url) => url.toString()));
                       
-                        List<String> mediaUrls = List<String>.from(
-                            (post['mediaUrls'] ?? []).map((url) =>
-                                url.toString()) // Ensure each URL is a string
-                            );
-                            // String userId = homeController.auth.currentUser!.uid; // Get user ID here
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: _ThePost(
-                                text: post['Text'],
-                                user: post['Username'],
-                                imageUrl: post['profileImageUrl'],
-                                timestamp: post['Timestamp'],
-                                context: context,
-                                mediaUrls: mediaUrls,
-                                postId: postId,
-                                //userId: userId,
-                              ),
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: _ThePost(
+                              text: post['Text'],
+                              user: post['Username'],
+                              imageUrl: post['profileImageUrl'],
+                              timestamp: post['Timestamp'],
+                              context: context,
+                              mediaUrls: mediaUrls,
+                              postId: postId,
+                            
                             ),
-                            if (index < posts.length - 1)
-                              const Divider(
-                                thickness: 1,
-                                color: Colors.grey,
-        ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ));
-                },
-              ),
-            )
-          ]),
-        ));
+                          ),
+                          if (index < posts.length - 1)
+                            const Divider(thickness: 1, color: Colors.grey),
+                        ],
+                      );
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                return const Center(
+                    child: CircularProgressIndicator(color: Colors.white));
+              },
+            ),
+          )
+        ]),
+      ),
+    );
   });
 }
+
 
 Widget _buildTextField({
   required TextEditingController controller,
@@ -576,7 +576,8 @@ Widget _ThePost({
                     mediaUrls.isNotEmpty
                         ? Wrap(
                             spacing: 8.0,
-                            runSpacing: 8.0,
+
+                  runSpacing: 8.0,
                             children: mediaUrls.map((url) {
                               return url.contains('.mp4')
                                   ? ClipRRect(
@@ -645,7 +646,14 @@ Widget _ThePost({
               IconButton(
                 icon: const Icon(Icons.share, color: Colors.white),
                 onPressed: () {
-                  // Handle share action
+                   // Call the sharePost method from the HomeController
+                HomeController homeController = Get.find();
+                
+                // Assuming you have access to the post text and media URLs
+                String postText = text; // This should be the actual post text
+                List<String> mediaUrls = []; // Fetch or pass the actual media URLs
+
+                homeController.sharePost(postText, mediaUrls);
                 },
               ),
             ],
