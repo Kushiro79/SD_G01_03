@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 import 'package:file_picker/file_picker.dart';
 
+import 'package:share_plus/share_plus.dart';
 import '../profile_page/controllers/edit_profile_controller.dart';
 
 class HomeController extends GetxController {
@@ -405,4 +406,25 @@ void _showDialog(String title, String content, Color titleColor) {
     },
   );
 }
+}
+void sharePost(String postText, List<String> mediaUrls) {
+    String content = postText; // Prepare the content to share
+
+    if (mediaUrls.isNotEmpty) {
+      content += '\nCheck this out: ${mediaUrls.join(', ')}';
+    }
+
+    Share.share(content, subject: 'Check out this post!');
+  }
+
+  
+ Future<void> reportPost(String postId, String userId, {String? reason}) async {
+    // Firestore operation (make sure this is awaited)
+    await firestore.collection('report_post').add({
+      'postId': postId,
+      'userId': userId,
+      'reason': reason ?? 'No reason provided',
+      'timestamp': Timestamp.now(),
+    });
+  }
 }

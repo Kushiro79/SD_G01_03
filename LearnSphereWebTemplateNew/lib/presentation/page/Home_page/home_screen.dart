@@ -1,3 +1,4 @@
+
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
 import '../comment_post/comment_screen.dart';
 
+import 'package:share_plus/share_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 @RoutePage()
@@ -74,7 +76,8 @@ Widget _buildSidebar(BuildContext context) {
   HomeController homeController = Get.put(HomeController());
   final EditProfileController editController = Get.put(EditProfileController());
 
-  var screenwidth = MediaQuery.of(context).size.width >= 800;
+
+var screenwidth = MediaQuery.of(context).size.width >= 800;
   return Container(
     width: screenwidth ? 300 : 70,
     decoration: const BoxDecoration(
@@ -180,7 +183,9 @@ Widget _buildSidebar(BuildContext context) {
                     child:
                         DiscoverPage() // Transparent background for floating window
                     // Show the DiscoverPage as a floating window
-                    );
+
+
+);
               },
             );
           },
@@ -303,6 +308,7 @@ Widget _buildSidebar(BuildContext context) {
   );
 }
 
+
 Widget _buildPost() {
   HomeController homeController = Get.put(HomeController());
   return LayoutBuilder(builder: (context, constraints) {
@@ -370,11 +376,12 @@ Widget _buildPost() {
                             // Handle photos action
                             final result = await FilePicker.platform.pickFiles(
                               type: FileType.custom,
-                              allowedExtensions: ['jpg', 'png', 'jpeg'],
+                              allowedExtensions: ['jpg', 'png', 'jpeg', 'mp4'],
                             );
                             if (result == null) return;
 
-                            for (var file in result.files) {
+
+                          for (var file in result.files) {
                               if (file.bytes != null) {
                                 // Determine if file is image or video based on extension
                                 final isImage = ['jpg', 'png', 'jpeg']
@@ -412,6 +419,15 @@ Widget _buildPost() {
                             Icons.videocam,
                             color: Colors.white,
                           ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // Handle other media action
+                          },
+                          icon: const Icon(
+                            Icons.attach_file,
+                            color: Colors.white,
+                          ), // Example for attachments
                         ),
                       ],
                     ),
@@ -452,7 +468,9 @@ Widget _buildPost() {
                                 postId: postId,
                                 //userId: userId,
                               ),
-                            ),
+
+
+            ),
                             if (index < posts.length - 1)
                               const Divider(
                                 thickness: 1,
@@ -548,7 +566,7 @@ Widget thePost({
                       height:
                           MediaQuery.of(context).size.height > 850 ? 50 : 20,
                       width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                      alignment: Alignment.center,
+                      alignment: Alignment.topLeft,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.grey,
@@ -578,6 +596,8 @@ Widget thePost({
                     mediaUrls.isNotEmpty
                         ? Wrap(
                             spacing: 8.0,
+
+
                             runSpacing: 8.0,
                             children: mediaUrls.map((url) {
                               return url.contains('.mp4')
@@ -716,9 +736,102 @@ Widget thePost({
               IconButton(
                 icon: const Icon(Icons.share, color: Colors.white),
                 onPressed: () {
-                  // Handle share action
+                   // Call the sharePost method from the HomeController
+                HomeController homeController = Get.find();
+                
+                // Assuming you have access to the post text and media URLs
+                String postText = text; // This should be the actual post text
+                List<String> mediaUrls = []; // Fetch or pass the actual media URLs
+
+                homeController.sharePost(postText, mediaUrls);
                 },
               ),
+   IconButton(
+  icon: const Icon(Icons.report, color: Colors.red), // Report icon
+  onPressed: () {
+    // Create a TextEditingController to manage the input field
+    TextEditingController reasonController = TextEditingController();
+
+    // Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns items on opposite ends
+          children: [
+            const Text("Report Post"),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Are you sure you want to report this post?"),
+            const SizedBox(height: 10),
+            TextField(
+              controller: reasonController, // Set the controller
+              decoration: const InputDecoration(
+                labelText: "Reason (required)",
+                hintText: "Enter your reason for reporting",
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              String reason = reasonController.text; // Get text from the controller
+
+              if (reason.isNotEmpty) {
+                // Get the current user ID
+                User? user = FirebaseAuth.instance.currentUser;
+                String userId = user?.uid ?? 'unknown_user'; // Handle case if user is not logged in
+
+                // Call the reportPost method
+                await reportPost(context, postId, userId, reason: reason);
+                
+                // Close the report confirmation dialog
+                Navigator.of(context).pop(); 
+
+                // Show the success dialog
+                showDialog(
+                  context: context, // Same context is used for success dialog
+                  builder: (context) => AlertDialog(
+                    title: const Text("Success"),
+                    content: const Text("Post has been reported successfully."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the success dialog
+                          reasonController.clear(); // Clear the text field after success dialog is closed
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                // Show a message if the reason is empty
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Please enter a reason.")),
+                );
+              }
+            },
+            child: const Text("Yes"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the report dialog
+              reasonController.clear(); // Clear the text field when dialog closes
+            },
+            child: const Text("No"),
+          ),
+        ],
+      ),
+    );
+  },
+),
+
+
             ],
           ),
         ],
@@ -726,6 +839,29 @@ Widget thePost({
     ),
   );
 }
+
+Future<void> reportPost(BuildContext context, String postId, String userId, {String? reason}) async {
+  // Access your controller and call the method to report the post
+  HomeController homeController = Get.find();
+  await homeController.reportPost(postId, userId, reason: reason); // Ensure this is awaited if it's an async call
+
+  // After reporting, show success dialog
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Success"),
+      content: const Text("Post has been reported successfully."),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(), // Close the dialog
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
+
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
@@ -739,7 +875,8 @@ class VideoPlayerWidget extends StatefulWidget {
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
 
-  @override
+
+@override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
