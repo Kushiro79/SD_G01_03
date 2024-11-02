@@ -123,74 +123,78 @@ class HomeController extends GetxController {
         return const SizedBox(); // No media to display
       }
 
-      return Wrap(
-        spacing: 8.0, // Spacing between items
-        runSpacing: 8.0,
-        children: homeController.pickedMedia.asMap().entries.map((entry) {
-          int index = entry.key;
-          Uint8List mediaData = entry.value["bytes"];
-          String mediaType = entry.value["type"];
-          final hover = false.obs;
-
-          return MouseRegion(
-            onEnter: (_) => hover.value = true,
-            onExit: (_) => hover.value = false,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Display the image or video icon
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: mediaType == 'image'
-                      ? Image.memory(
-                          mediaData,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(
-                          width: 100,
-                          height: 100,
-                          color: Colors.grey[800],
-                          child: Icon(
-                            Icons.videocam,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                        ),
-                ),
-                // Display the overlay 'X' button on hover
-                Obx(() => Visibility(
-                      visible: hover.value,
-                      child: Positioned(
-                        top: 8,
-                        right: 8,
-                        child: GestureDetector(
-                          onTap: () {
-                            // Remove the media from the list
-                            homeController.pickedMedia.removeAt(index);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.close,
+    return Wrap(
+      spacing: 8.0, // Spacing between items
+      runSpacing: 8.0,
+      children: homeController.pickedMedia
+          .asMap()
+          .entries
+          .map((entry) {
+            int index = entry.key;
+            Uint8List mediaData = entry.value["bytes"];
+            String mediaType = entry.value["type"];
+            final hover = false.obs;
+            return MouseRegion(
+              onEnter: (_) => hover.value = true,
+              onExit: (_) => hover.value = false,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Display the image or video icon
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: mediaType == 'image'
+                        ? Image.memory(
+                            mediaData,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            width: 100,
+                            height: 100,
+                            color: Colors.grey[800],
+                            child: Icon(
+                              Icons.videocam,
                               color: Colors.white,
-                              size: 20,
+                              size: 40,
+                            ),
+                          ),
+                  ),
+                  // Display the overlay 'X' button on hover
+                  Obx(() => Visibility(
+                        visible: hover.value,
+                        child: Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              // Remove the media from the list
+                              homeController.pickedMedia.removeAt(index);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )),
-              ],
-            ),
-          );
-        }).toList(),
-      );
-    });
-  }
+                      )),
+                ],
+              ),
+            );
+          })
+          .toList(),
+    );
+  });
+}
+
 
   Future<void> userUsername() async {
     User? user = auth.currentUser; // Use currentUser property directly
@@ -350,4 +354,7 @@ class HomeController extends GetxController {
       }
     }
   }
+
+
+
 }
