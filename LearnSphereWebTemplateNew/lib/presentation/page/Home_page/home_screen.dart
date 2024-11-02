@@ -17,7 +17,7 @@ import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
 import '../comment_post/comment_screen.dart';
-
+import '../notifications_screen/notification_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -185,7 +185,7 @@ var screenwidth = MediaQuery.of(context).size.width >= 800;
                     // Show the DiscoverPage as a floating window
 
 
-);
+                  );
               },
             );
           },
@@ -205,6 +205,11 @@ var screenwidth = MediaQuery.of(context).size.width >= 800;
               : null,
           onTap: () {
             // Handle tap on Notifications
+             // Navigate to Notifications Screen without using AutoRoute
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NotificationsScreen()),
+    );
           },
         ),
         ListTile(
@@ -311,6 +316,7 @@ var screenwidth = MediaQuery.of(context).size.width >= 800;
 
 Widget _buildPost() {
   HomeController homeController = Get.put(HomeController());
+  String userId = homeController.auth.currentUser!.uid;
   return LayoutBuilder(builder: (context, constraints) {
     return ConstrainedBox(
         constraints: BoxConstraints(
@@ -466,7 +472,8 @@ Widget _buildPost() {
                                 context: context,
                                 mediaUrls: mediaUrls,
                                 postId: postId,
-                                //userId: userId,
+                                userId: userId,
+                                //likesCount: post['likesCount']??0,
                               ),
 
 
@@ -536,8 +543,50 @@ Widget thePost({
   required List<String> mediaUrls,
   required BuildContext context,
   required String postId, // Pass the post ID to the widget
+  required String userId,
+  //required int likesCount,
 }) {
+
   HomeController homeController = Get.put(HomeController());
+
+  //final HomeController homeController = Get.find(); // Get the HomeController instance
+// Function to toggle like
+  Future<void> toggleLike() async {
+  final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+  if (currentUserId == null) return; // Ensure user is logged in
+
+  // Reference to the specific post in the subcollection
+  final postRef = FirebaseFirestore.instance
+      .collection('posts')
+      .doc(userId) // The owner of the post
+      .collection('myPost')
+      .doc(postId);
+
+  // Start a Firestore transaction
+  await FirebaseFirestore.instance.runTransaction((transaction) async {
+    final postSnapshot = await transaction.get(postRef);
+    if (!postSnapshot.exists) return; // Post does not exist
+
+    // Fetch the current likes array
+    List<dynamic> likes = postSnapshot.data()?['likes'] ?? [];
+    print('Current likes: $likes'); // Debugging line
+
+    if (likes.contains(currentUserId)) {
+      // User has already liked the post, so remove the like
+      likes.remove(currentUserId);
+      print('User $currentUserId unliked the post.'); // Debugging line
+    } else {
+      // User has not liked the post, so add the like
+      likes.add(currentUserId);
+      print('User $currentUserId liked the post.'); // Debugging line
+    }
+
+    // Update the post's likes array
+    transaction.update(postRef, {'likes': likes});
+    print('Updated likes: $likes'); // Debugging line
+  });
+}
+
 
   return Container(
     decoration: BoxDecoration(
@@ -727,11 +776,9 @@ Widget thePost({
                   );
                 },
               ),
-              IconButton(
+               IconButton(
                 icon: const Icon(Icons.thumb_up, color: Colors.white),
-                onPressed: () {
-                  // Handle like action
-                },
+                onPressed: toggleLike, // Call the toggleLike function
               ),
               IconButton(
                 icon: const Icon(Icons.share, color: Colors.white),
@@ -824,13 +871,12 @@ Widget thePost({
               reasonController.clear(); // Clear the text field when dialog closes
             },
             child: const Text("No"),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        ],
-      ),
-    );
-  },
-),
-
 
             ],
           ),
@@ -935,4 +981,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       ],
     );
   }
+
 }
+
