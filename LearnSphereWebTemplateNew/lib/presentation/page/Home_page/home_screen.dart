@@ -1,3 +1,4 @@
+
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,8 @@ Widget _buildSidebar(BuildContext context) {
   HomeController homeController = Get.put(HomeController());
   final EditProfileController editController = Get.put(EditProfileController());
 
-  var screenwidth = MediaQuery.of(context).size.width >= 800;
+
+var screenwidth = MediaQuery.of(context).size.width >= 800;
   return Container(
     width: screenwidth ? 300 : 70,
     decoration: const BoxDecoration(
@@ -183,7 +185,9 @@ Widget _buildSidebar(BuildContext context) {
                     child:
                         DiscoverPage() // Transparent background for floating window
                     // Show the DiscoverPage as a floating window
-                    );
+
+
+);
               },
             );
         },
@@ -306,47 +310,80 @@ Widget _buildSidebar(BuildContext context) {
   );
 }
 
+
 Widget _buildPost() {
   HomeController homeController = Get.put(HomeController());
   return LayoutBuilder(builder: (context, constraints) {
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width > 850
-            ? MediaQuery.of(context).size.width * 0.5
-            : MediaQuery.of(context).size.width * 0.85,
-      ),
-      child: Center(
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.5,
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width > 850
+              ? MediaQuery.of(context).size.width * 0.5
+              : MediaQuery.of(context).size.width * 0.85,
+        ),
+        child: Center(
+          child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 1.5,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.transparent,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.transparent,
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
+                padding: const EdgeInsets.all(
+                    10), // Optional padding for the container
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start, // Align children to the start
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: [
+                          // Post Text field
+                          Expanded(
+                            child: _buildTextField(
+                              hintText: 'What\'s on your mind?',
+                              controller: homeController.postText,
+                              onChanged: (value) {
+                                homeController.changeText(value);
+                              },
+                              obscureText: false,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          IconButton(
+                            onPressed: homeController.postMessage,
+                            icon: const Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    homeController.buildHoverableImages(homeController),
+                    // Row for multiple icons (e.g., pictures, videos)
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly, // Space evenly
                       children: [
                         IconButton(
                           onPressed: () async {
                             // Handle photos action
                             final result = await FilePicker.platform.pickFiles(
                               type: FileType.custom,
-                              allowedExtensions: ['jpg', 'png', 'jpeg'],
+                              allowedExtensions: ['jpg', 'png', 'jpeg', 'mp4'],
                             );
                             if (result == null) return;
 
 
-                            for (var file in result.files) {
+                          for (var file in result.files) {
                               if (file.bytes != null) {
                                 // Determine if file is image or video based on extension
                                 final isImage = ['jpg', 'png', 'jpeg']
@@ -361,122 +398,103 @@ Widget _buildPost() {
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(width: 10),
                         IconButton(
-                          onPressed: homeController.postMessage,
+                          onPressed: () async {
+                            // Handle videos action
+                            final result = await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: ['mp4'],
+                            );
+                            if (result == null) return;
+
+                            for (var file in result.files) {
+                              if (file.bytes != null) {
+                                // Determine if file is image or video based on extension
+                                final isImage = ['jpg', 'png', 'jpeg']
+                                    .contains(file.extension);
+                                homeController.addFile(
+                                    file.bytes!, isImage ? 'image' : 'video');
+                              }
+                            }
+                          },
                           icon: const Icon(
-                            Icons.send,
+                            Icons.videocam,
                             color: Colors.white,
                           ),
                         ),
+                        IconButton(
+                          onPressed: () {
+                            // Handle other media action
+                          },
+                          icon: const Icon(
+                            Icons.attach_file,
+                            color: Colors.white,
+                          ), // Example for attachments
+                        ),
                       ],
                     ),
-                  ),
-                  homeController.buildHoverableImages(homeController),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          // Handle photos action
-                          final result = await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: ['jpg', 'png', 'jpeg', 'mp4'],
-                          );
-                          if (result == null) return;
-
-                          for (var file in result.files) {
-                            if (file.bytes != null) {
-                              final isImage =
-                                  ['jpg', 'png', 'jpeg'].contains(file.extension);
-                              homeController.addFile(
-                                  file.bytes!, isImage ? 'image' : 'video');
-                            }
-                          }
-                        },
-                        icon: const Icon(Icons.photo, color: Colors.white),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          // Handle videos action
-                          final result = await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: ['mp4'],
-                          );
-                          if (result == null) return;
-
-                          for (var file in result.files) {
-                            if (file.bytes != null) {
-                              final isImage =
-                                  ['jpg', 'png', 'jpeg'].contains(file.extension);
-                              homeController.addFile(
-                                  file.bytes!, isImage ? 'image' : 'video');
-                            }
-                          }
-                        },
-                        icon: const Icon(Icons.videocam, color: Colors.white),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // Handle other media action
-                        },
-                        icon: const Icon(Icons.attach_file, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: StreamBuilder(
-              stream: homeController.getPostsStream(homeController.auth.currentUser!.uid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  var posts = snapshot.data as List<DocumentSnapshot>;
-                  return ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      final post = posts[index];
-                      String postId = post.id;
-                      List<String> mediaUrls = List<String>.from(
-                          (post['mediaUrls'] ?? []).map((url) => url.toString()));
+            Expanded(
+              child: StreamBuilder(
+                stream: homeController
+                    .getPostsStream(homeController.auth.currentUser!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var posts = snapshot.data as List<DocumentSnapshot>;
+                    return ListView.builder(
+                      itemCount: posts.length,
+                      itemBuilder: (context, index) {
+                        final post = posts[index];
+                        String postId = post.id;
                       
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: _ThePost(
-                              text: post['Text'],
-                              user: post['Username'],
-                              imageUrl: post['profileImageUrl'],
-                              timestamp: post['Timestamp'],
-                              context: context,
-                              mediaUrls: mediaUrls,
-                              postId: postId,
-                            
-                            ),
-                          ),
-                          if (index < posts.length - 1)
-                            const Divider(thickness: 1, color: Colors.grey),
-                        ],
-                      );
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                return const Center(
-                    child: CircularProgressIndicator(color: Colors.white));
-              },
+                        List<String> mediaUrls = List<String>.from(
+                            (post['mediaUrls'] ?? []).map((url) =>
+                                url.toString()) // Ensure each URL is a string
+                            );
+                            // String userId = homeController.auth.currentUser!.uid; // Get user ID here
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: _ThePost(
+                                text: post['Text'],
+                                user: post['Username'],
+                                imageUrl: post['profileImageUrl'],
+                                timestamp: post['Timestamp'],
+                                context: context,
+                                mediaUrls: mediaUrls,
+                                postId: postId,
+                                //userId: userId,
+                              ),
+
+
             ),
-          )
-        ]),
-      ),
-    );
+                            if (index < posts.length - 1)
+                              const Divider(
+                                thickness: 1,
+                                color: Colors.grey,
+        ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ));
+                },
+              ),
+            )
+          ]),
+        ));
   });
 }
-
 
 Widget _buildTextField({
   required TextEditingController controller,
@@ -546,7 +564,7 @@ Widget _ThePost({
                       margin: const EdgeInsets.only(top: 16),
                       height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
                       width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                      alignment: Alignment.center,
+                      alignment: Alignment.topLeft,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.grey,
@@ -577,7 +595,8 @@ Widget _ThePost({
                         ? Wrap(
                             spacing: 8.0,
 
-                  runSpacing: 8.0,
+
+                            runSpacing: 8.0,
                             children: mediaUrls.map((url) {
                               return url.contains('.mp4')
                                   ? ClipRRect(
@@ -656,6 +675,92 @@ Widget _ThePost({
                 homeController.sharePost(postText, mediaUrls);
                 },
               ),
+   IconButton(
+  icon: const Icon(Icons.report, color: Colors.red), // Report icon
+  onPressed: () {
+    // Create a TextEditingController to manage the input field
+    TextEditingController reasonController = TextEditingController();
+
+    // Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns items on opposite ends
+          children: [
+            const Text("Report Post"),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Are you sure you want to report this post?"),
+            const SizedBox(height: 10),
+            TextField(
+              controller: reasonController, // Set the controller
+              decoration: const InputDecoration(
+                labelText: "Reason (required)",
+                hintText: "Enter your reason for reporting",
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              String reason = reasonController.text; // Get text from the controller
+
+              if (reason.isNotEmpty) {
+                // Get the current user ID
+                User? user = FirebaseAuth.instance.currentUser;
+                String userId = user?.uid ?? 'unknown_user'; // Handle case if user is not logged in
+
+                // Call the reportPost method
+                await reportPost(context, postId, userId, reason: reason);
+                
+                // Close the report confirmation dialog
+                Navigator.of(context).pop(); 
+
+                // Show the success dialog
+                showDialog(
+                  context: context, // Same context is used for success dialog
+                  builder: (context) => AlertDialog(
+                    title: const Text("Success"),
+                    content: const Text("Post has been reported successfully."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the success dialog
+                          reasonController.clear(); // Clear the text field after success dialog is closed
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                // Show a message if the reason is empty
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Please enter a reason.")),
+                );
+              }
+            },
+            child: const Text("Yes"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the report dialog
+              reasonController.clear(); // Clear the text field when dialog closes
+            },
+            child: const Text("No"),
+          ),
+        ],
+      ),
+    );
+  },
+),
+
+
             ],
           ),
         ],
@@ -664,6 +769,26 @@ Widget _ThePost({
   );
 }
 
+Future<void> reportPost(BuildContext context, String postId, String userId, {String? reason}) async {
+  // Access your controller and call the method to report the post
+  HomeController homeController = Get.find();
+  await homeController.reportPost(postId, userId, reason: reason); // Ensure this is awaited if it's an async call
+
+  // After reporting, show success dialog
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Success"),
+      content: const Text("Post has been reported successfully."),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(), // Close the dialog
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
 
 
 
@@ -679,7 +804,8 @@ class VideoPlayerWidget extends StatefulWidget {
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
 
-  @override
+
+@override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))

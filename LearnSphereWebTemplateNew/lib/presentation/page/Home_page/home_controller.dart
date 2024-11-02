@@ -368,4 +368,13 @@ void sharePost(String postText, List<String> mediaUrls) {
   }
 
   
+ Future<void> reportPost(String postId, String userId, {String? reason}) async {
+    // Firestore operation (make sure this is awaited)
+    await firestore.collection('report_post').add({
+      'postId': postId,
+      'userId': userId,
+      'reason': reason ?? 'No reason provided',
+      'timestamp': Timestamp.now(),
+    });
+  }
 }
