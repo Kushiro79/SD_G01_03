@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,6 +78,11 @@ class CreateDiscussionPage extends StatelessWidget {
   }
 
   Future<void> createDiscussion(String title, String content, BuildContext context) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    //check from the users collection the current user's username
+    DocumentSnapshot userSnapshot = await firestore.collection('users').doc(auth.currentUser!.uid).get();
+    String username = userSnapshot['username'];
+
     if (title.isEmpty || content.isEmpty) {
       showAlertDialog(context, 'Error', 'Title and content cannot be empty.', true);
       return;
@@ -87,6 +93,7 @@ class CreateDiscussionPage extends StatelessWidget {
         'title': title,
         'content': content,
         'createdAt': FieldValue.serverTimestamp(), // Timestamp
+        'createdBy': username,
       });
 
       print('Discussion Created: Title: $title, Content: $content');

@@ -9,9 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 import 'package:file_picker/file_picker.dart';
 
-
 import '../profile_page/controllers/edit_profile_controller.dart';
-
 
 class HomeController extends GetxController {
   final postText = TextEditingController();
@@ -20,7 +18,7 @@ class HomeController extends GetxController {
   var pickedMedia = <Map<String, dynamic>>[].obs;
   RxBool isStaffOrAdmin = false.obs;
 
-void addFile(Uint8List bytes, String type) {
+  void addFile(Uint8List bytes, String type) {
     pickedMedia.add({"bytes": bytes, "type": type});
   }
 
@@ -31,7 +29,6 @@ void addFile(Uint8List bytes, String type) {
     checkUserRole();
   }
 
-
   var selectIndex = [];
   var selectIndex1 = [];
   int seltectitem = 0;
@@ -39,9 +36,7 @@ void addFile(Uint8List bytes, String type) {
 
   RxString username = ''.obs;
 
-
   void increment() => count.value++;
-
 
   changeValue({int? value}) {
     if (selectIndex.contains(value)) {
@@ -119,88 +114,83 @@ void addFile(Uint8List bytes, String type) {
   ];
 
   void changeText(String value) {
-  postText.text = value; // Update the controller's text
-}
+    postText.text = value; // Update the controller's text
+  }
 
-Widget buildHoverableImages(HomeController homeController) {
-  return Obx(() {
-    if (homeController.pickedMedia.isEmpty) {
-      return const SizedBox(); // No media to display
-    }
+  Widget buildHoverableImages(HomeController homeController) {
+    return Obx(() {
+      if (homeController.pickedMedia.isEmpty) {
+        return const SizedBox(); // No media to display
+      }
 
-    return Wrap(
-      spacing: 8.0, // Spacing between items
-      runSpacing: 8.0,
-      children: homeController.pickedMedia
-          .asMap()
-          .entries
-          .map((entry) {
-            int index = entry.key;
-            Uint8List mediaData = entry.value["bytes"];
-            String mediaType = entry.value["type"];
-            final hover = false.obs;
+      return Wrap(
+        spacing: 8.0, // Spacing between items
+        runSpacing: 8.0,
+        children: homeController.pickedMedia.asMap().entries.map((entry) {
+          int index = entry.key;
+          Uint8List mediaData = entry.value["bytes"];
+          String mediaType = entry.value["type"];
+          final hover = false.obs;
 
-            return MouseRegion(
-              onEnter: (_) => hover.value = true,
-              onExit: (_) => hover.value = false,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Display the image or video icon
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: mediaType == 'image'
-                        ? Image.memory(
-                            mediaData,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.grey[800],
-                            child: Icon(
-                              Icons.videocam,
-                              color: Colors.white,
-                              size: 40,
-                            ),
+          return MouseRegion(
+            onEnter: (_) => hover.value = true,
+            onExit: (_) => hover.value = false,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Display the image or video icon
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: mediaType == 'image'
+                      ? Image.memory(
+                          mediaData,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          width: 100,
+                          height: 100,
+                          color: Colors.grey[800],
+                          child: Icon(
+                            Icons.videocam,
+                            color: Colors.white,
+                            size: 40,
                           ),
-                  ),
-                  // Display the overlay 'X' button on hover
-                  Obx(() => Visibility(
-                        visible: hover.value,
-                        child: Positioned(
-                          top: 8,
-                          right: 8,
-                          child: GestureDetector(
-                            onTap: () {
-                              // Remove the media from the list
-                              homeController.pickedMedia.removeAt(index);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.7),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 20,
-                              ),
+                        ),
+                ),
+                // Display the overlay 'X' button on hover
+                Obx(() => Visibility(
+                      visible: hover.value,
+                      child: Positioned(
+                        top: 8,
+                        right: 8,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Remove the media from the list
+                            homeController.pickedMedia.removeAt(index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 20,
                             ),
                           ),
                         ),
-                      )),
-                ],
-              ),
-            );
-          })
-          .toList(),
-    );
-  });
-}
-
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }).toList(),
+      );
+    });
+  }
 
   Future<void> userUsername() async {
     User? user = auth.currentUser; // Use currentUser property directly
@@ -213,106 +203,130 @@ Widget buildHoverableImages(HomeController homeController) {
           .get(const GetOptions(source: Source.server));
       final data = document.data();
 
-       username.value = data?['username']; // Retrieve username
+      username.value = data?['username']; // Retrieve username
 
       print('Username: $username'); // Handle the retrieved username
     } else {
       print('No current user');
     }
   }
+
   //post message
   void postMessage() async {
-  EditProfileController editController = Get.put(EditProfileController());
-  User? user = auth.currentUser;
-  final userId = user!.uid;
-  
-  if (postText.text.isNotEmpty) {
-    // Create a list to hold the download URLs of the uploaded media
-    List<String> mediaUrls = [];
+    EditProfileController editController = Get.put(EditProfileController());
+    User? user = auth.currentUser;
+    final userId = user!.uid;
 
-    for (var media in pickedMedia) {
-      Uint8List mediaBytes = media["bytes"];
-      String mediaType = media["type"];
+    if (postText.text.isNotEmpty) {
+      // Create a list to hold the download URLs of the uploaded media
+      List<String> mediaUrls = [];
 
-      // Generate a unique file name
-      String fileName = '${userId}_${DateTime.now().millisecondsSinceEpoch}.${mediaType == 'image' ? 'jpg' : 'mp4'}';
+      for (var media in pickedMedia) {
+        Uint8List mediaBytes = media["bytes"];
+        String mediaType = media["type"];
 
-      // Upload to Firebase Storage
-      Reference storageRef = FirebaseStorage.instance.ref().child('uploads/$fileName');
+        // Generate a unique file name
+        String fileName =
+            '${userId}_${DateTime.now().millisecondsSinceEpoch}.${mediaType == 'image' ? 'jpg' : 'mp4'}';
 
-      UploadTask uploadTask = storageRef.putData(mediaBytes);
-      TaskSnapshot taskSnapshot = await uploadTask;
+        // Upload to Firebase Storage
+        Reference storageRef =
+            FirebaseStorage.instance.ref().child('uploads/$fileName');
 
-      // Get the download URL after successful upload
-      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-      mediaUrls.add(downloadUrl);
+        UploadTask uploadTask = storageRef.putData(mediaBytes);
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get the download URL after successful upload
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        mediaUrls.add(downloadUrl);
+      }
+
+      // Add the post document to Firestore with media URLs
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(userId)
+          .collection('myPosts')
+          .add({
+        'profileImageUrl': editController.profileImageUrl.value,
+        'Username': username.value,
+        'Text': postText.text,
+        'certificate': editController.certificate.value,
+        'Timestamp': Timestamp.now(),
+        'mediaUrls': mediaUrls, // Store the list of media URLs
+      });
+
+      print(
+          'Post created with username: ${username.value}, Text: ${postText.text}, Timestamp: ${Timestamp.now()}, mediaUrls: $mediaUrls');
+
+      // Optionally clear the picked media after posting
+      pickedMedia.clear();
+    } else {
+      print('Please enter some text');
     }
-
-    // Add the post document to Firestore with media URLs
-    await FirebaseFirestore.instance.collection('posts').doc(userId).collection('myPosts').add({
-      'profileImageUrl': editController.profileImageUrl.value,
-      'Username': username.value,
-      'Text': postText.text,
-      'certificate': editController.certificate.value,
-      'Timestamp': Timestamp.now(),
-      'mediaUrls': mediaUrls, // Store the list of media URLs
-    });
-
-    print('Post created with username: ${username.value}, Text: ${postText.text}, Timestamp: ${Timestamp.now()}, mediaUrls: $mediaUrls');
-    
-    // Optionally clear the picked media after posting
-    pickedMedia.clear();
-  } else {
-    print('Please enter some text');
   }
-}
-
 
   Stream<List<DocumentSnapshot>> getPostsStream(String userId) async* {
-  // Step 1: Get the list of user IDs the current user is following
-  DocumentSnapshot followingDoc = await FirebaseFirestore.instance
-      .collection('following')
-      .doc(userId)
-      .get();
-  
-  List<String> followingList = List<String>.from(followingDoc['followedUsers'] ?? []);
+    await checkUserRole();
+    //Step 1: Create a list to hold streams of posts
+    List<Stream<List<DocumentSnapshot>>> streams = [];
 
-  // Step 2: Create a list to hold streams of posts
-  List<Stream<List<DocumentSnapshot>>> streams = [];
+    if (isStaffOrAdmin.value == true) {
+      print('Admin/Staff detected. Loading posts from all users.');
 
-  // Add the current user's posts to the list of streams
-  streams.add(
-    FirebaseFirestore.instance
-        .collection("posts")
-        .doc(userId)
-        .collection('myPosts')
-        .orderBy("Timestamp", descending: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs)
-  );
+      // If the user is an admin or staff, add all users' post streams
+      QuerySnapshot allUsers =
+          await FirebaseFirestore.instance.collection('users').get();
 
-  // Step 3: For each followed user, get their posts
-  for (String followingUserId in followingList) {
-    streams.add(
-      FirebaseFirestore.instance
+
+      for (var user in allUsers.docs) {
+        String userId = user.id;
+        streams.add(FirebaseFirestore.instance
+            .collection('posts')
+            .doc(userId)
+            .collection('myPosts')
+            .orderBy('Timestamp', descending: true)
+            .snapshots()
+            .map((snapshot) => snapshot.docs));
+      }
+    } else {
+      // Step 1: Get the list of user IDs the current user is following
+      DocumentSnapshot followingDoc = await FirebaseFirestore.instance
+          .collection('following')
+          .doc(userId)
+          .get();
+
+      List<String> followingList =
+          List<String>.from(followingDoc['followedUsers'] ?? []);
+
+      // Add the current user's posts to the list of streams
+      streams.add(FirebaseFirestore.instance
           .collection("posts")
-          .doc(followingUserId)
+          .doc(userId)
           .collection('myPosts')
           .orderBy("Timestamp", descending: false)
           .snapshots()
-          .map((snapshot) => snapshot.docs)
-    );
+          .map((snapshot) => snapshot.docs));
+
+      // Step 3: For each followed user, get their posts
+      for (String followingUserId in followingList) {
+        streams.add(FirebaseFirestore.instance
+            .collection("posts")
+            .doc(followingUserId)
+            .collection('myPosts')
+            .orderBy("Timestamp", descending: false)
+            .snapshots()
+            .map((snapshot) => snapshot.docs));
+      }
+    }
+      // Step 4: Combine all the streams into a single stream
+      yield* rxdart.Rx.combineLatest(streams, (values) {
+        // Flatten the list of lists into a single list
+        return values.expand((list) => list).toList();
+      });
+    
   }
 
-  // Step 4: Combine all the streams into a single stream
-  yield* rxdart.Rx.combineLatest(streams, (values) {
-    // Flatten the list of lists into a single list
-    return values.expand((list) => list).toList();
-  });
-}
-
-
-    Future<void> checkUserRole() async {
+  Future<void> checkUserRole() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userId = user.uid;

@@ -544,7 +544,7 @@ Widget _ThePost({
                   margin: const EdgeInsets.only(top: 16),
                   height: MediaQuery.of(context).size.height > 850 ? 50 : 20,
                   width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.center,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,

@@ -27,14 +27,14 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
     _getCurrentUserName(); // Call to retrieve the current user's username
 
     _getRoomTitle(); // Call to retrieve the room title
-    
   }
 
   Future<void> _getCurrentUserName() async {
     User? user = auth.currentUser; // Get the current user
     if (user != null) {
       // Fetch user data from Firestore
-      DocumentSnapshot userDoc = await firestore.collection('users').doc(user.uid).get();
+      DocumentSnapshot userDoc =
+          await firestore.collection('users').doc(user.uid).get();
       if (userDoc.exists) {
         setState(() {
           username = userDoc['username']; // Retrieve username from Firestore
@@ -43,12 +43,14 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
     }
   }
 
- Future<void> _getRoomTitle() async {
+  Future<void> _getRoomTitle() async {
     try {
-      DocumentSnapshot roomDoc = await firestore.collection('discussions').doc(widget.roomId).get();
+      DocumentSnapshot roomDoc =
+          await firestore.collection('discussions').doc(widget.roomId).get();
       if (roomDoc.exists) {
         setState(() {
-          roomTitle = roomDoc['title']; // Assuming title is a field in the document
+          roomTitle =
+              roomDoc['title']; // Assuming title is a field in the document
         });
         print('Room title fetched: $roomTitle'); // Debug print
       } else {
@@ -63,96 +65,163 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(roomTitle ?? 'Loading...'), // Display the roomId
+        iconTheme: const IconThemeData(color: Colors.white), // Set back arrow icon to white
+        title: Text(roomTitle ?? 'Loading...', style: const TextStyle(color: Colors.white),), // Display the room title
+        backgroundColor: const Color(0xFF1A1F3B), // Display the roomId
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: firestore
-                  .collection('discussion_group')
-                  .doc(widget.roomId)
-                  .collection('messages') // Access the messages subcollection
-                  .orderBy('timestamp') // Order messages by timestamp
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
+      body: Container(
+        decoration: const BoxDecoration(color: Color(0xFF1A1F3B)),
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: firestore
+                    .collection('discussion_group')
+                    .doc(widget.roomId)
+                    .collection('messages') // Access the messages subcollection
+                    .orderBy('timestamp') // Order messages by timestamp
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
 
-                final messages = snapshot.data?.docs;
+                  final messages = snapshot.data?.docs;
 
-                return ListView.builder(
-                  itemCount: messages?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    final message = messages![index];
+                  return ListView.builder(
+                    itemCount: messages?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final message = messages![index];
+                      final bool isSender = message['sender'] == username;
 
-                    // Get the timestamp and format it
-                    Timestamp? timestamp = message['timestamp'];
-                    String formattedTime = timestamp != null
-                        ? DateFormat('yyyy-MM-dd – kk:mm').format(timestamp.toDate())
-                        : 'Unknown time'; // Handle the null case
+                      // Get the timestamp and format it
+                      Timestamp? timestamp = message['timestamp'];
+                      String formattedTime = timestamp != null
+                          ? DateFormat('yyyy-MM-dd – kk:mm')
+                              .format(timestamp.toDate())
+                          : 'Unknown time';
 
-                    return ListTile(
-                      title: Text(message['sender']),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              message['text'],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                      return Align(
+                        alignment: isSender
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: isSender
+                                ? const Color(0xFF117aca)
+                                : Color.fromARGB(255, 33, 38, 46),
+                            borderRadius: BorderRadius.only(
+                              topLeft: const Radius.circular(15),
+                              topRight: const Radius.circular(15),
+                              bottomLeft: isSender
+                                  ? const Radius.circular(15)
+                                  : const Radius.circular(0),
+                              bottomRight: isSender
+                                  ? const Radius.circular(0)
+                                  : const Radius.circular(15),
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Text(
-                            formattedTime,
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          child: Column(
+                            crossAxisAlignment: isSender
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                message['sender'],
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: isSender
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      message['text'],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  if (!isSender) // Show report icon only for received messages
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.report_problem,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: () {
+                                        reportMessage(message
+                                            .id); // Pass the message ID to report
+                                      },
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Align(
+                                alignment: isSender
+                                    ? Alignment.bottomLeft
+                                    : Alignment.bottomRight,
+                                child: Text(
+                                  formattedTime,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.white54),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-
-                       trailing: IconButton(
-                        icon: Icon(Icons.report_problem),
-                        onPressed: () {
-                          reportMessage(message.id); // Pass the message ID to report
-                        },
-                      ),
-
-
-                    );
-                  },
-                );
-              },
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(hintText: 'Enter your message'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: const InputDecoration(
+                          hintText: 'Enter your message',
+                          hintStyle: TextStyle(color: Colors.white54)),
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: isSending 
-                      ? CircularProgressIndicator(strokeWidth: 2) 
-                      : Icon(Icons.send),
-                  onPressed: isSending ? null : () {
-                    sendMessage();
-                  },
-                ),
-              ],
+                  IconButton(
+                    icon: isSending
+                        ? const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white))
+                        : const Icon(Icons.send, color: Colors.white),
+                    onPressed: isSending
+                        ? null
+                        : () {
+                            sendMessage();
+                          },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -164,7 +233,8 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
       });
 
       try {
-        await firestore.collection('discussion_group')
+        await firestore
+            .collection('discussion_group')
             .doc(widget.roomId) // Specify the room document
             .collection('messages') // Access the messages subcollection
             .add({
@@ -185,14 +255,12 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a message and ensure you are logged in.')),
+        SnackBar(
+            content:
+                Text('Please enter a message and ensure you are logged in.')),
       );
     }
   }
-
-
-
-
 
   void reportMessage(String messageId) async {
     String? reason = await showDialog<String>(
@@ -200,20 +268,23 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
       builder: (BuildContext context) {
         TextEditingController reasonController = TextEditingController();
         return AlertDialog(
-          title: Text('Report Message'),
+          backgroundColor:  Colors.black,
+          title: const Text('Report Message', style: TextStyle(color: Colors.white)),
           content: TextField(
             controller: reasonController,
-            decoration: InputDecoration(hintText: 'Enter the reason for reporting'),
+            decoration:
+                const InputDecoration(hintText: 'Enter the reason for reporting', hintStyle: TextStyle(color: Colors.white54)),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Submit'),
+              child: const Text('Submit', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                Navigator.of(context).pop(reasonController.text); // Return the reason
+                Navigator.of(context)
+                    .pop(reasonController.text); // Return the reason
               },
             ),
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel' , style: TextStyle(color: Colors.white)),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog without action
               },
@@ -237,5 +308,4 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
       );
     }
   }
-
 }
