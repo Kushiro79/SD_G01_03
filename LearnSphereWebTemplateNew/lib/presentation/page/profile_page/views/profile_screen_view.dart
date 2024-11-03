@@ -369,7 +369,7 @@ Expanded(
                   (post['mediaUrls'] ?? []).map((url) =>
                       url.toString()) // Ensure each URL is a string
                   );
-              // String userId = homeController.auth.currentUser!.uid; // Get user ID here
+              String userId = homeController.auth.currentUser!.uid; // Get user ID here
               return Column(
                 children: [
                   Padding(
@@ -383,7 +383,7 @@ Expanded(
                       context: context,
                       mediaUrls: mediaUrls,
                       postId: postId,
-                      //userId: userId,
+                      userId: userId,
                     ),
                   ),
                   if (index < posts.length - 1)

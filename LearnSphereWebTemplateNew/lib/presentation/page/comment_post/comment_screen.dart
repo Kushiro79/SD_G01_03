@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,13 +37,15 @@ class _CommentScreenState extends State<CommentScreen> {
 
   Future<void> submitComment() async {
     String commentText = commentController.text.trim();
-    
+    var uid = FirebaseAuth.instance.currentUser!.uid;
+
     if (commentText.isNotEmpty && currentUsername != null) {
       await FirebaseFirestore.instance.collection('comments').add({
         'postId': widget.postId,
         'user': currentUsername,
         'commentText': commentText,
         'timestamp': FieldValue.serverTimestamp(),
+        'uid': uid,
       });
 
       // Clear the comment input field
@@ -59,14 +62,23 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Comments'),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFF1A1F3B).withOpacity(0.90),
       ),
-      body: Padding(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            AppBar(
+              backgroundColor: const Color(0xFF1A1F3B).withOpacity(0.90),
+              title: const Text(
+                'Comments',
+                style: TextStyle(color: Colors.white),
+              ),
+              foregroundColor: Colors.white,
+            ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -76,13 +88,17 @@ class _CommentScreenState extends State<CommentScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(child: Text('No comments yet.'));
+                    return const Center(
+                        child: Text(
+                      'No comments yet.',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ));
                   }
 
                   return ListView.builder(
@@ -90,8 +106,8 @@ class _CommentScreenState extends State<CommentScreen> {
                     itemBuilder: (context, index) {
                       var commentDoc = snapshot.data!.docs[index];
                       return ListTile(
-                        title: Text(commentDoc['commentText']),
-                        subtitle: Text(commentDoc['user']),
+                        title: Text(commentDoc['commentText'], style: const TextStyle(color: Colors.white)),
+                        subtitle: Text(commentDoc['user'], style: const TextStyle(color: Colors.white60),),
                       );
                     },
                   );
@@ -100,16 +116,29 @@ class _CommentScreenState extends State<CommentScreen> {
             ),
             TextField(
               controller: commentController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Write your comment...',
+                labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color:  Color(0xFF117aca))
+                ),
               ),
+              style: const TextStyle(color: Colors.white),
+              minLines: 1,
               maxLines: 5,
             ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: submitComment,
-              child: Text('Submit Comment'),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF117aca),
+                  foregroundColor: const Color(0xFF1A1F3B),
+                ),
+                onPressed: submitComment,
+                child: Text('Submit Comment'),
+              ),
             ),
           ],
         ),

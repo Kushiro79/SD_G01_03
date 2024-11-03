@@ -406,7 +406,7 @@ void _showDialog(String title, String content, Color titleColor) {
     },
   );
 }
-}
+
 void sharePost(String postText, List<String> mediaUrls) {
     String content = postText; // Prepare the content to share
 
@@ -418,7 +418,7 @@ void sharePost(String postText, List<String> mediaUrls) {
   }
 
   
- Future<void> reportPost(String postId, String userId, {String? reason}) async {
+Future<void> reportPost(String postId, String userId, {String? reason}) async {
     // Firestore operation (make sure this is awaited)
     await firestore.collection('report_post').add({
       'postId': postId,
