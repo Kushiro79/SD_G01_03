@@ -204,6 +204,48 @@ Future<String> loadImageFromFirebase(String profileImageUrl) async {
   }
 }
 
+void reportUser(BuildContext context, String userId) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    String? currentUserId = currentUser?.uid; // Get the current user's UID
 
+    String? reason = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController reasonController = TextEditingController();
+        return AlertDialog(
+          title: Text('Report User'),
+          content: TextField(
+            controller: reasonController,
+            decoration: InputDecoration(hintText: 'Enter the reason for reporting'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Submit'),
+              onPressed: () {
+                Navigator.of(context).pop(reasonController.text); // Return the reason
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog without action
+              },
+            ),
+          ],
+        );
+      },
+    );
 
+    if (reason != null && reason.isNotEmpty) {
+      await FirebaseFirestore.instance.collection('report_user').add({
+        'reason': reason,
+        'reportedAt': FieldValue.serverTimestamp(),
+        'uid': userId, // Ensure this userId is the UID of the reported user
+        'reporterUid': currentUserId, // Current user's UID for reference
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Report submitted successfully!')),
+      );
+    }
+}
 }

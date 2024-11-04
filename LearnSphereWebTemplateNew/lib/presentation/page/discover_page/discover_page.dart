@@ -169,6 +169,21 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                       ),
                       child: Text(isFollowingMap[userId]! ? 'Following' : 'Follow'),
                     )),
+                    ElevatedButton(
+                    onPressed: () async {
+                    // Call the reportUser method in your controller
+                    controller.reportUser(context, userId);
+                  },
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE57373), // Change button background color here for reporting
+                  foregroundColor: Colors.white, // Change text color here
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
+                  ),
+                ),
+                child: const Text('Report'),
+              ),
               ],
             ),
             usersList[index]['credentials'] != null

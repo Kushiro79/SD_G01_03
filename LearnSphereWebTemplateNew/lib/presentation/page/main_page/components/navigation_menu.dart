@@ -96,6 +96,12 @@ class _NavigationMenuState extends State<_NavigationMenu> {
               text: 'User & Staff Management',
             ),
             _MenuItem(
+              iconPath: ProjectAssets.graduate.path,
+              isSelected: currentUrl == '/view-academic-qualifications',
+              onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
+              text: 'User Academic\n Qualifications',
+            ),
+            _MenuItem(
               iconPath: ProjectAssets.icons.setting2.path,
               isSelected: currentUrl == '/settings',
               onTap: () => _onTabTap(SettingsRoute()),
@@ -140,7 +146,7 @@ class _MenuItem extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
-
+  
   final String iconPath;
   final String text;
   final bool isSelected;
