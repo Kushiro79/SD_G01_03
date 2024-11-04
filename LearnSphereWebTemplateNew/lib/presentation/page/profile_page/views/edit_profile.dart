@@ -595,7 +595,36 @@ class EditProfilePage extends GetView<EditProfileController> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Row(
+                  MediaQuery.of(context).size.width > 850
+                  ?Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF117aca),
+                          ),
+                        label: const Text('Add Certificate', style: TextStyle(color:Colors.white),),
+                        icon: const Icon(Icons.description_rounded, color:Colors.white),
+                        onPressed: () {
+                          AutoRouter.of(context)
+                              .push(const UploadAcademicQualificationsRoute());
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF117aca),
+                          ),
+                        label: const Text('Change Password', style: TextStyle(color: Colors.white),),
+                        icon: const Icon(Icons.lock , color: Colors.white),
+                        onPressed: () {
+                          AutoRouter.of(context).push(ChangePasswordRoute());
+                        },
+                      ),
+                    ],
+                  )
+                  :
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       ElevatedButton.icon(

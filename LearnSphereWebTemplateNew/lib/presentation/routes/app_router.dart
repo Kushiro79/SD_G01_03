@@ -13,6 +13,7 @@ import '../page/feedback_pages/view_feedback_page.dart';
 import '../page/forgot_screen/views/forgot_screen_view.dart';
 import '../page/login_screen/views/login_screen_view.dart';
 import '../page/main_page/page.dart';
+import '../page/notification_screen/notification_view.dart';
 import '../page/other_users/other_users_page.dart';
 import '../page/profile_page/views/profile_screen_view.dart';
 import '../page/register/views/register_view.dart';
@@ -88,7 +89,7 @@ class AppRouter extends RootStackRouter {
             ),
         AutoRoute(
             page: ForgotRouteView.page,
-             path: '/forgot-Password'
+            path: '/forgot-Password'
             ),
         CustomRoute(
           path: '/forgotPassword',
@@ -156,6 +157,7 @@ class AppRouter extends RootStackRouter {
             path: '/discover-and-follows',
             page: DiscoverRoute.page,
             ),
+            
 
     
   ];

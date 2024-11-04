@@ -19,7 +19,7 @@ class DiscoverPage extends GetView<DiscoverController> {
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Color(0xFF1A1F3B).withOpacity(0.90), // Floating window background
+          color: Color(0xFF1A1F3B).withOpacity(0.95), // Floating window background
           borderRadius: BorderRadius.circular(20), // Rounded corners
         ),
         child: DefaultTabController(
@@ -27,6 +27,7 @@ class DiscoverPage extends GetView<DiscoverController> {
           child: Scaffold(
             backgroundColor: Colors.transparent, // No background color
             appBar: AppBar(
+              foregroundColor: Colors.white,
               elevation: 0,
               backgroundColor: Colors.transparent,
               centerTitle: true,

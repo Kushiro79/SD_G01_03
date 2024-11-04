@@ -3,11 +3,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../discussion_page/discussion_screen.dart';
+import '../notification_screen/notification_view.dart';
 import 'home_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
@@ -16,7 +15,6 @@ import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
 import '../comment_post/comment_screen.dart';
-import '../notifications_screen/notification_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -138,7 +136,6 @@ Widget _buildSidebar(BuildContext context) {
           ),
         ),
         ListTile(
-          hoverColor: Colors.white.withOpacity(0.2),
           leading: Image.asset(
             'assets/home.png',
             width: 25,
@@ -155,7 +152,6 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         ListTile(
-          hoverColor: Colors.white.withOpacity(0.1),
           leading: Image.asset(
             'assets/profile-2user.png',
             width: 25,
@@ -187,29 +183,56 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         ListTile(
-          hoverColor: Colors.white.withOpacity(0.1),
-          leading: Image.asset(
-            'assets/notification.png',
-            width: 25,
-            color: Colors.white,
+  leading: Stack(
+    clipBehavior: Clip.none,
+    children: [
+      Image.asset(
+        'assets/notification.png',
+        width: 25,
+        color: homeController.comments.isEmpty ? Colors.white : Colors.red,
+      ),
+      if (homeController.comments.isNotEmpty)
+        Positioned(
+          top: -5,
+          right: 0,
+          child: Container(
+            width: 15,
+            height: 15,
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(
+              color: Colors.red,
+              shape: BoxShape.circle,
+            ),
           ),
-          title: screenwidth
-              ? const Text(
-                  'Notifications',
-                  style: TextStyle(color: Colors.white),
-                )
-              : null,
-          onTap: () {
-            // Handle tap on Notifications
-            // Navigate to Notifications Screen without using AutoRoute
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationsScreen()),
-            );
-          },
         ),
+    ],
+  ),
+  title: screenwidth
+      ? const Text(
+          'Notifications',
+          style: TextStyle(color: Colors.white),
+        )
+      : null,
+  onTap: () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: MediaQuery.of(context).size.width > 850
+              ? EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.3,
+                  vertical: 15)
+              : const EdgeInsets.symmetric(
+                  horizontal: 15, vertical: 15),
+          backgroundColor: Colors.transparent,
+          child: const NotificationView(),
+        );
+      },
+    );
+  },
+),
+
         ListTile(
-          hoverColor: Colors.white.withOpacity(0.1),
           leading: Image.asset(
             'assets/people.png',
             width: 25,
@@ -231,20 +254,6 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         ListTile(
-          hoverColor: Colors.white.withOpacity(0.1),
-          leading: const Icon(Icons.bookmark, color: Colors.white),
-          title: screenwidth
-              ? const Text(
-                  'Bookmarks',
-                  style: TextStyle(color: Colors.white),
-                )
-              : null,
-          onTap: () {
-            // Handle tap on Bookmarks
-          },
-        ),
-        ListTile(
-          hoverColor: Colors.white.withOpacity(0.1),
           leading: Image.asset(
             'assets/profile.png',
             width: 25,
@@ -261,7 +270,6 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         ListTile(
-          hoverColor: Colors.white.withOpacity(0.1),
           leading: Image.asset(
             'assets/setting.png',
             width: 25,
@@ -274,7 +282,7 @@ Widget _buildSidebar(BuildContext context) {
                 )
               : null,
           onTap: () {
-            context.router.push(SettingsRoute());
+            context.router.push(const SettingsRoute());
           },
         ),
         Obx(() {
@@ -809,24 +817,32 @@ Widget thePost({
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Row(
+                      backgroundColor: Colors.black,
+                      title: const Row(
                         mainAxisAlignment: MainAxisAlignment
                             .spaceBetween, // Aligns items on opposite ends
                         children: [
-                          const Text("Report Post"),
+                          Text(
+                            "Report Post",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ],
                       ),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Text(
-                              "Are you sure you want to report this post?"),
+                              "Are you sure you want to report this post?",
+                              style: TextStyle(color: Colors.white)),
                           const SizedBox(height: 10),
                           TextField(
+                            style: TextStyle(color: Colors.white),
                             controller: reasonController, // Set the controller
                             decoration: const InputDecoration(
                               labelText: "Reason (required)",
                               hintText: "Enter your reason for reporting",
+                              labelStyle: TextStyle(color: Colors.white),
+                              hintStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                         ],
@@ -855,18 +871,25 @@ Widget thePost({
                                 context:
                                     context, // Same context is used for success dialog
                                 builder: (context) => AlertDialog(
-                                  title: const Text("Success"),
+                                  backgroundColor: Colors.black,
+                                  title: const Text("Success",
+                                      style: TextStyle(color: Colors.white)),
                                   content: const Text(
-                                      "Post has been reported successfully."),
+                                      "Post has been reported successfully.",
+                                      style: TextStyle(color: Colors.white)),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context)
                                             .pop(); // Close the success dialog
-                                        reasonController
-                                            .clear(); // Clear the text field after success dialog is closed
+                                        reasonController.clear();
+                                        Navigator.of(context)
+                                            .pop(); // Clear the text field after success dialog is closed
                                       },
-                                      child: const Text("OK"),
+                                      child: const Text(
+                                        "OK",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -875,11 +898,17 @@ Widget thePost({
                               // Show a message if the reason is empty
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text("Please enter a reason.")),
+                                    content: Text(
+                                  "Please enter a reason.",
+                                  style: TextStyle(color: Colors.white),
+                                )),
                               );
                             }
                           },
-                          child: const Text("Yes"),
+                          child: const Text(
+                            "Yes",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
@@ -888,7 +917,10 @@ Widget thePost({
                             reasonController
                                 .clear(); // Clear the text field when dialog closes
                           },
-                          child: const Text("No"),
+                          child: const Text(
+                            "No",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),

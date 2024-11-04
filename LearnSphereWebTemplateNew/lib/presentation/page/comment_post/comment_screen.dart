@@ -46,6 +46,7 @@ class _CommentScreenState extends State<CommentScreen> {
         'commentText': commentText,
         'timestamp': FieldValue.serverTimestamp(),
         'uid': uid,
+        'isRead' : false,
       });
 
       // Clear the comment input field

@@ -53,21 +53,21 @@ class LoginScreenView extends GetView<LoginScreenController> {
                               Image(
                                 image: AssetImage(
                                     ProjectAssets.learnSphereLogo.path),
-                                width: 100,
-                                height: 100,
+                                width: screenwidth ? 100 : 50,
+                                height: screenwidth ? 100 : 50,
                               ),
                               const SizedBox(width: 20),
-                              Text("Learn",
+                              Text('Learn',
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 30,
+                                      fontSize:  screenwidth ? 30 : 20,
                                       color: Colors.white)),
                               Text(
-                                "Sphere",
+                                'Sphere',
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF004ff9),
-                                    fontSize: 30),
+                                    fontSize:  screenwidth ? 30 : 20),
                               )
                             ]),
                           ],

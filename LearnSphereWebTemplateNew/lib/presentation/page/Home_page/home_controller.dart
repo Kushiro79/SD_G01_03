@@ -19,6 +19,8 @@ class HomeController extends GetxController {
   var pickedMedia = <Map<String, dynamic>>[].obs;
   RxBool isStaffOrAdmin = false.obs;
   RxBool isAtProfilePage = false.obs;
+  var comments = <Map<String, dynamic>>[].obs;
+
 
   void addFile(Uint8List bytes, String type) {
     pickedMedia.add({"bytes": bytes, "type": type});
@@ -29,6 +31,7 @@ class HomeController extends GetxController {
     super.onReady();
     userUsername();
     checkUserRole();
+    _fetchComments();
   }
 
   var selectIndex = [];
@@ -117,6 +120,33 @@ class HomeController extends GetxController {
 
   void changeText(String value) {
     postText.text = value; // Update the controller's text
+  }
+
+  Future<void> _fetchComments() async {
+    String currentUserUid = auth.currentUser!.uid;
+
+    //Listen for comments on posts by the current user
+    firestore
+        .collection('posts')
+        .doc(currentUserUid)
+        .collection('myPosts')
+        .snapshots()
+        .listen((snapshot) {
+      snapshot.docs.forEach((postDoc) {
+        String postId = postDoc.id;
+
+        //listen for unread comments on each post
+        firestore
+            .collection('comments')
+            .where('postId', isEqualTo: postId)
+            .where('isRead', isEqualTo: false)
+            .snapshots()
+            .listen((commentSnapshot) {
+          
+            comments.value = commentSnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        });
+      });
+    });
   }
 
   Widget buildHoverableImages(HomeController homeController) {
