@@ -18,6 +18,7 @@ class HomeController extends GetxController {
   final firestore = FirebaseFirestore.instance;
   var pickedMedia = <Map<String, dynamic>>[].obs;
   RxBool isStaffOrAdmin = false.obs;
+  RxBool isAtProfilePage = false.obs;
 
   void addFile(Uint8List bytes, String type) {
     pickedMedia.add({"bytes": bytes, "type": type});
@@ -124,78 +125,73 @@ class HomeController extends GetxController {
         return const SizedBox(); // No media to display
       }
 
-    return Wrap(
-      spacing: 8.0, // Spacing between items
-      runSpacing: 8.0,
-      children: homeController.pickedMedia
-          .asMap()
-          .entries
-          .map((entry) {
-            int index = entry.key;
-            Uint8List mediaData = entry.value["bytes"];
-            String mediaType = entry.value["type"];
-            final hover = false.obs;
-            return MouseRegion(
-              onEnter: (_) => hover.value = true,
-              onExit: (_) => hover.value = false,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Display the image or video icon
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: mediaType == 'image'
-                        ? Image.memory(
-                            mediaData,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.grey[800],
-                            child: Icon(
-                              Icons.videocam,
-                              color: Colors.white,
-                              size: 40,
-                            ),
+      return Wrap(
+        spacing: 8.0, // Spacing between items
+        runSpacing: 8.0,
+        children: homeController.pickedMedia.asMap().entries.map((entry) {
+          int index = entry.key;
+          Uint8List mediaData = entry.value["bytes"];
+          String mediaType = entry.value["type"];
+          final hover = false.obs;
+          return MouseRegion(
+            onEnter: (_) => hover.value = true,
+            onExit: (_) => hover.value = false,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Display the image or video icon
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: mediaType == 'image'
+                      ? Image.memory(
+                          mediaData,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          width: 100,
+                          height: 100,
+                          color: Colors.grey[800],
+                          child: Icon(
+                            Icons.videocam,
+                            color: Colors.white,
+                            size: 40,
                           ),
-                  ),
-                  // Display the overlay 'X' button on hover
-                  Obx(() => Visibility(
-                        visible: hover.value,
-                        child: Positioned(
-                          top: 8,
-                          right: 8,
-                          child: GestureDetector(
-                            onTap: () {
-                              // Remove the media from the list
-                              homeController.pickedMedia.removeAt(index);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.7),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 20,
-                              ),
+                        ),
+                ),
+                // Display the overlay 'X' button on hover
+                Obx(() => Visibility(
+                      visible: hover.value,
+                      child: Positioned(
+                        top: 8,
+                        right: 8,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Remove the media from the list
+                            homeController.pickedMedia.removeAt(index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 20,
                             ),
                           ),
                         ),
-                      )),
-                ],
-              ),
-            );
-          })
-          .toList(),
-    );
-  });
-}
-
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }).toList(),
+      );
+    });
+  }
 
   Future<void> userUsername() async {
     User? user = auth.currentUser; // Use currentUser property directly
@@ -253,6 +249,7 @@ class HomeController extends GetxController {
           .collection('myPosts')
           .add({
         'profileImageUrl': editController.profileImageUrl.value,
+        'uid' : userId,
         'Username': username.value,
         'Text': postText.text,
         'certificate': editController.certificate.value,
@@ -282,7 +279,6 @@ class HomeController extends GetxController {
       QuerySnapshot allUsers =
           await FirebaseFirestore.instance.collection('users').get();
 
-
       for (var user in allUsers.docs) {
         String userId = user.id;
         streams.add(FirebaseFirestore.instance
@@ -308,7 +304,7 @@ class HomeController extends GetxController {
           .collection("posts")
           .doc(userId)
           .collection('myPosts')
-          .orderBy("Timestamp", descending: false)
+          .orderBy("Timestamp", descending: true)
           .snapshots()
           .map((snapshot) => snapshot.docs));
 
@@ -318,17 +314,16 @@ class HomeController extends GetxController {
             .collection("posts")
             .doc(followingUserId)
             .collection('myPosts')
-            .orderBy("Timestamp", descending: false)
+            .orderBy("Timestamp", descending: true)
             .snapshots()
             .map((snapshot) => snapshot.docs));
       }
     }
-      // Step 4: Combine all the streams into a single stream
-      yield* rxdart.Rx.combineLatest(streams, (values) {
-        // Flatten the list of lists into a single list
-        return values.expand((list) => list).toList();
-      });
-    
+    // Step 4: Combine all the streams into a single stream
+    yield* rxdart.Rx.combineLatest(streams, (values) {
+      // Flatten the list of lists into a single list
+      return values.expand((list) => list).toList();
+    });
   }
 
   Future<void> checkUserRole() async {
@@ -356,6 +351,61 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> deletePost(String uid, String postId) async {
+  User? currentUser  = FirebaseAuth.instance.currentUser ;
+  if (currentUser  == null) {
+      _showDialog('Error', 'User  not authenticated', Colors.red);
+      return;
+    }
+  try {
+    // Fetch the user document for the post owner
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get();
+    // Check if the user exists
+    if (!userSnapshot.exists) {
+      print("User does not exist");
+      return;
+    }
+    print("Post exists. Deleting post...");
+
+    // Fetch the post document for the user who owns the post
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(uid) // Use the UID to find the user's posts
+        .collection('myPosts')
+        .doc(postId)
+        .delete();
+    
+    print("Delete successful...");
+
+  } catch (e) {
+    print("Error deleting post: $e");
+  }
+}
+
+// Function to show dialog
+void _showDialog(String title, String content, Color titleColor) {
+  showDialog(
+    context: Get.context!,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.transparent.withOpacity(0.13),
+        title: Text(title, style: TextStyle(color: titleColor)),
+        content: Text(content, style: TextStyle(color: Colors.white)),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text('OK', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 void sharePost(String postText, List<String> mediaUrls) {
     String content = postText; // Prepare the content to share
@@ -368,7 +418,7 @@ void sharePost(String postText, List<String> mediaUrls) {
   }
 
   
- Future<void> reportPost(String postId, String userId, {String? reason}) async {
+Future<void> reportPost(String postId, String userId, {String? reason}) async {
     // Firestore operation (make sure this is awaited)
     await firestore.collection('report_post').add({
       'postId': postId,
@@ -377,4 +427,9 @@ void sharePost(String postText, List<String> mediaUrls) {
       'timestamp': Timestamp.now(),
     });
   }
+
+  
+
 }
+
+
