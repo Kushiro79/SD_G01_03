@@ -41,7 +41,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           // Content on top of the background
           ListView(
             padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 8),
+                horizontal: MediaQuery.of(context).size.width * 0.05),
             children: [
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30),
@@ -53,21 +53,21 @@ class LoginScreenView extends GetView<LoginScreenController> {
                               Image(
                                 image: AssetImage(
                                     ProjectAssets.learnSphereLogo.path),
-                                width: screenwidth ? 100 : 50,
-                                height: screenwidth ? 100 : 50,
+                                width:  80 ,
+                                height: 80 ,
                               ),
                               const SizedBox(width: 20),
                               Text('Learn',
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
-                                      fontSize:  screenwidth ? 30 : 20,
+                                      fontSize:  30 ,
                                       color: Colors.white)),
                               Text(
                                 'Sphere',
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF004ff9),
-                                    fontSize:  screenwidth ? 30 : 20),
+                                    fontSize:   30 ),
                               )
                             ]),
                           ],

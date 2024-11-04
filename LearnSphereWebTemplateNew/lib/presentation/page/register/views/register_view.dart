@@ -41,7 +41,7 @@ class RegisterScreenView extends GetView<RegisterController> {
           // Content on top of the background image
           ListView(
             padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 8),
+                horizontal: MediaQuery.of(context).size.width * 0.05),
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
@@ -51,8 +51,8 @@ class RegisterScreenView extends GetView<RegisterController> {
                     Row(children: [
                       Image(
                         image: AssetImage(ProjectAssets.learnSphereLogo.path),
-                        width: screenwidth ? 100 : 60,
-                        height: screenwidth ? 100 : 60,
+                        width:  80 ,
+                        height: 80 ,
                       ),
                       const SizedBox(width: 20),
                       Text("Learn",

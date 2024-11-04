@@ -6,7 +6,7 @@ class _AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     EditProfileController controller = Get.put(EditProfileController());
-    var screenwidth = MediaQuery.of(context).size.width >850;
+    var screenwidth = MediaQuery.of(context).size.width > 850;
 
     return SizedBox(
       height: 100,
@@ -18,19 +18,25 @@ class _AppBar extends StatelessWidget {
             height: 80,
           ),
           const SizedBox(width: 10),
-          Text("Learn",
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                  fontSize: screenwidth ? 30 : 20,
-                  color: Colors.white)),
-          Text(
-            "Sphere",
-            style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF004ff9),
-                  fontSize: screenwidth ? 30 : 20,
-                ),
-          ),
+          screenwidth
+              ? Row(
+                  children: [
+                    Text("Learn",
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenwidth ? 30 : 20,
+                            color: Colors.white)),
+                    Text(
+                      "Sphere",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF004ff9),
+                        fontSize: screenwidth ? 30 : 20,
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
           const Spacer(),
           const SizedBox(width: 34),
           Obx(() {

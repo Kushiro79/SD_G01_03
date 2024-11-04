@@ -99,85 +99,87 @@ class DashboardPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            const Text(
-              'Dashboard',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            const SizedBox(height: 16),
-            // Foreground content
-            FutureBuilder(
-              future: Future.wait([
-                getAmountofStaffAndAdmin(),
-                getUserRegisteredLastMonth(),
-                getAveragePostsPerUser(),
-                getUserDeviceUsage(),
-                getTotalActiveUsers(),
-              ]),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-
-                final data = snapshot.data as List<dynamic>;
-                final amountofStaffAndAdmin = data[0] as int;
-                final userRegisteredLastMonth = data[1] as int;
-                final averagePostsPerUser = data[2] as double;
-                final deviceUsage = data[3] as Map<String, int>;
-                final totalActiveUsers = data[4] as int;
-
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.black
-                            .withOpacity(0.13), // Increased transparency
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildMetricCard(
-                            title: 'Staff and Admin',
-                            value: amountofStaffAndAdmin.toString(),
-                            
-                          ),
-                          const Divider(height: 24),
-                          _buildMetricCard(
-                            title: 'Users Registered Last Month',
-                            value: userRegisteredLastMonth.toString(),
-                          ),
-                          const Divider(height: 24),
-                          _buildMetricCard(
-                            title: 'Avg. Posts per User',
-                            value: averagePostsPerUser.toStringAsFixed(2),
-                          ),
-                          const Divider(height: 24),
-                          _buildDeviceUsageChart(deviceUsage),
-                          const Divider(height: 24),
-                          _buildMetricCard(
-                            title: 'Total Active Users',
-                            value: totalActiveUsers.toString(),
-                          ),
-                        ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              const Text(
+                'Dashboard',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              const SizedBox(height: 16),
+              // Foreground content
+              FutureBuilder(
+                future: Future.wait([
+                  getAmountofStaffAndAdmin(),
+                  getUserRegisteredLastMonth(),
+                  getAveragePostsPerUser(),
+                  getUserDeviceUsage(),
+                  getTotalActiveUsers(),
+                ]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+          
+                  final data = snapshot.data as List<dynamic>;
+                  final amountofStaffAndAdmin = data[0] as int;
+                  final userRegisteredLastMonth = data[1] as int;
+                  final averagePostsPerUser = data[2] as double;
+                  final deviceUsage = data[3] as Map<String, int>;
+                  final totalActiveUsers = data[4] as int;
+          
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black
+                              .withOpacity(0.13), // Increased transparency
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildMetricCard(
+                              title: 'Staff and Admin',
+                              value: amountofStaffAndAdmin.toString(),
+                              
+                            ),
+                            const Divider(height: 24),
+                            _buildMetricCard(
+                              title: 'Users Registered Last Month',
+                              value: userRegisteredLastMonth.toString(),
+                            ),
+                            const Divider(height: 24),
+                            _buildMetricCard(
+                              title: 'Avg. Posts per User',
+                              value: averagePostsPerUser.toStringAsFixed(2),
+                            ),
+                            const Divider(height: 24),
+                            _buildDeviceUsageChart(deviceUsage),
+                            const Divider(height: 24),
+                            _buildMetricCard(
+                              title: 'Total Active Users',
+                              value: totalActiveUsers.toString(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

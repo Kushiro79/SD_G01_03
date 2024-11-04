@@ -10,7 +10,6 @@ class _NavigationMenu extends StatefulWidget {
 class _NavigationMenuState extends State<_NavigationMenu> {
   bool _isListenerAdded = false;
   bool isStaffOrAdmin = true;
-  bool _isMenuExpanded = false;
 
   @override
   void initState() {
@@ -64,78 +63,78 @@ class _NavigationMenuState extends State<_NavigationMenu> {
     final screenwidth = MediaQuery.of(context).size.width > 850;
 
     return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-            child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 120,),
-            _MenuItem(
-              iconPath: ProjectAssets.icons.home.path,
-              isSelected: currentUrl == '/dashboard',
-              onTap: () => _onTabTap(const DashboardRoute()),
-              text: 'Dashboard',
-            ),
-            _MenuItem(
-              iconPath: ProjectAssets.graduate.path,
-              isSelected: currentUrl == '/view-academic-qualifications',
-              onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
-              text: 'User Academic\n Qualifications',
-            ),
-            _MenuItem(
-              iconPath: ProjectAssets.feedback.path,
-              isSelected: currentUrl == '/view-feedback',
-              onTap: () => _onTabTap(ViewFeedbackRoute()),
-              text: 'User Feedback',
-            ),
-            _MenuItem(
-              iconPath: ProjectAssets.tagUser1.path,
-              isSelected: currentUrl == '/user-management',
-              onTap: () => _onTabTap(const ViewAndManageUsersRoute()),
-              text: 'User & Staff Management',
-            ),
-            _MenuItem(
-              iconPath: ProjectAssets.graduate.path,
-              isSelected: currentUrl == '/view-academic-qualifications',
-              onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
-              text: 'User Academic\n Qualifications',
-            ),
-            _MenuItem(
-              iconPath: ProjectAssets.icons.setting2.path,
-              isSelected: currentUrl == '/settings',
-              onTap: () => _onTabTap(SettingsRoute()),
-              text: 'Settings',
-            ),
-            const Spacer(),
-            isStaffOrAdmin
-                ? Column(
-                    children: [
-                      ListTile(
-                          leading: const Icon(
-                            Icons.swap_calls,
-                            color: Color.fromARGB(255, 255, 255, 255),
-                          ),
-                          title: screenwidth ?  
-                          const Text(
-                            'Change Mode',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
+        builder: (context, constraints) {
+          return SizedBox(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 120,),
+              _MenuItem(
+                iconPath: ProjectAssets.icons.home.path,
+                isSelected: currentUrl == '/dashboard',
+                onTap: () => _onTabTap(const DashboardRoute()),
+                text: 'Dashboard',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.graduate.path,
+                isSelected: currentUrl == '/view-academic-qualifications',
+                onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
+                text: 'User Academic\n Qualifications',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.feedback.path,
+                isSelected: currentUrl == '/view-feedback',
+                onTap: () => _onTabTap(ViewFeedbackRoute()),
+                text: 'User Feedback',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.tagUser1.path,
+                isSelected: currentUrl == '/user-management',
+                onTap: () => _onTabTap(const ViewAndManageUsersRoute()),
+                text: 'User & Staff Management',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.graduate.path,
+                isSelected: currentUrl == '/view-academic-qualifications',
+                onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
+                text: 'User Academic\n Qualifications',
+              ),
+              _MenuItem(
+                iconPath: ProjectAssets.icons.setting2.path,
+                isSelected: currentUrl == '/settings',
+                onTap: () => _onTabTap(SettingsRoute()),
+                text: 'Settings',
+              ),
+              const Spacer(),
+              isStaffOrAdmin
+                  ? 
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                            leading: const Icon(
+                              Icons.swap_calls,
+                              color: Color.fromARGB(255, 255, 255, 255),
                             ),
-                          )
-                          : const SizedBox.shrink(),
-                          onTap: () {
-                            // Navigate to homepage if currently in main page
-                            context.router.push(MyHomeRoute());
-                          }),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-          ],
-        ));
-      },
-    );
+                            title: screenwidth ?  
+                            const Text(
+                              'Change Mode',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            )
+                            : const SizedBox.shrink(),
+                            onTap: () {
+                              // Navigate to homepage if currently in main page
+                              context.router.push(MyHomeRoute());
+                            })
+                      
+                  : const SizedBox.shrink(),
+            ],
+          ));
+        },
+      );
+    
   }
 }
 

@@ -26,7 +26,7 @@ class MainPage extends StatefulWidget  {
 }
 
 class _MainPageState extends State<MainPage> {
-  bool _isMenuVisible = false;
+  bool _isMenuVisible = true;
 
   void _toggleMenuVisibility() {
     setState(() {
@@ -36,6 +36,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    var screenwidth = MediaQuery.of(context).size.width > 850;
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -43,7 +45,7 @@ class _MainPageState extends State<MainPage> {
             children: <Widget>[
               if (_isMenuVisible)
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.15,
+                  width: screenwidth ? MediaQuery.of(context).size.width * 0.15 : MediaQuery.of(context).size.width * 0.1,
                   height: double.infinity,
                   child: const ColoredBox(
                     color: Color(0xFF1A1F3B),

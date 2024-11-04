@@ -44,9 +44,9 @@ class DiscussionPage extends StatelessWidget {
                           ? EdgeInsets.symmetric(
                               horizontal:
                                   MediaQuery.of(context).size.width * 0.3,
-                              vertical: MediaQuery.of(context).size.height * 0.2)
+                              vertical: MediaQuery.of(context).size.height * 0.1)
                           :  EdgeInsets.symmetric(
-                              horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.2 ),
+                              horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.1 ),
                       backgroundColor: Colors.transparent,
                       child: CreateDiscussionPage(),
                     );

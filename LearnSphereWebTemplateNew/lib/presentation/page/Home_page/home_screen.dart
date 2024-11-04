@@ -46,14 +46,14 @@ class MyHomePage extends GetView<HomeController> {
                 Text("Learn",
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                        fontSize: screenwidth ? 30 : 20,
                         color: Colors.white)),
                 Text(
                   "Sphere",
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF004ff9),
-                      fontSize: 30),
+                      fontSize: screenwidth ? 30 : 20,),
                 )
               ]),
         ),
