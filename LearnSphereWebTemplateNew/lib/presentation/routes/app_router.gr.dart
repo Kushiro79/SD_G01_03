@@ -545,4 +545,3 @@ class ViewOtherUsersRouteArgs {
     return 'ViewOtherUsersRouteArgs{key: $key}';
   }
 }
-

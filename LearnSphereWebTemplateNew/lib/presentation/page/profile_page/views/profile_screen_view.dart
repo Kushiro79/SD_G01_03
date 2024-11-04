@@ -24,7 +24,6 @@ class ProfileScreenPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var screenwidth = MediaQuery.of(context).size.width >= 800;
     //String bannerImageUrl = editController.bannerImageUrl.value;
-    homeController.isAtProfilePage.value = true;
     return Scaffold(
         backgroundColor: const Color(0xFF1A1F3B),
         body: Column(

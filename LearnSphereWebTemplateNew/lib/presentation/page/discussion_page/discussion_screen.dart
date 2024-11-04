@@ -36,10 +36,21 @@ class DiscussionPage extends StatelessWidget {
                 size: 30,
               ), // Set icon color to white
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreateDiscussionPage()),
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      insetPadding: MediaQuery.of(context).size.width > 850
+                          ? EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.of(context).size.width * 0.3,
+                              vertical: MediaQuery.of(context).size.height * 0.2)
+                          :  EdgeInsets.symmetric(
+                              horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.2 ),
+                      backgroundColor: Colors.transparent,
+                      child: CreateDiscussionPage(),
+                    );
+                  },
                 );
               },
             ),

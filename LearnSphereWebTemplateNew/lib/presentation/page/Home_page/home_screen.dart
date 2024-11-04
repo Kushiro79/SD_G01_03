@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../discussion_page/discussion_screen.dart';
 import '../notification_screen/notification_view.dart';
+import '../profile_page/controllers/profile_screen_controller.dart';
+import '../profile_page/views/profile_screen_view.dart';
 import 'home_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -70,7 +72,9 @@ class MyHomePage extends GetView<HomeController> {
 }
 
 Widget _buildSidebar(BuildContext context) {
-  HomeController homeController = Get.put(HomeController());
+  final ProfileScreenController profileController =
+      Get.put(ProfileScreenController());
+  final HomeController homeController = Get.put(HomeController());
   final EditProfileController editController = Get.put(EditProfileController());
 
   var screenwidth = MediaQuery.of(context).size.width >= 800;
@@ -171,8 +175,8 @@ Widget _buildSidebar(BuildContext context) {
                     insetPadding: MediaQuery.of(context).size.width > 850
                         ? EdgeInsets.symmetric(
                             horizontal: MediaQuery.of(context).size.width * 0.3,
-                            vertical: 15)
-                        : EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            vertical: MediaQuery.of(context).size.height * 0.2)
+                        : EdgeInsets.symmetric(horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.2),
                     backgroundColor: Colors.transparent,
                     child:
                         DiscoverPage() // Transparent background for floating window
@@ -221,9 +225,9 @@ Widget _buildSidebar(BuildContext context) {
           insetPadding: MediaQuery.of(context).size.width > 850
               ? EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.3,
-                  vertical: 15)
-              : const EdgeInsets.symmetric(
-                  horizontal: 15, vertical: 15),
+                  vertical: MediaQuery.of(context).size.height * 0.2)
+              :  EdgeInsets.symmetric(
+                  horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.2),
           backgroundColor: Colors.transparent,
           child: const NotificationView(),
         );

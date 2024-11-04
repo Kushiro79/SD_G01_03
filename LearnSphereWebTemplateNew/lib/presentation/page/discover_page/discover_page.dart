@@ -137,7 +137,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
               : const Icon(Icons.person, size: 40); // Fallback icon
         }),
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +150,11 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                           color : Colors.white,
                         ))
                     : const Text('Unknown User'),
-                Obx(() => ElevatedButton(
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Obx(() => ElevatedButton(
                       onPressed: () async {
                         if (isFollowingMap[userId]!) {
                           await controller.unfollowUser(userId);
@@ -170,6 +174,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                       ),
                       child: Text(isFollowingMap[userId]! ? 'Following' : 'Follow'),
                     )),
+                    const SizedBox(width: 10), // Add space between buttons
                     ElevatedButton(
                     onPressed: () async {
                     // Call the reportUser method in your controller
@@ -185,6 +190,10 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                 ),
                 child: const Text('Report'),
               ),
+                      ],
+                    )
+
+                
               ],
             ),
             usersList[index]['credentials'] != null
