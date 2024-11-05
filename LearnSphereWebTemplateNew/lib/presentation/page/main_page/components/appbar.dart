@@ -14,8 +14,8 @@ class _AppBar extends StatelessWidget {
         children: <Widget>[
           Image(
             image: AssetImage(ProjectAssets.learnSphereLogo.path),
-            width: 80,
-            height: 80,
+            width: screenwidth ? 80 : 60,
+            height: screenwidth ? 80 : 60,
           ),
           const SizedBox(width: 10),
           screenwidth

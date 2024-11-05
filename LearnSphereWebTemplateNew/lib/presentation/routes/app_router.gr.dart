@@ -65,10 +65,13 @@ class ContentManagementRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [DashboardPage]
-class DashboardRoute extends PageRouteInfo<void> {
-  const DashboardRoute({List<PageRouteInfo>? children})
-      : super(
+class DashboardRoute extends PageRouteInfo<DashboardRouteArgs> {
+  DashboardRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           DashboardRoute.name,
+          args: DashboardRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -77,9 +80,22 @@ class DashboardRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DashboardPage();
+      final args = data.argsAs<DashboardRouteArgs>(
+          orElse: () => const DashboardRouteArgs());
+      return DashboardPage(key: args.key);
     },
   );
+}
+
+class DashboardRouteArgs {
+  const DashboardRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DashboardRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for

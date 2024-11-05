@@ -72,37 +72,31 @@ class _NavigationMenuState extends State<_NavigationMenu> {
               const SizedBox(height: 120,),
               _MenuItem(
                 iconPath: ProjectAssets.icons.home.path,
-                isSelected: currentUrl == '/dashboard',
-                onTap: () => _onTabTap(const DashboardRoute()),
+                isSelected: currentUrl == '/main-page/dashboard',
+                onTap: () => _onTabTap( DashboardRoute()),
                 text: 'Dashboard',
               ),
               _MenuItem(
                 iconPath: ProjectAssets.graduate.path,
-                isSelected: currentUrl == '/view-academic-qualifications',
+                isSelected: currentUrl == '/main-page/view-academic-qualifications',
                 onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
                 text: 'User Academic\n Qualifications',
               ),
               _MenuItem(
                 iconPath: ProjectAssets.feedback.path,
-                isSelected: currentUrl == '/view-feedback',
+                isSelected: currentUrl == '/main-page/view-feedback',
                 onTap: () => _onTabTap(ViewFeedbackRoute()),
                 text: 'User Feedback',
               ),
               _MenuItem(
                 iconPath: ProjectAssets.tagUser1.path,
-                isSelected: currentUrl == '/user-management',
+                isSelected: currentUrl == '/main-page/user-management',
                 onTap: () => _onTabTap(const ViewAndManageUsersRoute()),
                 text: 'User & Staff Management',
               ),
               _MenuItem(
-                iconPath: ProjectAssets.graduate.path,
-                isSelected: currentUrl == '/view-academic-qualifications',
-                onTap: () => _onTabTap(const ViewAcademicQualificationsRoute()),
-                text: 'User Academic\n Qualifications',
-              ),
-              _MenuItem(
                 iconPath: ProjectAssets.icons.setting2.path,
-                isSelected: currentUrl == '/settings',
+                isSelected: currentUrl == '/main-page/settings',
                 onTap: () => _onTabTap(SettingsRoute()),
                 text: 'Settings',
               ),
@@ -110,8 +104,9 @@ class _NavigationMenuState extends State<_NavigationMenu> {
               isStaffOrAdmin
                   ? 
                         ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          contentPadding: EdgeInsets.all( 15),
                             leading: const Icon(
+                              size: 24,
                               Icons.swap_calls,
                               color: Color.fromARGB(255, 255, 255, 255),
                             ),
@@ -163,15 +158,23 @@ class _MenuItem extends StatelessWidget {
         margin: const EdgeInsets.only(
           bottom: 25,
         ),
-        decoration: isSelected
-            ? const BoxDecoration(
-                color: Palette.lightBlue,
-                borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: isSelected ? Palette.lightBlue : Colors.transparent,
+          borderRadius: isSelected
+              ? const BorderRadius.only(
                   topRight: Radius.circular(8),
                   bottomRight: Radius.circular(8),
-                ),
-              )
-            : null,
+                )
+              : null,
+          border: isSelected
+              ? const Border(
+                  left: BorderSide(
+                    color: Colors.white, // White border line
+                    width: 3.0,         // Adjust the width of the line
+                  ),
+                )
+              : null,
+        ),
         child: screenwidth
             ? Padding(
                 padding: EdgeInsets.only(left: 15),

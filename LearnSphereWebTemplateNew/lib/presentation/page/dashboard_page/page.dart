@@ -1,11 +1,16 @@
 import 'package:auto_route/auto_route.dart';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import  'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 @RoutePage()
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
+  DashboardPage({super.key});
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 
   Future<int> getAmountofStaffAndAdmin() async {
     try {
@@ -35,27 +40,45 @@ class DashboardPage extends StatelessWidget {
     }
   }
 
-  Future<double> getAveragePostsPerUser() async {
-    try {
-      final postsSnapshot =
-          await FirebaseFirestore.instance.collection('posts').get();
-      final userPostCounts = <String, int>{};
+  Future<double> fetchAveragePostCountPerUser() async {
+  try {
+    // Get all user documents from 'users' collection
+    final userSnapshots = await _firestore.collection('users').get();
 
-      for (var post in postsSnapshot.docs) {
-        final username = post['username'];
-        userPostCounts[username] = (userPostCounts[username] ?? 0) + 1;
-      }
+    // Use Future.wait to fetch all user posts concurrently
+    final futures = userSnapshots.docs.map((userDoc) async {
+      final userId = userDoc.id;
 
-      final totalUsers = userPostCounts.keys.length;
-      if (totalUsers == 0) return 0.0;
+      // Get all posts for the user in 'myPosts' subcollection
+      final userPostsSnapshot = await _firestore
+          .collection('posts')
+          .doc(userId)
+          .collection('myPosts')
+          .get();
 
-      final totalPosts = userPostCounts.values.reduce((a, b) => a + b);
-      return totalPosts / totalUsers;
-    } catch (e) {
-      print('Error in get average posts: $e');
-      return 0.0;
-    }
+      return userPostsSnapshot.size; // Return the count of posts for this user
+    });
+
+    // Wait for all futures to complete and collect the post counts
+    final postCounts = await Future.wait(futures);
+    final totalPosts = postCounts.reduce((a, b) => a + b); // Sum all counts
+    final userCount = userSnapshots.docs.length; // Count of users
+
+    // Calculate average, handle division by zero case
+    final averagePosts = userCount > 0 ? totalPosts / userCount : 0.0;
+
+    print('Total Posts: $totalPosts');
+    print('User Count: $userCount');
+    print('Average Posts per User: $averagePosts');
+    
+    return averagePosts; // Return the average number of posts per user
+  } catch (e) {
+    print('Error fetching average post count per user: $e');
+    return 0.0; // Return 0 or handle the error as needed
   }
+}
+
+
 
   Future<Map<String, int>> getUserDeviceUsage() async {
     try {
@@ -93,6 +116,37 @@ class DashboardPage extends StatelessWidget {
     }
   }
 
+  Future<int> fetchTotalPostCount() async {
+  try {
+    // Get all user IDs from 'posts' collection
+    final userSnapshots = await _firestore.collection('users').get();
+    
+    // Use Future.wait to fetch all user posts concurrently
+    final futures = userSnapshots.docs.map((userDoc) async {
+      final userId = userDoc.id;
+
+      // Get all posts for the user in 'myPosts' subcollection
+      final userPostsSnapshot = await _firestore
+          .collection('posts')
+          .doc(userId)
+          .collection('myPosts')
+          .get();
+      
+      return userPostsSnapshot.size; // Return the count of posts for this user
+    });
+
+    // Wait for all futures to complete and sum the results
+    final postCounts = await Future.wait(futures);
+    final totalPosts = postCounts.reduce((a, b) => a + b); // Sum all counts
+
+    print(totalPosts);
+    return totalPosts;
+  } catch (e) {
+    print('Error fetching total post count: $e');
+    return 0; // Return 0 or handle the error as needed
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +171,8 @@ class DashboardPage extends StatelessWidget {
                 future: Future.wait([
                   getAmountofStaffAndAdmin(),
                   getUserRegisteredLastMonth(),
-                  getAveragePostsPerUser(),
+                  fetchTotalPostCount(),
+                  fetchAveragePostCountPerUser(),
                   getUserDeviceUsage(),
                   getTotalActiveUsers(),
                 ]),
@@ -129,13 +184,14 @@ class DashboardPage extends StatelessWidget {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
           
-                  final data = snapshot.data as List<dynamic>;
-                  final amountofStaffAndAdmin = data[0] as int;
-                  final userRegisteredLastMonth = data[1] as int;
-                  final averagePostsPerUser = data[2] as double;
-                  final deviceUsage = data[3] as Map<String, int>;
-                  final totalActiveUsers = data[4] as int;
-          
+                    final data = snapshot.data as List<dynamic>;
+                    final amountofStaffAndAdmin = data[0] as int;
+                    final userRegisteredLastMonth = data[1] as int;
+                    final totalPost = data[2] as int; // This should be the total post count
+                    final averagePostsPerUser = data[3] as double; // This is correct as it returns double
+                    final deviceUsage = data[4] as Map<String, int>; // Change index from 3 to 4
+                    final totalActiveUsers = data[5] as int;
+
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
@@ -158,6 +214,11 @@ class DashboardPage extends StatelessWidget {
                             _buildMetricCard(
                               title: 'Users Registered Last Month',
                               value: userRegisteredLastMonth.toString(),
+                            ),
+                            const Divider(height: 24),
+                            _buildMetricCard(
+                              title: 'Total Posts',
+                              value: totalPost.toString(),
                             ),
                             const Divider(height: 24),
                             _buildMetricCard(

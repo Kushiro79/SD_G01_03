@@ -79,7 +79,7 @@ Widget _buildSidebar(BuildContext context) {
   final HomeController homeController = Get.put(HomeController());
   final EditProfileController editController = Get.put(EditProfileController());
 
-  var screenwidth = MediaQuery.of(context).size.width >= 800;
+  var screenwidth = MediaQuery.of(context).size.width >= 850;
   return Container(
     width: screenwidth ? 300 : 70,
     decoration: BoxDecoration(
@@ -440,15 +440,6 @@ Widget _buildPost() {
                             color: Colors.white,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            // Handle other media action
-                          },
-                          icon: const Icon(
-                            Icons.attach_file,
-                            color: Colors.white,
-                          ), // Example for attachments
-                        ),
                       ],
                     ),
                   ],
@@ -550,14 +541,13 @@ Widget thePost({
   required String postId, // Pass the post ID to the widget
   required String userId,
   required int likesCount,
-  //required int likesCount,
 }) {
   HomeController homeController = Get.put(HomeController());
 
-  //final HomeController homeController = Get.find(); // Get the HomeController instance
-// Function to toggle like
-
   return Container(
+    width: MediaQuery.of(context).size.width > 850
+        ? MediaQuery.of(context).size.width * 0.5
+        : MediaQuery.of(context).size.width * 0.9,
     decoration: const BoxDecoration(
       color: Colors.transparent,
     ),
@@ -566,178 +556,188 @@ Widget thePost({
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 0, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        imageUrl.isNotEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: ClipOval(
+          // Row for profile picture and username
+          Padding(
+            padding: const EdgeInsets.fromLTRB(5, 5, 0, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Profile Picture
+                imageUrl.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: ClipOval(
+                          child: Image.network(
+                            imageUrl,
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 50,
+                        width: 50,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey,
+                        ),
+                        child: const Icon(Icons.person, color: Colors.white),
+                      ),
+                const SizedBox(width: 10),
+                // Username
+                Text(
+                  user,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                // Optional Menu for Admin/Staff
+                Obx(() {
+                  return homeController.isStaffOrAdmin.value ||
+                          homeController.isAtProfilePage.value
+                      ? PopupMenuButton<String>(
+                          icon: const Icon(Icons.more_vert, color: Colors.white),
+                          onSelected: (value) {
+                            if (value == 'Delete') {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirm Deletion'),
+                                    content: const Text(
+                                        'Are you sure you want to delete this post?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          homeController.deletePost(
+                                              uid, postId.trim());
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Delete'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              const PopupMenuItem<String>(
+                                value: 'Delete',
+                                child: Text('Delete Post'),
+                              ),
+                            ];
+                          },
+                        )
+                      : const SizedBox.shrink();
+                }),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Post Text
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Media Display (Images/Videos)
+          mediaUrls.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: mediaUrls.map((url) {
+                      double width;
+                      if (mediaUrls.length == 1) {
+                        width = MediaQuery.of(context).size.width > 850
+                            ? MediaQuery.of(context).size.width * 0.75
+                            : MediaQuery.of(context).size.width * 0.9;
+                      } else {
+                        width = MediaQuery.of(context).size.width > 850
+                            ? MediaQuery.of(context).size.width * 0.2
+                            : MediaQuery.of(context).size.width * 0.35;
+                      }
+                      return GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => Dialog(
+                              backgroundColor: Colors.transparent.withOpacity(0.8),
+                              insetPadding: EdgeInsets.zero,
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: url.contains('.mp4')
+                                        ? VideoPlayerWidget(videoUrl: url)
+                                        : InteractiveViewer(
+                                            child: Image.network(
+                                              url,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                  ),
+                                  Positioned(
+                                    top: 20,
+                                    right: 20,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.close, color: Colors.white),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        child: url.contains('.mp4')
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: SizedBox(
+                                  width: width,
+                                  child: VideoPlayerWidget(videoUrl: url),
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
                                   child: Image.network(
-                                    imageUrl,
-                                    height: 50,
-                                    width: 50,
+                                    url,
+                                    width: width,
+                                    height: 200,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                              )
-                            : Container(
-                                margin: const EdgeInsets.only(top: 16),
-                                height: MediaQuery.of(context).size.height > 850
-                                    ? 50
-                                    : 20,
-                                width: MediaQuery.of(context).size.height > 850
-                                    ? 50
-                                    : 20,
-                                alignment: Alignment.topLeft,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey,
-                                ),
-                                child: const Icon(Icons.person,
-                                    color: Colors.white),
                               ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          user,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 15),
-                    Text(
-                      text,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(height: 10),
-                    // Display the media
-                    mediaUrls.isNotEmpty
-                        ? Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
-                            children: mediaUrls.map((url) {
-                              return url.contains('.mp4')
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width >
-                                                    800
-                                                ? MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.3
-                                                : MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.75,
-                                        child: VideoPlayerWidget(videoUrl: url),
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        url,
-                                        width:
-                                            MediaQuery.of(context).size.width >
-                                                    800
-                                                ? MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.3
-                                                : MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.75,
-                                        height: 300,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                            }).toList(),
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Obx(() {
-                    return homeController.isStaffOrAdmin.value ||
-                            homeController.isAtProfilePage.value
-                        ? PopupMenuButton<String>(
-                            icon: const Icon(Icons.more_vert,
-                                color: Colors.white),
-                            onSelected: (value) {
-                              // Handle the selection
-                              if (value == 'Delete') {
-                                // Show confirmation dialog
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Confirm Deletion'),
-                                      content: const Text(
-                                          'Are you sure you want to delete this post?'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            homeController.deletePost(
-                                                uid, postId.trim());
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                          child: const Text('Delete'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            itemBuilder: (BuildContext context) {
-                              return [
-                                const PopupMenuItem<String>(
-                                  value: 'Delete',
-                                  child: Text('Delete Post'),
-                                ),
-                              ];
-                            },
-                          )
-                        : const SizedBox
-                            .shrink(); // If not staff/admin, display nothing
-                  }),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 10), // Space between the post and buttons
+                      );
+                    }).toList(),
+                  ),
+                )
+              : Container(),
+          const SizedBox(height: 10),
+          // Like and Timestamp
           Container(
-            decoration:  BoxDecoration(
-              //make visible line top and under
+            decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
                   color: Colors.white.withOpacity(0.5),
@@ -753,30 +753,26 @@ Widget thePost({
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Text(
                     'Likes $likesCount',
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Text(
-                    DateFormat('dd-MM-yyyy hh:mm:ss')
-                        .format(timestamp.toDate()),
+                    DateFormat('dd-MM-yyyy hh:mm:ss').format(timestamp.toDate()),
                     style: const TextStyle(color: Colors.white60, fontSize: 10),
                   ),
                 ),
               ],
             ),
           ),
+          // Interaction Buttons
           Container(
-            decoration:  BoxDecoration(
-              //make visible line top and under
+            decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
                   color: Colors.white.withOpacity(0.5),
@@ -791,167 +787,83 @@ Widget thePost({
                   icon: const Icon(Icons.thumb_up, color: Colors.white),
                   onPressed: () {
                     homeController.toggleLike(userId, postId);
-                  }, // Call the toggleLike function
+                  },
                 ),
                 IconButton(
                   icon: const Icon(Icons.comment, color: Colors.white),
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            insetPadding: MediaQuery.of(context).size.width >
-                                    850
-                                ? EdgeInsets.symmetric(
-                                    horizontal:
-                                        MediaQuery.of(context).size.width * 0.3,
-                                    vertical: 15)
-                                : EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 15),
-                            backgroundColor: Colors.transparent,
-                            child: CommentScreen(postId: postId),
-                          );
-                        });
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          insetPadding: MediaQuery.of(context).size.width > 850
+                              ? EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  vertical: 15)
+                              : EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          backgroundColor: Colors.transparent,
+                          child: CommentScreen(postId: postId),
+                        );
+                      },
+                    );
                   },
                 ),
                 IconButton(
                   icon: const Icon(Icons.share, color: Colors.white),
                   onPressed: () {
-                    // Call the sharePost method from the HomeController
-                    HomeController homeController = Get.find();
-
-                    // Assuming you have access to the post text and media URLs
-                    String postText =
-                        text; // This should be the actual post text
-                    List<String> mediaUrls =
-                        []; // Fetch or pass the actual media URLs
-
-                    homeController.sharePost(postText, mediaUrls);
+                    homeController.sharePost(text, mediaUrls);
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.report,
-                      color: Colors.red), // Report icon
+                  icon: const Icon(Icons.report, color: Colors.red),
                   onPressed: () {
-                    // Create a TextEditingController to manage the input field
-                    TextEditingController reasonController =
-                        TextEditingController();
-
-                    // Show confirmation dialog
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor: Colors.black,
-                        title: const Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .spaceBetween, // Aligns items on opposite ends
-                          children: [
-                            Text(
-                              "Report Post",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                                "Are you sure you want to report this post?",
-                                style: TextStyle(color: Colors.white)),
-                            const SizedBox(height: 10),
-                            TextField(
-                              style: TextStyle(color: Colors.white),
-                              controller:
-                                  reasonController, // Set the controller
-                              decoration: const InputDecoration(
-                                labelText: "Reason (required)",
-                                hintText: "Enter your reason for reporting",
-                                labelStyle: TextStyle(color: Colors.white),
-                                hintStyle: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              String reason = reasonController
-                                  .text; // Get text from the controller
-
-                              if (reason.isNotEmpty) {
-                                // Get the current user ID
-                                User? user = FirebaseAuth.instance.currentUser;
-                                String userId = user?.uid ??
-                                    'unknown_user'; // Handle case if user is not logged in
-
-                                // Call the reportPost method
-                                await reportPost(context, postId, userId,
-                                    reason: reason);
-
-                                // Close the report confirmation dialog
-                                Navigator.of(context).pop();
-
-                                // Show the success dialog
-                                showDialog(
-                                  context:
-                                      context, // Same context is used for success dialog
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: Colors.black,
-                                    title: const Text("Success",
-                                        style: TextStyle(color: Colors.white)),
-                                    content: const Text(
-                                        "Post has been reported successfully.",
-                                        style: TextStyle(color: Colors.white)),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close the success dialog
-                                          reasonController.clear();
-                                          Navigator.of(context)
-                                              .pop(); // Clear the text field after success dialog is closed
-                                        },
-                                        child: const Text(
-                                          "OK",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                // Show a message if the reason is empty
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                    "Please enter a reason.",
-                                    style: TextStyle(color: Colors.white),
-                                  )),
-                                );
-                              }
-                            },
-                            child: const Text(
-                              "Yes",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                    TextEditingController reasonController = TextEditingController();
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: Colors.black,
+                    title: const Text("Report Post", style: TextStyle(color: Colors.white)),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("Are you sure you want to report this post?", style: TextStyle(color: Colors.white)),
+                        const SizedBox(height: 10),
+                        TextField(
+                          style: const TextStyle(color: Colors.white),
+                          controller: reasonController,
+                          decoration: const InputDecoration(
+                            labelText: "Reason (required)",
+                            labelStyle: TextStyle(color: Colors.white),
+                            hintStyle: TextStyle(color: Colors.white),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pop(); // Close the report dialog
-                              reasonController
-                                  .clear(); // Clear the text field when dialog closes
-                            },
-                            child: const Text(
-                              "No",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          if (reasonController.text.isNotEmpty) {
+                            await reportPost(context, postId, userId, reason: reasonController.text);
+                            Navigator.of(context).pop();
+                            reasonController.clear();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Please enter a reason.")),
+                            );
+                          }
+                        },
+                        child: const Text("Yes", style: TextStyle(color: Colors.white)),
                       ),
-                    );
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("No", style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                );
                   },
                 ),
               ],
@@ -962,6 +874,8 @@ Widget thePost({
     ),
   );
 }
+
+
 
 Future<void> reportPost(BuildContext context, String postId, String userId,
     {String? reason}) async {
