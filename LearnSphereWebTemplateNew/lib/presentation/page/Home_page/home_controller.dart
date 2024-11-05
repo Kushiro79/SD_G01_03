@@ -61,63 +61,6 @@ class HomeController extends GetxController {
     update();
   }
 
-  List pic = [
-    'assets/02.png',
-    'assets/03.png',
-    'assets/03.png',
-  ];
-  List frame = [
-    'assets/Frame 427321881.png',
-    'assets/Frame 427321882.png',
-    'assets/Frame 427321883.png',
-  ];
-  List text = [
-    'Alon musk',
-    'Samantha',
-    'Sara Ali khan',
-  ];
-  List instastory = [
-    'assets/02.png',
-    'assets/03.png',
-    'assets/01.png',
-    'assets/04.png',
-    'assets/03.png',
-  ];
-  List instastory1 = [
-    'assets/02.png',
-    'assets/03.png',
-    'assets/01.png',
-    'assets/04.png',
-  ];
-  List text1 = [
-    'Alon musk',
-    'V. Kohl',
-    'Tiger shroff',
-    'Sharukh',
-  ];
-  List subtitle = [
-    'Wow Looking Handsome Buddy',
-    'You Are So Handsome',
-    'So Beautiful Pic',
-    'You Have A Great Smile',
-  ];
-  List time = [
-    '2 min ago',
-    '5 min ago',
-    '10 min ago',
-    '20 min ago',
-  ];
-  List option = [
-    'Hide',
-    'Block',
-    'Report',
-  ];
-  List<Color> colors = [
-    Colors.black,
-    Colors.red,
-    Colors.red,
-  ];
-
   void changeText(String value) {
     postText.text = value; // Update the controller's text
   }
@@ -458,7 +401,45 @@ Future<void> reportPost(String postId, String userId, {String? reason}) async {
     });
   }
 
-  
+  Future<void> toggleLike(String userId, String postId) async {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) return; // Ensure user is logged in
+
+    // Reference to the specific post in the subcollection
+    final postRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(userId) // The owner of the post
+        .collection('myPosts')
+        .doc(postId);
+
+    final postSnapshot = await postRef.get();
+
+
+
+    final List<dynamic> likes = postSnapshot['likes'] ?? [];
+
+    if(!postSnapshot.exists){
+      print('Post does not exist');
+      return;
+    }
+
+    if (likes.contains(currentUserId)) {
+        // If the user has already liked the post, remove their ID from the array
+        await postRef.update({
+            'likes': FieldValue.arrayRemove([currentUserId])
+        });
+    } else {
+        // If the user has not liked the post, add their ID to the array
+        await postRef.update({
+            'likes': FieldValue.arrayUnion([currentUserId])
+        });
+    }
+
+
+   
+  }
+
+
 
 }
 

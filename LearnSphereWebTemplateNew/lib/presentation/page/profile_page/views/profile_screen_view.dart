@@ -383,6 +383,7 @@ Expanded(
                       mediaUrls: mediaUrls,
                       postId: postId,
                       userId: userId,
+                      likesCount: post['likes'].length,
                     ),
                   ),
                   if (index < posts.length - 1)

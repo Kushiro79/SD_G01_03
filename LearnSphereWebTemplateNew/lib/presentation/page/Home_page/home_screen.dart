@@ -33,7 +33,7 @@ class MyHomePage extends GetView<HomeController> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF1A1F3B),
-          toolbarHeight: 100,
+          toolbarHeight: screenwidth ? 100 : 80,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -51,13 +51,15 @@ class MyHomePage extends GetView<HomeController> {
                 Text(
                   "Sphere",
                   style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF004ff9),
-                      fontSize: screenwidth ? 30 : 20,),
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF004ff9),
+                    fontSize: screenwidth ? 30 : 20,
+                  ),
                 )
               ]),
         ),
         body: Container(
+            padding: EdgeInsets.zero,
             decoration: const BoxDecoration(
               color: Color(0xFF1A1F3B),
             ), // add this to avoid errors
@@ -80,13 +82,12 @@ Widget _buildSidebar(BuildContext context) {
   var screenwidth = MediaQuery.of(context).size.width >= 800;
   return Container(
     width: screenwidth ? 300 : 70,
-    decoration: const BoxDecoration(
+    decoration: BoxDecoration(
       border: Border(
-        right: BorderSide(width: 2, color: Colors.white),
+        right: BorderSide(width: 1, color: Colors.white.withOpacity(0.5)),
       ),
     ),
     child: ListView(
-      padding: EdgeInsets.zero,
       children: [
         SizedBox(
           child: Padding(
@@ -152,7 +153,7 @@ Widget _buildSidebar(BuildContext context) {
                 )
               : null,
           onTap: () {
-            // Handle tap on Home
+            homeController.getPostsStream(homeController.auth.currentUser!.uid);
           },
         ),
         ListTile(
@@ -176,7 +177,9 @@ Widget _buildSidebar(BuildContext context) {
                         ? EdgeInsets.symmetric(
                             horizontal: MediaQuery.of(context).size.width * 0.3,
                             vertical: MediaQuery.of(context).size.height * 0.2)
-                        : EdgeInsets.symmetric(horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.2),
+                        : EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: MediaQuery.of(context).size.height * 0.2),
                     backgroundColor: Colors.transparent,
                     child:
                         DiscoverPage() // Transparent background for floating window
@@ -187,55 +190,56 @@ Widget _buildSidebar(BuildContext context) {
           },
         ),
         ListTile(
-  leading: Stack(
-    clipBehavior: Clip.none,
-    children: [
-      Image.asset(
-        'assets/notification.png',
-        width: 25,
-        color: homeController.comments.isEmpty ? Colors.white : Colors.red,
-      ),
-      if (homeController.comments.isNotEmpty)
-        Positioned(
-          top: -5,
-          right: 0,
-          child: Container(
-            width: 15,
-            height: 15,
-            padding: const EdgeInsets.all(2),
-            decoration: const BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-            ),
+          leading: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Image.asset(
+                'assets/notification.png',
+                width: 25,
+                color:
+                    homeController.comments.isEmpty ? Colors.white : Colors.red,
+              ),
+              if (homeController.comments.isNotEmpty)
+                Positioned(
+                  top: -5,
+                  right: 0,
+                  child: Container(
+                    width: 15,
+                    height: 15,
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
           ),
+          title: screenwidth
+              ? const Text(
+                  'Notifications',
+                  style: TextStyle(color: Colors.white),
+                )
+              : null,
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  insetPadding: MediaQuery.of(context).size.width > 850
+                      ? EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.3,
+                          vertical: MediaQuery.of(context).size.height * 0.2)
+                      : EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: MediaQuery.of(context).size.height * 0.2),
+                  backgroundColor: Colors.transparent,
+                  child: const NotificationView(),
+                );
+              },
+            );
+          },
         ),
-    ],
-  ),
-  title: screenwidth
-      ? const Text(
-          'Notifications',
-          style: TextStyle(color: Colors.white),
-        )
-      : null,
-  onTap: () {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          insetPadding: MediaQuery.of(context).size.width > 850
-              ? EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.3,
-                  vertical: MediaQuery.of(context).size.height * 0.2)
-              :  EdgeInsets.symmetric(
-                  horizontal: 15, vertical: MediaQuery.of(context).size.height * 0.2),
-          backgroundColor: Colors.transparent,
-          child: const NotificationView(),
-        );
-      },
-    );
-  },
-),
-
         ListTile(
           leading: Image.asset(
             'assets/people.png',
@@ -338,8 +342,8 @@ Widget _buildPost() {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.white,
-                    width: 1.5,
+                    color: Colors.white.withOpacity(0.5),
+                    width: 0.5,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   color: Colors.transparent,
@@ -471,26 +475,19 @@ Widget _buildPost() {
                         // String userId = homeController.auth.currentUser!.uid; // Get user ID here
                         return Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: thePost(
-                                text: post['Text'],
-                                user: post['Username'],
-                                uid: post['uid'],
-                                imageUrl: post['profileImageUrl'],
-                                timestamp: post['Timestamp'],
-                                context: context,
-                                mediaUrls: mediaUrls,
-                                postId: postId,
-                                userId: userId,
-                                //likesCount: post['likesCount']??0,
-                              ),
+                            thePost(
+                              text: post['Text'],
+                              user: post['Username'],
+                              uid: post['uid'],
+                              imageUrl: post['profileImageUrl'],
+                              timestamp: post['Timestamp'],
+                              context: context,
+                              mediaUrls: mediaUrls,
+                              postId: postId,
+                              userId: userId,
+                              likesCount: post['likes'].length,
+                              //likesCount: post['likesCount']??0,
                             ),
-                            if (index < posts.length - 1)
-                              const Divider(
-                                thickness: 1,
-                                color: Colors.grey,
-                              ),
                           ],
                         );
                       },
@@ -552,54 +549,20 @@ Widget thePost({
   required BuildContext context,
   required String postId, // Pass the post ID to the widget
   required String userId,
+  required int likesCount,
   //required int likesCount,
 }) {
   HomeController homeController = Get.put(HomeController());
 
   //final HomeController homeController = Get.find(); // Get the HomeController instance
 // Function to toggle like
-  Future<void> toggleLike() async {
-    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-    if (currentUserId == null) return; // Ensure user is logged in
-
-    // Reference to the specific post in the subcollection
-    final postRef = FirebaseFirestore.instance
-        .collection('posts')
-        .doc(userId) // The owner of the post
-        .collection('myPost')
-        .doc(postId);
-
-    // Start a Firestore transaction
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      final postSnapshot = await transaction.get(postRef);
-      if (!postSnapshot.exists) return; // Post does not exist
-
-      // Fetch the current likes array
-      List<dynamic> likes = postSnapshot.data()?['likes'] ?? [];
-      print('Current likes: $likes'); // Debugging line
-
-      if (likes.contains(currentUserId)) {
-        // User has already liked the post, so remove the like
-        likes.remove(currentUserId);
-        print('User $currentUserId unliked the post.'); // Debugging line
-      } else {
-        // User has not liked the post, so add the like
-        likes.add(currentUserId);
-        print('User $currentUserId liked the post.'); // Debugging line
-      }
-
-      // Update the post's likes array
-      transaction.update(postRef, {'likes': likes});
-      print('Updated likes: $likes'); // Debugging line
-    });
-  }
 
   return Container(
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       color: Colors.transparent,
     ),
     child: Padding(
-      padding: const EdgeInsets.only(top: 10, left: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -607,41 +570,56 @@ Widget thePost({
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              imageUrl.isNotEmpty
-                  ? ClipOval(
-                      child: Image.network(
-                        imageUrl,
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Container(
-                      margin: const EdgeInsets.only(top: 16),
-                      height:
-                          MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                      width: MediaQuery.of(context).size.height > 850 ? 50 : 20,
-                      alignment: Alignment.topLeft,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                      ),
-                      child: const Icon(Icons.person, color: Colors.white),
-                    ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 5, 0, 10),
+                padding: const EdgeInsets.fromLTRB(5, 5, 0, 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      user,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        imageUrl.isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    imageUrl,
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                margin: const EdgeInsets.only(top: 16),
+                                height: MediaQuery.of(context).size.height > 850
+                                    ? 50
+                                    : 20,
+                                width: MediaQuery.of(context).size.height > 850
+                                    ? 50
+                                    : 20,
+                                alignment: Alignment.topLeft,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey,
+                                ),
+                                child: const Icon(Icons.person,
+                                    color: Colors.white),
+                              ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          user,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
+
+                    const SizedBox(height: 15),
                     Text(
                       text,
                       style: const TextStyle(color: Colors.white),
@@ -667,7 +645,7 @@ Widget thePost({
                                                 : MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.50,
+                                                    0.75,
                                         child: VideoPlayerWidget(videoUrl: url),
                                       ),
                                     )
@@ -685,7 +663,7 @@ Widget thePost({
                                                 : MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.50,
+                                                    0.75,
                                         height: 300,
                                         fit: BoxFit.cover,
                                       ),
@@ -752,186 +730,232 @@ Widget thePost({
                         : const SizedBox
                             .shrink(); // If not staff/admin, display nothing
                   }),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Text(
-                      DateFormat('dd-MM-yyyy\nhh:mm:ss')
-                          .format(timestamp.toDate()),
-                      style:
-                          const TextStyle(color: Colors.white60, fontSize: 10),
-                    ),
-                  ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 10), // Space between the post and buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.comment, color: Colors.white),
-                onPressed: () {
-                  showDialog(
+          Container(
+            decoration:  BoxDecoration(
+              //make visible line top and under
+              border: Border(
+                top: BorderSide(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 0.5,
+                ),
+                bottom: BorderSide(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: Text(
+                    'Likes $likesCount',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Text(
+                    DateFormat('dd-MM-yyyy hh:mm:ss')
+                        .format(timestamp.toDate()),
+                    style: const TextStyle(color: Colors.white60, fontSize: 10),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            decoration:  BoxDecoration(
+              //make visible line top and under
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.thumb_up, color: Colors.white),
+                  onPressed: () {
+                    homeController.toggleLike(userId, postId);
+                  }, // Call the toggleLike function
+                ),
+                IconButton(
+                  icon: const Icon(Icons.comment, color: Colors.white),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            insetPadding: MediaQuery.of(context).size.width >
+                                    850
+                                ? EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    vertical: 15)
+                                : EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 15),
+                            backgroundColor: Colors.transparent,
+                            child: CommentScreen(postId: postId),
+                          );
+                        });
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share, color: Colors.white),
+                  onPressed: () {
+                    // Call the sharePost method from the HomeController
+                    HomeController homeController = Get.find();
+
+                    // Assuming you have access to the post text and media URLs
+                    String postText =
+                        text; // This should be the actual post text
+                    List<String> mediaUrls =
+                        []; // Fetch or pass the actual media URLs
+
+                    homeController.sharePost(postText, mediaUrls);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.report,
+                      color: Colors.red), // Report icon
+                  onPressed: () {
+                    // Create a TextEditingController to manage the input field
+                    TextEditingController reasonController =
+                        TextEditingController();
+
+                    // Show confirmation dialog
+                    showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          insetPadding: MediaQuery.of(context).size.width > 850
-                              ? EdgeInsets.symmetric(
-                                  horizontal:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  vertical: 15)
-                              : EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 15),
-                          backgroundColor: Colors.transparent,
-                          child: CommentScreen(postId: postId),
-                        );
-                      });
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.thumb_up, color: Colors.white),
-                onPressed: toggleLike, // Call the toggleLike function
-              ),
-              IconButton(
-                icon: const Icon(Icons.share, color: Colors.white),
-                onPressed: () {
-                  // Call the sharePost method from the HomeController
-                  HomeController homeController = Get.find();
+                      builder: (context) => AlertDialog(
+                        backgroundColor: Colors.black,
+                        title: const Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .spaceBetween, // Aligns items on opposite ends
+                          children: [
+                            Text(
+                              "Report Post",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                                "Are you sure you want to report this post?",
+                                style: TextStyle(color: Colors.white)),
+                            const SizedBox(height: 10),
+                            TextField(
+                              style: TextStyle(color: Colors.white),
+                              controller:
+                                  reasonController, // Set the controller
+                              decoration: const InputDecoration(
+                                labelText: "Reason (required)",
+                                hintText: "Enter your reason for reporting",
+                                labelStyle: TextStyle(color: Colors.white),
+                                hintStyle: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              String reason = reasonController
+                                  .text; // Get text from the controller
 
-                  // Assuming you have access to the post text and media URLs
-                  String postText = text; // This should be the actual post text
-                  List<String> mediaUrls =
-                      []; // Fetch or pass the actual media URLs
+                              if (reason.isNotEmpty) {
+                                // Get the current user ID
+                                User? user = FirebaseAuth.instance.currentUser;
+                                String userId = user?.uid ??
+                                    'unknown_user'; // Handle case if user is not logged in
 
-                  homeController.sharePost(postText, mediaUrls);
-                },
-              ),
-              IconButton(
-                icon:
-                    const Icon(Icons.report, color: Colors.red), // Report icon
-                onPressed: () {
-                  // Create a TextEditingController to manage the input field
-                  TextEditingController reasonController =
-                      TextEditingController();
+                                // Call the reportPost method
+                                await reportPost(context, postId, userId,
+                                    reason: reason);
 
-                  // Show confirmation dialog
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      backgroundColor: Colors.black,
-                      title: const Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween, // Aligns items on opposite ends
-                        children: [
-                          Text(
-                            "Report Post",
-                            style: TextStyle(color: Colors.white),
+                                // Close the report confirmation dialog
+                                Navigator.of(context).pop();
+
+                                // Show the success dialog
+                                showDialog(
+                                  context:
+                                      context, // Same context is used for success dialog
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.black,
+                                    title: const Text("Success",
+                                        style: TextStyle(color: Colors.white)),
+                                    content: const Text(
+                                        "Post has been reported successfully.",
+                                        style: TextStyle(color: Colors.white)),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the success dialog
+                                          reasonController.clear();
+                                          Navigator.of(context)
+                                              .pop(); // Clear the text field after success dialog is closed
+                                        },
+                                        child: const Text(
+                                          "OK",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                // Show a message if the reason is empty
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                    "Please enter a reason.",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                );
+                              }
+                            },
+                            child: const Text(
+                              "Yes",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                        ],
-                      ),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                              "Are you sure you want to report this post?",
-                              style: TextStyle(color: Colors.white)),
-                          const SizedBox(height: 10),
-                          TextField(
-                            style: TextStyle(color: Colors.white),
-                            controller: reasonController, // Set the controller
-                            decoration: const InputDecoration(
-                              labelText: "Reason (required)",
-                              hintText: "Enter your reason for reporting",
-                              labelStyle: TextStyle(color: Colors.white),
-                              hintStyle: TextStyle(color: Colors.white),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pop(); // Close the report dialog
+                              reasonController
+                                  .clear(); // Clear the text field when dialog closes
+                            },
+                            child: const Text(
+                              "No",
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () async {
-                            String reason = reasonController
-                                .text; // Get text from the controller
-
-                            if (reason.isNotEmpty) {
-                              // Get the current user ID
-                              User? user = FirebaseAuth.instance.currentUser;
-                              String userId = user?.uid ??
-                                  'unknown_user'; // Handle case if user is not logged in
-
-                              // Call the reportPost method
-                              await reportPost(context, postId, userId,
-                                  reason: reason);
-
-                              // Close the report confirmation dialog
-                              Navigator.of(context).pop();
-
-                              // Show the success dialog
-                              showDialog(
-                                context:
-                                    context, // Same context is used for success dialog
-                                builder: (context) => AlertDialog(
-                                  backgroundColor: Colors.black,
-                                  title: const Text("Success",
-                                      style: TextStyle(color: Colors.white)),
-                                  content: const Text(
-                                      "Post has been reported successfully.",
-                                      style: TextStyle(color: Colors.white)),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the success dialog
-                                        reasonController.clear();
-                                        Navigator.of(context)
-                                            .pop(); // Clear the text field after success dialog is closed
-                                      },
-                                      child: const Text(
-                                        "OK",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              // Show a message if the reason is empty
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                  "Please enter a reason.",
-                                  style: TextStyle(color: Colors.white),
-                                )),
-                              );
-                            }
-                          },
-                          child: const Text(
-                            "Yes",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // Close the report dialog
-                            reasonController
-                                .clear(); // Clear the text field when dialog closes
-                          },
-                          child: const Text(
-                            "No",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
