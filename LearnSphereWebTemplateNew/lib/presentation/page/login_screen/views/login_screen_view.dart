@@ -293,14 +293,14 @@ class LoginScreenView extends GetView<LoginScreenController> {
           onChanged: loginScreenController.updateEmail,
         ),
         const SizedBox(height: 20),
-        _buildTextField(
+        Obx(()=> _buildTextField(
           hintText: 'Min. 6 characters...',
           labelText: 'Password',
           onChanged: loginScreenController.updatePassword,
-          obscureText: loginScreenController.showPassword,
+          obscureText: loginScreenController.showPassword.value,
           suffixIcon: IconButton(
             icon: Icon(
-              loginScreenController.showPassword
+              loginScreenController.showPassword.value
                   ? Icons.visibility_off
                   : Icons.visibility,
             ),
@@ -308,6 +308,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
               loginScreenController.changePasswordhideAndShow();
             },
           ),
+        ),
         ),
         const SizedBox(height: 10),
         Row(
@@ -343,6 +344,7 @@ class LoginScreenView extends GetView<LoginScreenController> {
           child: ElevatedButton(
             onPressed: () {
               loginScreenController.SigninWithEmailandPassword(context);
+              
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

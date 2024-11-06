@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io';
 
 import '../../../routes/app_router.dart';
 import 'package:auto_route/auto_route.dart';
@@ -33,36 +35,43 @@ class UploadAcademicQualificationController extends GetxController {
 
   // Picking and uploading the certificate
 Future<void> pickAndUploadCertificate(BuildContext context) async {
-  // Open file picker and select an image
+  // Open file picker and select an image or document
   FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
-    allowedExtensions: ['pdf','docx','jpg','png','jpeg'],
+    allowedExtensions: ['pdf', 'docx', 'jpg', 'png', 'jpeg'],
   );
 
   if (result != null && result.files.isNotEmpty) {
     // Get the selected file
     final file = result.files.first;
 
-    // Upload the file to Firebase Storage
     try {
-      isUploading.value = true;
-      // Create a reference to the Firebase Storage bucket
-      final storageRef =
-          FirebaseStorage.instance.ref().child('certificates/${file.name}');
-      
-      // Upload the file
-      await storageRef.putData(file.bytes!);
+      isUploading.value = true; // Indicate that the upload is in progress
 
-      // Optionally, get the download URL
+      // Create a reference to the Firebase Storage bucket
+      final storageRef = FirebaseStorage.instance.ref().child('certificates/${file.name}');
+
+      // Check platform and upload the file accordingly
+      if (kIsWeb) {
+        // Upload directly from bytes for web
+        await storageRef.putData(file.bytes!);
+      } else {
+        // Convert path to File and upload for Android/iOS
+        File localFile = File(file.path!);
+        await storageRef.putFile(localFile);
+      }
+
+      // Get the download URL after successful upload
       String downloadURL = await storageRef.getDownloadURL();
       
-      // Update certificateUrl observable or variable
+      // Update certificate URL observable or variable
       certificateUrl.value = downloadURL;
-      isUploading.value = false;
+      isUploading.value = false; // Reset upload state
+
       print('File uploaded successfully! Download URL: $downloadURL');
       
     } catch (e) {
-      isUploading.value = false;
+      isUploading.value = false; // Reset upload state on error
       print('Error uploading file: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error uploading file: $e')),
@@ -75,6 +84,7 @@ Future<void> pickAndUploadCertificate(BuildContext context) async {
     );
   }
 }
+
 
 // Submitting form information to Firestore
 Future<void> submitInfo(BuildContext context) async {

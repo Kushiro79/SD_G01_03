@@ -47,7 +47,9 @@ class DiscoverPage extends GetView<DiscoverController> {
               ),
             ),
             body: Container(
-              padding: const EdgeInsets.all(10),
+              padding: MediaQuery.of(context).size.width > 850
+                  ? const EdgeInsets.all(20)
+                  : const EdgeInsets.all(5),
               child: TabBarView(
                 children: [
                   discoverTab(),
@@ -89,7 +91,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
 
 
   return ListView.builder(
-    padding: EdgeInsets.zero, // Remove default padding
+    padding:  EdgeInsets.zero, // Remove default padding
     itemCount: usersList.length,
     itemBuilder: (context, index) {
       String userId = usersList[index].id;
@@ -118,7 +120,7 @@ usersLists(RxList<DocumentSnapshot> usersList) {
 
       return ListTile(
         dense: false,
-        contentPadding: const EdgeInsets.all(10),
+        contentPadding: const EdgeInsets.all(5),
         leading: Obx(() {
           // Observe changes to the userImageUrls
           final imageUrl = userImageUrls[userId];
@@ -152,8 +154,8 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                         ))
                     : const Text('Unknown User'),
 
-                    MediaQuery.of(context).size.width > 850 ?
-                    Row(
+                    MediaQuery.of(context).size.width > 850 
+                    ? Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Obx(() => ElevatedButton(
@@ -211,14 +213,11 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF117aca), // Change button background color here
                         foregroundColor: Colors.white, // Change text color here
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10), // Adjust padding for button size
+                        shape: const CircleBorder(),
                       ),
                       child: Icon(isFollowingMap[userId]! ? Icons.check : Icons.person_add_alt_rounded),
                     )),
-                     const SizedBox(width: 5), // Add space between buttons
                     ElevatedButton(
                     onPressed: () async {
                     // Call the reportUser method in your controller
@@ -227,10 +226,8 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                   style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE57373), // Change button background color here for reporting
                   foregroundColor: Colors.white, // Change text color here
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10), // Adjust padding for button size
+                  shape: const CircleBorder(),
                 ),
                 child: const Icon(Icons.report_rounded),
               ),

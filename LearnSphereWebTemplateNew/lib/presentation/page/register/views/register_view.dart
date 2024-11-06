@@ -337,14 +337,14 @@ class RegisterScreenView extends GetView<RegisterController> {
           onChanged: registerController.updateEmail,
         ),
         const SizedBox(height: 20),
-        _buildTextField(
+        Obx(()=> _buildTextField(
           hintText: 'Min. 6 characters...',
           labelText: 'Password',
           onChanged: registerController.updatePassword,
-          obscureText: registerController.showPassword,
+          obscureText: registerController.showPassword.value,
           suffixIcon: IconButton(
             icon: Icon(
-              registerController.showPassword
+              registerController.showPassword.value
                   ? Icons.visibility_off
                   : Icons.visibility,
             ),
@@ -352,6 +352,7 @@ class RegisterScreenView extends GetView<RegisterController> {
               registerController.changePasswordhideAndShow();
             },
           ),
+        ),
         ),
       ],
     );

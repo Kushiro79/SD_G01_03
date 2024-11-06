@@ -164,102 +164,50 @@ class EditProfilePage extends GetView<EditProfileController> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Card(
-                            color: Colors.transparent.withOpacity(0.13),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Obx(() {
-                                    // Reactive part of the UI
-                                    if (!isEditing.value) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              'Username: ${controller.username.value}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              )),
-                                          const SizedBox(height: 16),
-                                          Text(
-                                              'Email: ${controller.email.value}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              )),
-                                          const SizedBox(height: 32),
-                                          ElevatedButton.icon(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Color(0xFF117aca),
-                                            ),
-                                            onPressed: () {
-                                              isEditing.value = true;
-                                            },
-                                            icon: const Icon(Icons.edit,  color: Colors.white,),
-                                            label: const Text('Change', style: TextStyle(color: Colors.white)),
-                                          ),
-                                        ],
-                                      );
-                                    } else {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextFormField(
-                                            style: TextStyle(color: Colors.white),
-                                            initialValue:
-                                                controller.username.value,
-                                            decoration: const InputDecoration(
-                                                labelText: 'Username',
-                                                hintStyle: TextStyle(
-                                                    color: Colors.white38)),
-                                            onChanged: (value) async {
-                                              controller.username.value = value;
-                                            },
-                                          ),
-                                          const SizedBox(height: 16),
-                                          TextFormField(
-                                            style: TextStyle(color: Colors.white),
-                                            initialValue:
-                                                controller.email.value,
-                                            decoration: const InputDecoration(
-                                                labelText: 'Email',
-                                                hintStyle: TextStyle(
-                                                    color: Colors.white38)),
-                                            onChanged: (value) {
-                                              controller.email.value = value;
-                                            },
-                                          ),
-                                          const SizedBox(height: 32),
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Color(0xFF117aca),
-                                              foregroundColor: Colors.white,
-                                            ),
-                                            onPressed: () async {
-                                              if (await registerController
-                                                  .checkUsernameExists(
-                                                      controller
-                                                          .username.value)) {
-                                                showCustomToast(context,
-                                                    'Username Already Exists.');
-                                              } else {
-                                                controller.saveProfile(context);
-                                                isEditing.value = false;
-                                              }
-                                            },
-                                            child: const Text('Save Changes'),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  }),
-                                ],
-                              ),
-                            ),
-                          ),
+
+    Card(
+      color: Colors.transparent.withOpacity(0.13),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Obx(() {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Username: ${controller.username.value}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Email: ${controller.email.value}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 32),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF117aca),
+                    ),
+                    onPressed: () {
+                      controller.showEditDialog(context);
+                    },
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    label: const Text('Change', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
+      ),
+    ),
+  
+
+  // Method to show the edit dialog
+  
+
                           const SizedBox(width: 16),
                           Card(
                             color: Colors.transparent.withOpacity(0.13),

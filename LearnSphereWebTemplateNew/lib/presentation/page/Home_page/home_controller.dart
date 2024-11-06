@@ -120,15 +120,16 @@ class HomeController extends GetxController {
   }
 
   getColorBasedOnContent(String certificate) {
+    certificate = certificate.toLowerCase().trim();
     if (certificate == 'High School') {
       return Colors.green;
-    } else if (certificate == 'Diploma') {
+    } else if (certificate == 'diploma') {
       return Colors.blue;
-    } else if (certificate == 'Degree') {
+    } else if (certificate == 'degree') {
       return Colors.orange;
-    } else if (certificate == 'Masters') {
+    } else if (certificate == 'masters') {
       return Colors.yellow;
-    } else if (certificate == 'PhD') {
+    } else if (certificate == 'phd') {
       return Colors.red;
     } else {
       return Colors.grey;
@@ -276,6 +277,11 @@ class HomeController extends GetxController {
       runSpacing: 8.0,
       children: pickedFiles.map((file) {
         return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          width: 100,
+          height: 100,
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: _getMediaWidget(file), // Assuming _getMediaWidget handles media type
@@ -592,6 +598,7 @@ class HomeController extends GetxController {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserId == null) return; // Ensure user is logged in
 
+    print(postId);
     // Reference to the specific post in the subcollection
     final postRef = FirebaseFirestore.instance
         .collection('posts')
@@ -601,7 +608,7 @@ class HomeController extends GetxController {
 
     final postSnapshot = await postRef.get();
 
-    final List<dynamic> likes = postSnapshot['likes'] ?? [];
+    final List<dynamic> likes = postSnapshot['likes'] ;
 
     if (!postSnapshot.exists) {
       print('Post does not exist');

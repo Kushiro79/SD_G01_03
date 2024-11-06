@@ -39,7 +39,8 @@ class ViewAcademicQualificationsPage
                   ? const Center(
                       child: Text(
                         'No Request Submitted',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18,
+                        color: Colors.white),
                       ),
                     )
                   : ListView.separated(

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,11 @@ import '../../../routes/app_router.dart';
 import '../../../utils/custom_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:typed_data';
+import 'dart:io';
+
+
+import '../../register/controllers/register_controller.dart';
 
 class EditProfileController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,6 +43,66 @@ class EditProfileController extends GetxController {
   loadPfp() {
     return profileImageUrl.value;
   }
+
+  void showEditDialog(BuildContext context) {
+    final usernameController = TextEditingController(text: username.value);
+    final emailController = TextEditingController(text: email.value);
+    RegisterController registerController = Get.put(RegisterController());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.black,
+          title: const Text("Edit Profile", style: TextStyle(color: Colors.white),),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                style: TextStyle(color: Colors.white),
+                controller: usernameController,
+                decoration: const InputDecoration(labelText: 'Username'),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                style: TextStyle(color: Colors.white),
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text("Cancel" , style: TextStyle(color: Color(0xFF117aca)),),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: const Color(0xFF117aca),
+                elevation: 0,
+                backgroundColor: Colors.black
+              ),
+              onPressed: () async {
+                // Check if username exists
+                if (await registerController.checkUsernameExists(usernameController.text)) {
+                  Get.snackbar('Error', 'Username already exists');
+                } else {
+                  username.value = usernameController.text;
+                  email.value = emailController.text;
+                  saveProfile(context);
+                  Navigator.of(context).pop(); // Close the dialog
+                }
+              },
+              child: const Text("Save Changes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   // Method to fetch profile data from Firebase
   Future<void> loadProfile() async {
@@ -145,66 +211,76 @@ class EditProfileController extends GetxController {
   }
 
   Future<void> pickAndUploadPfp(BuildContext context) async {
-    // Open file picker and select an image
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+  );
 
-    if (result != null && result.files.isNotEmpty) {
-      // Get the selected file
-      final file = result.files.first;
+  if (result != null && result.files.isNotEmpty) {
+    final file = result.files.first;
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    String fileName = '${userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-      // Upload the file to Firebase Storage
-      try {
-        // Create a reference to the Firebase Storage bucket
-        final storageRef =
-            FirebaseStorage.instance.ref().child('profile/${file.name}');
-        // Upload the file
-        await storageRef.putData(file.bytes!);
+    try {
+      Reference storageRef = FirebaseStorage.instance.ref().child('profile/$fileName');
 
-        // Optionally, get the download URL
-        String downloadURL = await storageRef.getDownloadURL();
-        profileImageUrl.value = downloadURL;
-        print('File uploaded successfully! Download URL: $downloadURL');
-        saveProfile(context);
-      } catch (e) {
-        print('Error uploading file: $e');
+      if (kIsWeb) {
+        await storageRef.putData(file.bytes!); // Web uses putData with Uint8List
+      } else {
+        File localFile = File(file.path!);
+        await storageRef.putFile(localFile); // Android uses putFile with File
       }
-    } else {
-      print('No file selected.');
+
+      String downloadURL = await storageRef.getDownloadURL();
+      profileImageUrl.value = downloadURL;
+      print('Profile picture uploaded successfully! Download URL: $downloadURL');
+      saveProfile(context);
+    } catch (e) {
+      print('Error uploading profile picture: $e');
     }
+  } else {
+    print('No file selected.');
   }
+}
+
+  
 
   Future<void> pickAndUploadBanner(BuildContext context) async {
-    // Open file picker and select an image
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+  // Open file picker and select an image
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+  );
 
-    if (result != null && result.files.isNotEmpty) {
-      // Get the selected file
-      final file = result.files.first;
+  if (result != null && result.files.isNotEmpty) {
+    final file = result.files.first;
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    String fileName = '${userId}_banner_${DateTime.now().millisecondsSinceEpoch}.${file.extension}';
 
-      // Upload the file to Firebase Storage
-      try {
-        // Create a reference to the Firebase Storage bucket
-        final storageRef =
-            FirebaseStorage.instance.ref().child('banner/${file.name}');
-        // Upload the file
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child('banner/$fileName');
+      
+      // Check if running on web
+      if (kIsWeb) {
+        // Upload directly from bytes on web
         await storageRef.putData(file.bytes!);
-
-        // Optionally, get the download URL
-        String downloadURL = await storageRef.getDownloadURL();
-        bannerImageUrl.value = downloadURL;
-        print('File uploaded successfully! Download URL: $downloadURL');
-        saveProfile(context);
-      } catch (e) {
-        print('Error uploading file: $e');
+      } else {
+        // Convert file path to a `File` object on mobile
+        final localFile = File(file.path!);
+        await storageRef.putFile(localFile);
       }
-    } else {
-      print('No file selected.');
+
+      // Get the download URL after successful upload
+      String downloadURL = await storageRef.getDownloadURL();
+      bannerImageUrl.value = downloadURL;
+      print('Banner uploaded successfully! Download URL: $downloadURL');
+      saveProfile(context);
+    } catch (e) {
+      print('Error uploading banner: $e');
     }
+  } else {
+    print('No file selected.');
   }
+}
+
 
   //DELETE
   Future<void> deleteAccount(BuildContext context) async {

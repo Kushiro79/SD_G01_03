@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../../routes/app_router.dart';
 import '../Home_page/home_screen.dart';
+import '../login_screen/views/login_screen_view.dart';
 
 @RoutePage()
 class SettingsPage extends StatefulWidget {
@@ -194,7 +195,7 @@ class SettingsPageState extends State<SettingsPage> {
                               await FirebaseAuth.instance.signOut();
                               Get.reset(); // Reset all GetX controllers
                               print('Log out successfully');
-                              context.router.replace(LoginRouteView());
+                              context.router.replaceAll([LoginRouteView()]);
                             } catch (e) {
                               print('Error logging out: ${e.toString()}');
                             }

@@ -23,12 +23,20 @@ class LoginScreenController extends GetxController {
   String get passwordErrorText => _passwordErrorText.value;
 
   void updateEmail(String value) {
-    _emailController.text = value;
+    String trimmedValue = value.trim();
+    _emailController.text = trimmedValue;
     //isValidEmail.value = isEmail(value);
-    bool validEmail = isEmail(value);
+    bool validEmail = isEmail(trimmedValue);
     print('email: $value, valid: $validEmail'); //debug test
     isValidEmail.value = validEmail;
     update();
+  }
+
+   @override
+  void onClose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.onClose();
   }
 
   /*bool isPassValid(String password){
@@ -49,12 +57,12 @@ class LoginScreenController extends GetxController {
   //TODO: Implement LoginScreenController
 
   final count = 0.obs;
-  bool showPassword = true;
+  RxBool showPassword = true.obs;
 
   void increment() => count.value++;
 
   changePasswordhideAndShow() {
-    showPassword = !showPassword;
+    showPassword.value = !showPassword.value;
     update();
   }
 
@@ -105,6 +113,10 @@ class LoginScreenController extends GetxController {
             .get();
 
         String role = userDoc.get('role');
+
+        
+        _emailController.clear();
+        _passwordController.clear();
 
         if (context.mounted) {
           if (role == 'user') {

@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/foundation.dart'
     show kIsWeb; //to check if the app is running on the web
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'dart:io' as io; // to check if the app running on app
 
 import '../../../utils/custom_toast.dart';
@@ -19,7 +20,7 @@ class RegisterController extends GetxController {
 
   final count = 0.obs;
 
-  bool showPassword = true;
+  RxBool showPassword = true.obs;
 
   void increment() => count.value++;
 
@@ -49,9 +50,10 @@ Future<bool> checkUsernameExists(String username) async {
 
 
   void updateEmail(String value) {
-    _emailController.text = value;
+    String trimmedValue = value.trim();
+    _emailController.text = trimmedValue;
     //isValidEmail.value = isEmail(value);
-    bool validEmail = isEmail(value);
+    bool validEmail = isEmail(trimmedValue);
     print('email: $value, valid: $validEmail'); //debug test
     isValidEmail.value = validEmail;
     update();
@@ -73,7 +75,7 @@ Future<bool> checkUsernameExists(String username) async {
   }
 
   changePasswordhideAndShow() {
-    showPassword = !showPassword;
+    showPassword.value = !showPassword.value;
     update();
   }
 

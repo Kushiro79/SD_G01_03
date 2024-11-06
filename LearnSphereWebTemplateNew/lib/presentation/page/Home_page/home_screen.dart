@@ -892,7 +892,7 @@ Widget thePost({
                 IconButton(
                   icon: const Icon(Icons.thumb_up, color: Colors.white),
                   onPressed: () {
-                    homeController.toggleLike(userId, postId);
+                    homeController.toggleLike(uid, postId);
                   },
                 ),
                 IconButton(
