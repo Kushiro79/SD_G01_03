@@ -135,3 +135,5 @@ class LoginScreenController extends GetxController {
     _passwordController.text = value;
   }
 }
+
+

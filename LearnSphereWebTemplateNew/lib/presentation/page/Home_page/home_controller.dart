@@ -8,23 +8,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 import 'package:file_picker/file_picker.dart';
-
+import 'package:video_player/video_player.dart';
 import 'package:share_plus/share_plus.dart';
 import '../profile_page/controllers/edit_profile_controller.dart';
+import 'dart:io';
+import 'package:path/path.dart' as path;
 
 class HomeController extends GetxController {
   final postText = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
   var pickedMedia = <Map<String, dynamic>>[].obs;
+  RxList<PlatformFile> pickedFile = RxList<PlatformFile>();
   RxBool isStaffOrAdmin = false.obs;
   RxBool isAtProfilePage = false.obs;
   var comments = <Map<String, dynamic>>[].obs;
-
-
-  void addFile(Uint8List bytes, String type) {
-    pickedMedia.add({"bytes": bytes, "type": type});
-  }
+  RxList certificates = <Map<String, dynamic>>[].obs;
 
   @override
   void onReady() {
@@ -85,88 +84,252 @@ class HomeController extends GetxController {
             .where('isRead', isEqualTo: false)
             .snapshots()
             .listen((commentSnapshot) {
-          
-            comments.value = commentSnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+          comments.value = commentSnapshot.docs
+              .map((doc) => doc.data() as Map<String, dynamic>)
+              .toList();
         });
       });
     });
   }
 
- Widget buildHoverableImages(HomeController homeController) {
-  return Obx(() {
-    if (homeController.pickedMedia.isEmpty) {
-      return const SizedBox(); // No media to display
+  Future<void> checkUserCertificate(String userId) async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    try {
+      // Replace 'userUID' with the actual user's UID and 'certificate' with the correct collection path
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('qualificationRequests')
+          .doc('approvedCertificates')
+          .collection('users')
+          .doc(userId)
+          .collection('certificates')
+          .get();
+
+      // Map through the documents and add them to the list
+      certificates.value = snapshot.docs.map((doc) {
+        return {
+          'id': doc.id, // Document ID
+          ...doc.data() as Map<String, dynamic>,
+        };
+      }).toList();
+
+      print(certificates);
+    } catch (e) {
+      print('Error fetching certificates: $e');
     }
+  }
+
+  getColorBasedOnContent(String certificate) {
+    if (certificate == 'High School') {
+      return Colors.green;
+    } else if (certificate == 'Diploma') {
+      return Colors.blue;
+    } else if (certificate == 'Degree') {
+      return Colors.orange;
+    } else if (certificate == 'Masters') {
+      return Colors.yellow;
+    } else if (certificate == 'PhD') {
+      return Colors.red;
+    } else {
+      return Colors.grey;
+    }
+  }
+
+  void addFile(Uint8List bytes, String type) {
+    pickedMedia.add({"bytes": bytes, "type": type});
+  }
+
+  Future selectImageAndroid() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: true,
+    );
+    if (result == null) return;
+
+    pickedFile.addAll(result.files);
+  }
+
+  Future selectImageDesktop() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: true,
+    );
+    if (result == null) return;
+
+    for (var file in result.files) {
+      if (file.bytes != null) {
+        // Determine if file is image or video based on extension
+        final isImage = ['jpg', 'png', 'jpeg'].contains(file.extension);
+        addFile(file.bytes!, isImage ? 'image' : 'video');
+      }
+    }
+  }
+
+  Future selectVideoAndroid() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+      allowMultiple: true,
+    );
+    if (result == null) return;
+
+    pickedFile.addAll(result.files);
+  }
+
+  Future selectVideoDesktop() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+      allowMultiple: true,
+    );
+    if (result == null) return;
+
+    for (var file in result.files) {
+      if (file.bytes != null) {
+        // Determine if file is image or video based on extension
+        final isImage = ['jpg', 'png', 'jpeg'].contains(file.extension);
+        addFile(file.bytes!, isImage ? 'image' : 'video');
+      }
+    }
+  }
+
+  Widget buildHoverableImagesDesktop(HomeController homeController) {
+    return Obx(() {
+      return Wrap(
+        spacing: 8.0, // Spacing between items
+        runSpacing: 8.0,
+        children: homeController.pickedMedia.asMap().entries.map((entry) {
+          int index = entry.key;
+          Map<String, dynamic> media = entry.value;
+          Uint8List mediaData = media["bytes"];
+          String mediaType = media["type"];
+          final isVisible = false.obs; // Track visibility of the close button
+
+          return GestureDetector(
+            onTap: () {
+              isVisible.value = !isVisible
+                  .value; // Toggle visibility of the close button on tap
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Display the image or video icon
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: mediaType == 'image'
+                      ? Image.memory(
+                          mediaData,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          width: 100,
+                          height: 100,
+                          color: Colors.grey[800],
+                          child: const Icon(
+                            Icons.videocam,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                ),
+                // Display the overlay 'X' button to remove the item
+                Obx(() => Visibility(
+                      visible: isVisible.value,
+                      child: Positioned(
+                        top: 8,
+                        right: 8,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Remove the media from the list
+                            homeController.pickedMedia.removeAt(index);
+                            isVisible.value =
+                                false; // Hide the button after removal
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }).toList(),
+      );
+    });
+  }
+
+  Widget buildHoverableImages(HomeController homeController) {
+  return Obx(() {
+    final pickedFiles = homeController.pickedFile.value; // List of selected files
 
     return Wrap(
       spacing: 8.0, // Spacing between items
       runSpacing: 8.0,
-      children: homeController.pickedMedia.asMap().entries.map((entry) {
-        int index = entry.key;
-        Uint8List mediaData = entry.value["bytes"];
-        String mediaType = entry.value["type"];
-        final isVisible = false.obs; // Track visibility of the close button
-
-        return GestureDetector(
-          onTap: () {
-            isVisible.value = !isVisible.value; // Toggle visibility on tap
-          },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Display the image or video icon
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: mediaType == 'image'
-                    ? Image.memory(
-                        mediaData,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.grey[800],
-                        child: Icon(
-                          Icons.videocam,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      ),
-              ),
-              // Display the overlay 'X' button
-              Obx(() => Visibility(
-                    visible: isVisible.value,
-                    child: Positioned(
-                      top: 8,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: () {
-                          // Remove the media from the list
-                          homeController.pickedMedia.removeAt(index);
-                          isVisible.value = false; // Hide the button after removal
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )),
-            ],
+      children: pickedFiles.map((file) {
+        return Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: _getMediaWidget(file), // Assuming _getMediaWidget handles media type
           ),
         );
       }).toList(),
     );
   });
+}
+
+
+  Widget _getMediaWidget(PlatformFile file) {
+  final fileExtension = path.extension(file.path!).toLowerCase();
+
+  // Check if the file is an image based on the extension
+  if (fileExtension == '.jpg' ||
+      fileExtension == '.jpeg' ||
+      fileExtension == '.png' ||
+      fileExtension == '.gif') {
+    // It's an image
+    return Image.file(
+      File(file.path!),
+      width: 100,
+      height: 100,
+      fit: BoxFit.cover,
+    );
+  } else if (fileExtension == '.mp4' ||
+      fileExtension == '.mov' ||
+      fileExtension == '.avi' ||
+      fileExtension == '.mkv') {
+    // It's a video, display a video icon or placeholder
+    return Container(
+      width: 100,
+      height: 100,
+      color: Colors.grey[800],
+      child: const Icon(
+        Icons.videocam,
+        color: Colors.white,
+        size: 40,
+      ),
+    );
+  } else {
+    // Handle other media types or show a placeholder
+    return Container(
+      width: 100,
+      height: 100,
+      color: Colors.grey[800],
+      child: const Icon(
+        Icons.file_copy,
+        color: Colors.white,
+        size: 40,
+      ),
+    );
+  }
 }
 
 
@@ -219,6 +382,26 @@ class HomeController extends GetxController {
         mediaUrls.add(downloadUrl);
       }
 
+      for (var file in pickedFile) {
+      String filePath = file.path!;
+      File localFile = File(filePath);
+
+
+      Uint8List fileBytes = await localFile.readAsBytes(); // Read the file as bytes
+      String fileExtension = path.extension(file.path!).toLowerCase();
+      String fileName =
+          '${userId}_${DateTime.now().millisecondsSinceEpoch}.${fileExtension == '.mp4' ? 'mp4' : 'jpg'}';
+
+      // Upload to Firebase Storage
+      Reference storageRef = FirebaseStorage.instance.ref().child('uploads/$fileName');
+      UploadTask uploadTask = storageRef.putData(fileBytes);
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      // Get the download URL after successful upload
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      mediaUrls.add(downloadUrl);
+    }
+
       // Add the post document to Firestore with media URLs
       await FirebaseFirestore.instance
           .collection('posts')
@@ -226,7 +409,7 @@ class HomeController extends GetxController {
           .collection('myPosts')
           .add({
         'profileImageUrl': editController.profileImageUrl.value,
-        'uid' : userId,
+        'uid': userId,
         'Username': username.value,
         'Text': postText.text,
         'certificate': editController.certificate.value,
@@ -240,6 +423,8 @@ class HomeController extends GetxController {
 
       // Optionally clear the picked media after posting
       pickedMedia.clear();
+      pickedFile.clear();
+      postText.clear();
     } else {
       print('Please enter some text');
     }
@@ -330,62 +515,59 @@ class HomeController extends GetxController {
   }
 
   Future<void> deletePost(String uid, String postId) async {
-  User? currentUser  = FirebaseAuth.instance.currentUser ;
-  if (currentUser  == null) {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
       _showDialog('Error', 'User  not authenticated', Colors.red);
       return;
     }
-  try {
-    // Fetch the user document for the post owner
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .get();
-    // Check if the user exists
-    if (!userSnapshot.exists) {
-      print("User does not exist");
-      return;
+    try {
+      // Fetch the user document for the post owner
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      // Check if the user exists
+      if (!userSnapshot.exists) {
+        print("User does not exist");
+        return;
+      }
+      print("Post exists. Deleting post...");
+
+      // Fetch the post document for the user who owns the post
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(uid) // Use the UID to find the user's posts
+          .collection('myPosts')
+          .doc(postId)
+          .delete();
+
+      print("Delete successful...");
+    } catch (e) {
+      print("Error deleting post: $e");
     }
-    print("Post exists. Deleting post...");
-
-    // Fetch the post document for the user who owns the post
-    await FirebaseFirestore.instance
-        .collection('posts')
-        .doc(uid) // Use the UID to find the user's posts
-        .collection('myPosts')
-        .doc(postId)
-        .delete();
-    
-    print("Delete successful...");
-
-  } catch (e) {
-    print("Error deleting post: $e");
   }
-}
 
 // Function to show dialog
-void _showDialog(String title, String content, Color titleColor) {
-  showDialog(
-    context: Get.context!,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: Colors.transparent.withOpacity(0.13),
-        title: Text(title, style: TextStyle(color: titleColor)),
-        content: Text(content, style: TextStyle(color: Colors.white)),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text('OK', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      );
-    },
-  );
-}
+  void _showDialog(String title, String content, Color titleColor) {
+    showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent.withOpacity(0.13),
+          title: Text(title, style: TextStyle(color: titleColor)),
+          content: Text(content, style: TextStyle(color: Colors.white)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('OK', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-void sharePost(String postText, List<String> mediaUrls) {
+  void sharePost(String postText, List<String> mediaUrls) {
     String content = postText; // Prepare the content to share
 
     if (mediaUrls.isNotEmpty) {
@@ -395,8 +577,8 @@ void sharePost(String postText, List<String> mediaUrls) {
     Share.share(content, subject: 'Check out this post!');
   }
 
-  
-Future<void> reportPost(String postId, String userId, {String? reason}) async {
+  Future<void> reportPost(String postId, String userId,
+      {String? reason}) async {
     // Firestore operation (make sure this is awaited)
     await firestore.collection('report_post').add({
       'postId': postId,
@@ -419,33 +601,62 @@ Future<void> reportPost(String postId, String userId, {String? reason}) async {
 
     final postSnapshot = await postRef.get();
 
-
-
     final List<dynamic> likes = postSnapshot['likes'] ?? [];
 
-    if(!postSnapshot.exists){
+    if (!postSnapshot.exists) {
       print('Post does not exist');
       return;
     }
 
     if (likes.contains(currentUserId)) {
-        // If the user has already liked the post, remove their ID from the array
-        await postRef.update({
-            'likes': FieldValue.arrayRemove([currentUserId])
-        });
+      // If the user has already liked the post, remove their ID from the array
+      await postRef.update({
+        'likes': FieldValue.arrayRemove([currentUserId])
+      });
     } else {
-        // If the user has not liked the post, add their ID to the array
-        await postRef.update({
-            'likes': FieldValue.arrayUnion([currentUserId])
-        });
+      // If the user has not liked the post, add their ID to the array
+      await postRef.update({
+        'likes': FieldValue.arrayUnion([currentUserId])
+      });
     }
-
-
-   
   }
-
-
-
 }
 
+class VideoPreview extends StatefulWidget {
+  final String? filePath;
 
+  const VideoPreview({Key? key, required this.filePath}) : super(key: key);
+
+  @override
+  _VideoPreviewState createState() => _VideoPreviewState();
+}
+
+class _VideoPreviewState extends State<VideoPreview> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.file(File(widget.filePath!))
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.setLooping(true);
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          )
+        : const Center(child: CircularProgressIndicator());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+}

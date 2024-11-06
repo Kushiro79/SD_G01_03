@@ -2,6 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+
+import '../Home_page/home_controller.dart';
 
 class CommentScreen extends StatefulWidget {
   final String postId;
@@ -63,6 +66,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    HomeController homeController = Get.put(HomeController());
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -109,6 +113,115 @@ class _CommentScreenState extends State<CommentScreen> {
                       return ListTile(
                         title: Text(commentDoc['commentText'], style: const TextStyle(color: Colors.white)),
                         subtitle: Text(commentDoc['user'], style: const TextStyle(color: Colors.white60),),
+                        trailing: ElevatedButton.icon(
+                  onPressed: () {
+                    homeController.checkUserCertificate(commentDoc['uid']);
+                    // Show alert dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor:
+                              const Color(0xFF1A1F3B), // Dialog background
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          title: const Text(
+                            'Verified Qualifications',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          content: Obx(() {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.verified_user,
+                                      color: Colors.greenAccent,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'Verified Qualifications',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                if (homeController.certificates.isEmpty)
+                                  const Text(
+                                    'No certificates found.',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                ...homeController.certificates
+                                    .map((certificate) {
+                                  return ListTile(
+                                    title: Text(
+                                      certificate['fieldOfStudy'] ??
+                                          'Unknown Field of Study',
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          certificate['levelOfEducation'] ??
+                                              'Unknown Level of Education',
+                                          style: TextStyle(
+                                            color: homeController
+                                                .getColorBasedOnContent(
+                                                    certificate[
+                                                        'levelOfEducation']),
+                                          ),
+                                        ),
+                                        Text(
+                                          certificate['institutionName'] ??
+                                              'Unknown Institution',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            );
+                          }),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pop(); // Closes the dialog
+                              },
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(color: Color(0xFF117aca)),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.shield_rounded),
+                  label: const SizedBox
+                      .shrink(), // Hide label for a circular button
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(16),
+                    backgroundColor: const Color(0xFF1A1F3B),
+                    foregroundColor: const Color(0xFF117aca),
+                  ),
+                ),
                       );
                     },
                   );

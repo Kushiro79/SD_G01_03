@@ -12,7 +12,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFf5f5f5),
+    backgroundColor: const Color(0xFF1A1F3B),
       body: ListView(
         padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width / 8),
@@ -64,13 +64,13 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 490,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
                     'assets/forgot_ui.png',
-                    width: 500,
+                    width: MediaQuery.of(context).size.width * 0.4,
+
                   ),
                 ],
               ),
@@ -79,7 +79,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height / 10),
               child: SizedBox(
-                width: 320,
+                width: MediaQuery.of(context).size.width * 0.2,
                 child: _formForgot(context),
               ),
             ),
@@ -91,7 +91,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
           children: [
             Image.asset(
               'assets/forgot_ui.png',
-              width: constraints.maxWidth * 0.7, // Adjust image width
+              width: constraints.maxWidth * 0.9, // Adjust image width
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -120,6 +120,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             style: TextStyle(
               fontSize: 35,
               fontWeight: FontWeight.bold,
+              color : Colors.white,
             ),
           ),
         ),
@@ -199,9 +200,9 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: Colors.deepPurple[100]!,
+                color: Color(0xFF117aca),
                 spreadRadius: 10,
                 blurRadius: 20,
               ),

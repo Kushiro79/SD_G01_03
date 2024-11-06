@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +12,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
-
+import 'dart:io' show Platform;
 import '../profile_page/controllers/edit_profile_controller.dart';
 import '../../theme/gen/assets.gen.dart';
 import '../../routes/app_router.dart';
 import '../../page/discover_page/discover_page.dart';
 import '../comment_post/comment_screen.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 @RoutePage()
 class MyHomePage extends GetView<HomeController> {
   MyHomePage({super.key});
@@ -383,7 +382,13 @@ Widget _buildPost() {
                         ],
                       ),
                     ),
-                    homeController.buildHoverableImages(homeController),
+                    kIsWeb
+                        // If the platform is Web
+                        ?homeController.buildHoverableImagesDesktop(homeController)
+     
+                        // If the platform is Android
+                        : homeController.buildHoverableImages(homeController),
+
                     // Row for multiple icons (e.g., pictures, videos)
                     Row(
                       mainAxisAlignment:
@@ -392,24 +397,12 @@ Widget _buildPost() {
                         IconButton(
                           onPressed: () async {
                             // Handle photos action
-                            final result = await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: [
-                                'jpg',
-                                'png',
-                                'jpeg',
-                              ],
-                            );
-                            if (result == null) return;
-
-                            for (var file in result.files) {
-                              if (file.bytes != null) {
-                                // Determine if file is image or video based on extension
-                                final isImage = ['jpg', 'png', 'jpeg']
-                                    .contains(file.extension);
-                                homeController.addFile(
-                                    file.bytes!, isImage ? 'image' : 'video');
-                              }
+                            if (kIsWeb) {
+                              // If the platform is Web
+                              homeController.selectImageDesktop();
+                            } else {
+                              // If the platform is Android
+                              homeController.selectImageAndroid();
                             }
                           },
                           icon: const Icon(
@@ -420,20 +413,12 @@ Widget _buildPost() {
                         IconButton(
                           onPressed: () async {
                             // Handle videos action
-                            final result = await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ['mp4'],
-                            );
-                            if (result == null) return;
-
-                            for (var file in result.files) {
-                              if (file.bytes != null) {
-                                // Determine if file is image or video based on extension
-                                final isImage = ['jpg', 'png', 'jpeg']
-                                    .contains(file.extension);
-                                homeController.addFile(
-                                    file.bytes!, isImage ? 'image' : 'video');
-                              }
+                            if (kIsWeb) {
+                              // If the platform is Web
+                              homeController.selectVideoDesktop();
+                            } else {
+                              // If the platform is Android
+                              homeController.selectVideoAndroid();
                             }
                           },
                           icon: const Icon(
@@ -544,6 +529,9 @@ Widget thePost({
   required int likesCount,
 }) {
   HomeController homeController = Get.put(HomeController());
+  EditProfileController editController = Get.put(EditProfileController());
+  ProfileScreenController profileController =
+      Get.put(ProfileScreenController());
 
   return Container(
     width: MediaQuery.of(context).size.width > 850
@@ -597,13 +585,124 @@ Widget thePost({
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    homeController.checkUserCertificate(uid);
+                    // Show alert dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor:
+                              const Color(0xFF1A1F3B), // Dialog background
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          title: const Text(
+                            'Verified Qualifications',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          content: Obx(() {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.verified_user,
+                                      color: Colors.greenAccent,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'Verified Qualifications',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                if (homeController.certificates.isEmpty)
+                                  const Text(
+                                    'No certificates found.',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                ...homeController.certificates
+                                    .map((certificate) {
+                                  return ListTile(
+                                    title: Text(
+                                      certificate['fieldOfStudy'] ??
+                                          'Unknown Field of Study',
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          certificate['levelOfEducation'] ??
+                                              'Unknown Level of Education',
+                                          style: TextStyle(
+                                            color: homeController
+                                                .getColorBasedOnContent(
+                                                    certificate[
+                                                        'levelOfEducation']),
+                                          ),
+                                        ),
+                                        Text(
+                                          certificate['institutionName'] ??
+                                              'Unknown Institution',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            );
+                          }),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pop(); // Closes the dialog
+                              },
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(color: Color(0xFF117aca)),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.shield_rounded),
+                  label: const SizedBox
+                      .shrink(), // Hide label for a circular button
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(16),
+                    backgroundColor: const Color(0xFF1A1F3B),
+                    foregroundColor: const Color(0xFF117aca),
+                  ),
+                ),
+
                 const Spacer(),
                 // Optional Menu for Admin/Staff
                 Obx(() {
                   return homeController.isStaffOrAdmin.value ||
-                          homeController.isAtProfilePage.value
+                          userId == uid 
                       ? PopupMenuButton<String>(
-                          icon: const Icon(Icons.more_vert, color: Colors.white),
+                          icon:
+                              const Icon(Icons.more_vert, color: Colors.white),
                           onSelected: (value) {
                             if (value == 'Delete') {
                               showDialog(
@@ -681,7 +780,8 @@ Widget thePost({
                           showDialog(
                             context: context,
                             builder: (_) => Dialog(
-                              backgroundColor: Colors.transparent.withOpacity(0.8),
+                              backgroundColor:
+                                  Colors.transparent.withOpacity(0.8),
                               insetPadding: EdgeInsets.zero,
                               child: Stack(
                                 children: [
@@ -699,7 +799,8 @@ Widget thePost({
                                     top: 20,
                                     right: 20,
                                     child: IconButton(
-                                      icon: const Icon(Icons.close, color: Colors.white),
+                                      icon: const Icon(Icons.close,
+                                          color: Colors.white),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
@@ -754,17 +855,21 @@ Widget thePost({
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Text(
                     'Likes $likesCount',
                     style: const TextStyle(
-                        color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Text(
-                    DateFormat('dd-MM-yyyy hh:mm:ss').format(timestamp.toDate()),
+                    DateFormat('dd-MM-yyyy hh:mm:ss')
+                        .format(timestamp.toDate()),
                     style: const TextStyle(color: Colors.white60, fontSize: 10),
                   ),
                 ),
@@ -804,7 +909,8 @@ Widget thePost({
                                   horizontal:
                                       MediaQuery.of(context).size.width * 0.3,
                                   vertical: 15)
-                              : EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                              : EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
                           backgroundColor: Colors.transparent,
                           child: CommentScreen(postId: postId),
                         );
@@ -821,50 +927,58 @@ Widget thePost({
                 IconButton(
                   icon: const Icon(Icons.report, color: Colors.red),
                   onPressed: () {
-                    TextEditingController reasonController = TextEditingController();
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    backgroundColor: Colors.black,
-                    title: const Text("Report Post", style: TextStyle(color: Colors.white)),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text("Are you sure you want to report this post?", style: TextStyle(color: Colors.white)),
-                        const SizedBox(height: 10),
-                        TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: reasonController,
-                          decoration: const InputDecoration(
-                            labelText: "Reason (required)",
-                            labelStyle: TextStyle(color: Colors.white),
-                            hintStyle: TextStyle(color: Colors.white),
-                          ),
+                    TextEditingController reasonController =
+                        TextEditingController();
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: Colors.black,
+                        title: const Text("Report Post",
+                            style: TextStyle(color: Colors.white)),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                                "Are you sure you want to report this post?",
+                                style: TextStyle(color: Colors.white)),
+                            const SizedBox(height: 10),
+                            TextField(
+                              style: const TextStyle(color: Colors.white),
+                              controller: reasonController,
+                              decoration: const InputDecoration(
+                                labelText: "Reason (required)",
+                                labelStyle: TextStyle(color: Colors.white),
+                                hintStyle: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () async {
-                          if (reasonController.text.isNotEmpty) {
-                            await reportPost(context, postId, userId, reason: reasonController.text);
-                            Navigator.of(context).pop();
-                            reasonController.clear();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Please enter a reason.")),
-                            );
-                          }
-                        },
-                        child: const Text("Yes", style: TextStyle(color: Colors.white)),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              if (reasonController.text.isNotEmpty) {
+                                await reportPost(context, postId, userId,
+                                    reason: reasonController.text);
+                                Navigator.of(context).pop();
+                                reasonController.clear();
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Please enter a reason.")),
+                                );
+                              }
+                            },
+                            child: const Text("Yes",
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text("No",
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("No", style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
-                  ),
-                );
+                    );
                   },
                 ),
               ],
@@ -875,8 +989,6 @@ Widget thePost({
     ),
   );
 }
-
-
 
 Future<void> reportPost(BuildContext context, String postId, String userId,
     {String? reason}) async {

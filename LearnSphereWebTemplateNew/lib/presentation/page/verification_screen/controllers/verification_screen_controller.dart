@@ -13,15 +13,10 @@ class VerificationScreenController extends GetxController {
     await user
         ?.reload(); // Reload user data to get the latest email verification status
     if (user != null){
-      if (user.emailVerified == true) {
       context.router.push(const UploadAcademicQualificationsRoute());
-    } else {
-      showCustomToast(context, 'Please verify your email');
-    }
-    }else{
-      Get.snackbar('Error', 'User not found');
-    }
+   
     
+  }
   }
 
   Future<void> resendVerificationEmail() async {
