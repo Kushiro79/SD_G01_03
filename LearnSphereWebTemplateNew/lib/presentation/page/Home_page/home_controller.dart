@@ -24,6 +24,7 @@ class HomeController extends GetxController {
   RxBool isAtProfilePage = false.obs;
   var comments = <Map<String, dynamic>>[].obs;
   RxList certificates = <Map<String, dynamic>>[].obs;
+  String postUid = '';
 
   @override
   void onReady() {
@@ -31,6 +32,7 @@ class HomeController extends GetxController {
     userUsername();
     checkUserRole();
     _fetchComments();
+    getUserProfilePicture(postUid);
   }
 
   var selectIndex = [];
@@ -59,6 +61,25 @@ class HomeController extends GetxController {
     }
     update();
   }
+
+  Future<String> getUserProfilePicture(String uid) async {
+  try {
+    // Get the user document by uid
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get();
+
+    // Check if the document exists and contains the imageUrl field
+    if (userSnapshot.exists && userSnapshot.data() != null) {
+      var userData = userSnapshot.data() as Map<String, dynamic>;
+      return userData['profileImageUrl'] ?? '';  // Return imageUrl if available
+    }
+  } catch (e) {
+    print("Error getting user profile picture: $e");
+  }
+  return '';  // Return an empty string if not found or there's an error
+}
 
   void changeText(String value) {
     postText.text = value; // Update the controller's text
@@ -436,64 +457,75 @@ class HomeController extends GetxController {
     }
   }
 
-  Stream<List<DocumentSnapshot>> getPostsStream(String userId) async* {
-    await checkUserRole();
-    //Step 1: Create a list to hold streams of posts
-    List<Stream<List<DocumentSnapshot>>> streams = [];
+Stream<List<DocumentSnapshot>> getPostsStream(String userId) async* {
+  await checkUserRole();
+  // Step 1: Create a list to hold streams of posts
+  List<Stream<List<DocumentSnapshot>>> streams = [];
 
-    if (isStaffOrAdmin.value == true) {
-      print('Admin/Staff detected. Loading posts from all users.');
+  if (isStaffOrAdmin.value == true) {
+    print('Admin/Staff detected. Loading posts from all users.');
 
-      // If the user is an admin or staff, add all users' post streams
-      QuerySnapshot allUsers =
-          await FirebaseFirestore.instance.collection('users').get();
+    // If the user is an admin or staff, add all users' post streams
+    QuerySnapshot allUsers =
+        await FirebaseFirestore.instance.collection('users').get();
 
-      for (var user in allUsers.docs) {
-        String userId = user.id;
-        streams.add(FirebaseFirestore.instance
-            .collection('posts')
-            .doc(userId)
-            .collection('myPosts')
-            .orderBy('Timestamp', descending: true)
-            .snapshots()
-            .map((snapshot) => snapshot.docs));
-      }
-    } else {
-      // Step 1: Get the list of user IDs the current user is following
-      DocumentSnapshot followingDoc = await FirebaseFirestore.instance
-          .collection('following')
+    for (var user in allUsers.docs) {
+      String userId = user.id;
+      streams.add(FirebaseFirestore.instance
+          .collection('posts')
           .doc(userId)
-          .get();
+          .collection('myPosts')
+          .orderBy('Timestamp', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs));
+    }
+  } else {
+    // Step 1: Get the list of user IDs the current user is following
+    DocumentSnapshot followingDoc = await FirebaseFirestore.instance
+        .collection('following')
+        .doc(userId)
+        .get();
 
-      List<String> followingList =
-          List<String>.from(followingDoc['followedUsers'] ?? []);
+    List<String> followingList =
+        List<String>.from(followingDoc['followedUsers'] ?? []);
 
-      // Add the current user's posts to the list of streams
+    // Add the current user's posts to the list of streams
+    streams.add(FirebaseFirestore.instance
+        .collection("posts")
+        .doc(userId)
+        .collection('myPosts')
+        .orderBy("Timestamp", descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs));
+
+    // Step 3: For each followed user, get their posts
+    for (String followingUserId in followingList) {
       streams.add(FirebaseFirestore.instance
           .collection("posts")
-          .doc(userId)
+          .doc(followingUserId)
           .collection('myPosts')
           .orderBy("Timestamp", descending: true)
           .snapshots()
           .map((snapshot) => snapshot.docs));
-
-      // Step 3: For each followed user, get their posts
-      for (String followingUserId in followingList) {
-        streams.add(FirebaseFirestore.instance
-            .collection("posts")
-            .doc(followingUserId)
-            .collection('myPosts')
-            .orderBy("Timestamp", descending: true)
-            .snapshots()
-            .map((snapshot) => snapshot.docs));
-      }
     }
-    // Step 4: Combine all the streams into a single stream
-    yield* rxdart.Rx.combineLatest(streams, (values) {
-      // Flatten the list of lists into a single list
-      return values.expand((list) => list).toList();
-    });
   }
+
+  // Step 4: Combine all the streams into a single stream
+  yield* rxdart.Rx.combineLatest(streams, (List<List<DocumentSnapshot>> values) {
+    // Flatten the list of lists into a single list
+    var allPosts = values.expand((list) => list).toList();
+    
+    // Sort the posts by Timestamp (descending order)
+    allPosts.sort((a, b) {
+      Timestamp timestampA = a['Timestamp'];
+      Timestamp timestampB = b['Timestamp'];
+      return timestampB.compareTo(timestampA); // Sorting by descending order
+    });
+
+    return allPosts; // Return the sorted list of posts
+  });
+}
+
 
   Future<void> checkUserRole() async {
     final user = FirebaseAuth.instance.currentUser;

@@ -78,98 +78,91 @@ class ViewAcademicQualificationsPage
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-            title: const Text('Qualification Details'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Text('Name: ${qualification['name']}'),
-                  Text('Education: ${qualification['levelOfEducation']}'),
-                  Text('Field of Study: ${qualification['fieldOfStudy']}'),
-                  Text('Institution: ${qualification['institutionName']}'),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () async {
-                      final urlString = qualification['certificateUrl'];
-                      Uri url = Uri.parse(urlString);
-                      print(url);
-                      if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    }
-                                        },
-                    child: const Text('View Certificate'),
-                  )
-                ],
+        return  SizedBox(
+          width: MediaQuery.of(context).size.width > 850 ?MediaQuery.of(context).size.width * 0.3 : MediaQuery.of(context).size.width * 0.9,
+          child: AlertDialog(
+              title: const Text('Qualification Details'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    Text('Name: ${qualification['name']}'),
+                    Text('Education: ${qualification['levelOfEducation']}'),
+                    Text('Field of Study: ${qualification['fieldOfStudy']}'),
+                    Text('Institution: ${qualification['institutionName']}'),
+                    Wrap(children: [SelectableText('Certificate URL: ${qualification['certificateUrl']}')],),
+                    
+                  ],
+                ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  bool isSuccess = await controller.approveQualification(
-                      qualification['qualificationId'],
-                      qualification['userId']);
-                  Navigator.pop(context); // Close the previous dialog
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        icon: Icon(
-                          isSuccess ? Icons.check_rounded : Icons.close_rounded,
-                          color:
-                              isSuccess ? Colors.greenAccent : Colors.redAccent,
-                        ),
-                        title: Text(isSuccess ? 'Success' : 'Error'),
-                        content: Text(isSuccess
-                            ? 'Qualification approved successfully.'
-                            : 'Failed to approve qualification.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Close'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    bool isSuccess = await controller.approveQualification(
+                        qualification['qualificationId'],
+                        qualification['userId']);
+                    Navigator.pop(context); // Close the previous dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          icon: Icon(
+                            isSuccess ? Icons.check_rounded : Icons.close_rounded,
+                            color:
+                                isSuccess ? Colors.greenAccent : Colors.redAccent,
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: const Text('Approve'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  bool isSuccess = await controller.rejectQualification(
-                      qualification['qualificationId'],
-                      qualification['userId']);
-                  Navigator.pop(context); // Close the previous dialog
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        icon: Icon(
-                          isSuccess ? Icons.check_rounded : Icons.close_rounded,
-                          color:
-                              isSuccess ? Colors.greenAccent : Colors.redAccent,
-                        ),
-                        title: Text(isSuccess ? 'Success' : 'Error'),
-                        content: Text(isSuccess
-                            ? 'Qualification rejected successfully.'
-                            : 'Failed to reject qualification.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Close'),
+                          title: Text(isSuccess ? 'Success' : 'Error'),
+                          content: Text(isSuccess
+                              ? 'Qualification approved successfully.'
+                              : 'Failed to approve qualification.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Approve'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    bool isSuccess = await controller.rejectQualification(
+                        qualification['qualificationId'],
+                        qualification['userId']);
+                    Navigator.pop(context); // Close the previous dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          icon: Icon(
+                            isSuccess ? Icons.check_rounded : Icons.close_rounded,
+                            color:
+                                isSuccess ? Colors.greenAccent : Colors.redAccent,
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: const Text('Reject'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
-              ),
-            ]);
+                          title: Text(isSuccess ? 'Success' : 'Error'),
+                          content: Text(isSuccess
+                              ? 'Qualification rejected successfully.'
+                              : 'Failed to reject qualification.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Reject'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ]),
+        );
       },
     );
   }

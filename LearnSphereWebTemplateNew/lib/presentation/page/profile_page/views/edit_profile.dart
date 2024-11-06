@@ -164,50 +164,52 @@ class EditProfilePage extends GetView<EditProfileController> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
-    Card(
-      color: Colors.transparent.withOpacity(0.13),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Obx(() {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Username: ${controller.username.value}',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Email: ${controller.email.value}',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 32),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF117aca),
-                    ),
-                    onPressed: () {
-                      controller.showEditDialog(context);
-                    },
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    label: const Text('Change', style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              );
-            }),
-          ],
-        ),
-      ),
-    ),
-  
-
-  // Method to show the edit dialog
-  
-
+                          Card(
+                            color: Colors.transparent.withOpacity(0.13),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Obx(() {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Username: ${controller.username.value}',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'Email: ${controller.email.value}',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 32),
+                                        ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xFF117aca),
+                                          ),
+                                          onPressed: () {
+                                            controller.showEditDialog(context);
+                                          },
+                                          icon: const Icon(Icons.edit,
+                                              color: Colors.white),
+                                          label: const Text('Change',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Method to show the edit dialog
                           const SizedBox(width: 16),
                           Card(
                             color: Colors.transparent.withOpacity(0.13),
@@ -277,8 +279,10 @@ class EditProfilePage extends GetView<EditProfileController> {
                                               .min, // Ensures the row takes up the minimum width needed
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons
-                                                  .download, color: Colors.white,), // Download icon
+                                              icon: const Icon(
+                                                Icons.download,
+                                                color: Colors.white,
+                                              ), // Download icon
                                               onPressed: () {
                                                 final certificateUrl =
                                                     certificate[
@@ -453,8 +457,10 @@ class EditProfilePage extends GetView<EditProfileController> {
                                                 .min, // Ensures the row takes up the minimum width needed
                                             children: [
                                               IconButton(
-                                                icon: const Icon(Icons
-                                                    .download, color: Colors.white,), // Download icon
+                                                icon: const Icon(
+                                                  Icons.download,
+                                                  color: Colors.white,
+                                                ), // Download icon
                                                 onPressed: () {
                                                   final certificateUrl =
                                                       rejectedCertificate[
@@ -553,61 +559,76 @@ class EditProfilePage extends GetView<EditProfileController> {
                   ),
                   const SizedBox(height: 16),
                   MediaQuery.of(context).size.width > 850
-                  ?Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF117aca),
-                          ),
-                        label: const Text('Add Certificate', style: TextStyle(color:Colors.white),),
-                        icon: const Icon(Icons.description_rounded, color:Colors.white),
-                        onPressed: () {
-                          AutoRouter.of(context)
-                              .push(const UploadAcademicQualificationsRoute());
-                        },
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF117aca),
-                          ),
-                        label: const Text('Change Password', style: TextStyle(color: Colors.white),),
-                        icon: const Icon(Icons.lock , color: Colors.white),
-                        onPressed: () {
-                          AutoRouter.of(context).push(ChangePasswordRoute());
-                        },
-                      ),
-                    ],
-                  )
-                  :
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF117aca),
-                          ),
-                        label: const Text('Add Certificate', style: TextStyle(color:Colors.white),),
-                        icon: const Icon(Icons.description_rounded, color:Colors.white),
-                        onPressed: () {
-                          AutoRouter.of(context)
-                              .push(const UploadAcademicQualificationsRoute());
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF117aca),
-                          ),
-                        label: const Text('Change Password', style: TextStyle(color: Colors.white),),
-                        icon: const Icon(Icons.lock , color: Colors.white),
-                        onPressed: () {
-                          AutoRouter.of(context).push(ChangePasswordRoute());
-                        },
-                      ),
-                    ],
-                  ),
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF117aca),
+                              ),
+                              label: const Text(
+                                'Add Certificate',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(Icons.description_rounded,
+                                  color: Colors.white),
+                              onPressed: () {
+                                AutoRouter.of(context).push(
+                                    const UploadAcademicQualificationsRoute());
+                              },
+                            ),
+                            const SizedBox(width: 16),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF117aca),
+                              ),
+                              label: const Text(
+                                'Change Password',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(Icons.lock, color: Colors.white),
+                              onPressed: () {
+                                AutoRouter.of(context)
+                                    .push(ChangePasswordRoute());
+                              },
+                            ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF117aca),
+                              ),
+                              label: const Text(
+                                'Add Certificate',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(Icons.description_rounded,
+                                  color: Colors.white),
+                              onPressed: () {
+                                AutoRouter.of(context).push(
+                                    const UploadAcademicQualificationsRoute());
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF117aca),
+                              ),
+                              label: const Text(
+                                'Change Password',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(Icons.lock, color: Colors.white),
+                              onPressed: () {
+                                AutoRouter.of(context)
+                                    .push(ChangePasswordRoute());
+                              },
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ],

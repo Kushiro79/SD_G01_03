@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
+import '../controllers/edit_profile_controller.dart';
 
 
 class ProfileScreenController extends GetxController {
@@ -20,6 +21,8 @@ class ProfileScreenController extends GetxController {
   String get followersCountString => followersCount.toString();
   String get postCountString => postCount.toString();
 
+  EditProfileController editController = Get.put(EditProfileController());
+
   @override
   void onInit() {
     super.onInit();
@@ -28,6 +31,7 @@ class ProfileScreenController extends GetxController {
     getFollowersCount();
     getFollowingCount();
     getPostCount();
+    editController.fetchCertificates();
   }
 
   loadPfp() {

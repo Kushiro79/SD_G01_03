@@ -532,6 +532,7 @@ Widget thePost({
   EditProfileController editController = Get.put(EditProfileController());
   ProfileScreenController profileController =
       Get.put(ProfileScreenController());
+      homeController.postUid = uid;
 
   return Container(
     width: MediaQuery.of(context).size.width > 850
@@ -552,20 +553,14 @@ Widget thePost({
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                
                 // Profile Picture
-                imageUrl.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: ClipOval(
-                          child: Image.network(
-                            imageUrl,
-                            height: 50,
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                    : Container(
+                // Profile Picture with FutureBuilder
+                FutureBuilder<String>(
+                  future: homeController.getUserProfilePicture(uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
                         height: 50,
                         width: 50,
                         alignment: Alignment.center,
@@ -573,8 +568,41 @@ Widget thePost({
                           shape: BoxShape.circle,
                           color: Colors.grey,
                         ),
-                        child: const Icon(Icons.person, color: Colors.white),
-                      ),
+                        child: const CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      // Display the profile picture if available
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: ClipOval(
+                          child: Image.network(
+                            snapshot.data!,
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      // If no image URL, show a default icon
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: ClipOval(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                            ),
+                            child: const Icon(Icons.person, color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
                 const SizedBox(width: 10),
                 // Username
                 Text(

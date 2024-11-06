@@ -407,34 +407,42 @@ Future<void> fetchRejectedQualifications() async {
   }
 }
 
-
 Future<void> deleteCertificate(String certificateId) async {
   String uid = FirebaseAuth.instance.currentUser!.uid;
   print('Certificate ID function: $certificateId');
-    try {
-      try {
-        await FirebaseFirestore.instance
-            .collection('qualificationRequests')
-            .doc('approvedCertificates') // Replace with the actual user ID
-            .collection('users')
-            .doc(uid)
-            .collection('certificates')
-            .doc(certificateId)
-            .delete();
+  try {
+    // Get a reference to the certificate document
+    DocumentReference certificateRef = FirebaseFirestore.instance
+        .collection('qualificationRequests')
+        .doc('approvedCertificates') // Replace with the actual user ID
+        .collection('users')
+        .doc(uid)
+        .collection('certificates')
+        .doc(certificateId);
 
-        // Optionally, remove the certificate from the local list
-        certificates.removeWhere((certificate) => certificate['id'] == certificateId);
-        Get.snackbar('Success', 'Certificate deleted successfully',
-            snackPosition: SnackPosition.BOTTOM);
-      } catch (e) {
-        Get.snackbar('Error', 'Certificate ID not found',
-            snackPosition: SnackPosition.BOTTOM);
-      }
-        // Access the Firestore collection and delete the document
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to delete certificate: $e',
+    // Check if the document exists before attempting to delete
+    DocumentSnapshot snapshot = await certificateRef.get();
+    if (snapshot.exists) {
+      // Document exists, delete it
+      await certificateRef.delete();
+
+      // Optionally, remove the certificate from the local list
+      certificates.removeWhere((certificate) => certificate['id'] == certificateId);
+      
+      // Display success message
+      Get.snackbar('Success', 'Certificate deleted successfully',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      // If the document does not exist
+      Get.snackbar('Error', 'Certificate ID not found',
           snackPosition: SnackPosition.BOTTOM);
     }
+  } catch (e) {
+    // Catch any other errors and display an error message
+    Get.snackbar('Error', 'Failed to delete certificate: $e',
+        snackPosition: SnackPosition.BOTTOM);
   }
+}
+
 
 }

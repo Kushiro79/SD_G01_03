@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,11 +12,16 @@ void main() async {
   try {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-        
-      runApp(
-        const OKToast( // Wrap your app with OKToast
+
+    // Enable Firestore offline persistence (optional but recommended)
+    FirebaseFirestore.instance.settings = Settings(
+      persistenceEnabled: true,  // This enables offline persistence
+    );
+
+    runApp(
+      const OKToast( // Wrap your app with OKToast
         child: MyApp(),
-        ),
+      ),
     );
   } catch (e) {
     print('Error initializing Firebase: $e');
