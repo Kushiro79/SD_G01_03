@@ -93,7 +93,9 @@ class ViewAcademicQualificationsPage
                       final urlString = qualification['certificateUrl'];
                       Uri url = Uri.parse(urlString);
                       print(url);
-                      await launchUrl(url);
+                      if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
                                         },
                     child: const Text('View Certificate'),
                   )

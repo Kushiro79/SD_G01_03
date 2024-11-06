@@ -151,7 +151,7 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
                                   Flexible(
                                     child: Text(
                                       message['text'],
-                                      maxLines: 2,
+                                      maxLines: 50,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         color: Colors.white,
@@ -272,6 +272,7 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
           backgroundColor:  Colors.black,
           title: const Text('Report Message', style: TextStyle(color: Colors.white)),
           content: TextField(
+            style: TextStyle(color: Colors.white),
             controller: reasonController,
             decoration:
                 const InputDecoration(hintText: 'Enter the reason for reporting', hintStyle: TextStyle(color: Colors.white54)),

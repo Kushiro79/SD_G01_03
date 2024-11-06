@@ -136,6 +136,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
         ),
         const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
         TextField(
+          obscureText: true,
           controller: controller.oldpassword,
           decoration: InputDecoration(
             hintText: 'Enter Old Password ',
@@ -157,6 +158,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).size.height * 0.02)),
         TextField(
+          obscureText: true,
           controller: controller.newpassword,
           decoration: InputDecoration(
             hintText: 'Enter New Password ',
@@ -178,6 +180,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).size.height * 0.02)),
         TextField(
+          obscureText: true,
           controller: controller.confirmpassword,
           decoration: InputDecoration(
             hintText: 'Confirm New Password ',

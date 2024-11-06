@@ -38,8 +38,7 @@ class ChangePasswordController extends GetxController {
       } else {
         showCustomToast(context, 'Please login first');
       }
-    } on FirebaseAuthException catch (e) {
-      showCustomToast(context, e.message.toString());
+  
     } catch (e) {
       showCustomToast(context, 'An unexpected error occurred');
     }
@@ -58,13 +57,13 @@ class ChangePasswordController extends GetxController {
             ),
           ),
           content: SizedBox(
-            height: screenheight >555 ? screenheight *0.2 : screenheight *0.3,
-            width: screenwidth >555 ? screenwidth *0.2 : screenwidth *0.8,
+            height: screenheight >850 ? screenheight *0.3 : screenheight *0.7,
+            width: screenwidth >850 ? screenwidth *0.3 : screenwidth *0.8,
             child: Padding(
               padding: MediaQuery.of(context).padding +
                   const EdgeInsets.only(top: 25),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 120,

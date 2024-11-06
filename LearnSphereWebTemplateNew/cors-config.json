@@ -1,0 +1,7 @@
+[
+    {
+      "origin": ["https://learnsphere-e6563.web.app"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+  ]

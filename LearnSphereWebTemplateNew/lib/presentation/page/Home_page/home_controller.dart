@@ -426,7 +426,7 @@ class HomeController extends GetxController {
 
       print(
           'Post created with username: ${username.value}, Text: ${postText.text}, Timestamp: ${Timestamp.now()}, mediaUrls: $mediaUrls');
-
+    
       // Optionally clear the picked media after posting
       pickedMedia.clear();
       pickedFile.clear();
