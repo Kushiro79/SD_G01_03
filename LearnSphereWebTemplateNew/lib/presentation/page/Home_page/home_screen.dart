@@ -32,6 +32,7 @@ class MyHomePage extends GetView<HomeController> {
 
     return Scaffold(
         appBar: AppBar(
+          foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF1A1F3B),
           toolbarHeight: screenwidth ? 100 : 80,
           title: Row(
@@ -173,13 +174,13 @@ Widget _buildSidebar(BuildContext context) {
               context: context,
               builder: (BuildContext context) {
                 return Dialog(
-                    insetPadding: MediaQuery.of(context).size.width > 850
+                    insetPadding: MediaQuery.of(context).size.width > 1000
                         ? EdgeInsets.symmetric(
                             horizontal: MediaQuery.of(context).size.width * 0.3,
-                            vertical: MediaQuery.of(context).size.height * 0.2)
+                            vertical: MediaQuery.of(context).size.height * 0.1)
                         : EdgeInsets.symmetric(
                             horizontal: 15,
-                            vertical: MediaQuery.of(context).size.height * 0.2),
+                            vertical: MediaQuery.of(context).size.height * 0.1),
                     backgroundColor: Colors.transparent,
                     child:
                         DiscoverPage() // Transparent background for floating window

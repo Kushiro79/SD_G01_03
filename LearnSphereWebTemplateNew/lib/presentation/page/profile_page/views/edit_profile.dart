@@ -166,7 +166,6 @@ class EditProfilePage extends GetView<EditProfileController> {
                         children: [
                           Card(
                             color: Colors.transparent.withOpacity(0.13),
-                            margin: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
@@ -204,31 +203,41 @@ class EditProfilePage extends GetView<EditProfileController> {
                                         ],
                                       );
                                     } else {
-                                      return Row(
+                                      return Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           TextFormField(
+                                            style: TextStyle(color: Colors.white),
                                             initialValue:
                                                 controller.username.value,
                                             decoration: const InputDecoration(
-                                                labelText: 'Username'),
+                                                labelText: 'Username',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.white38)),
                                             onChanged: (value) async {
                                               controller.username.value = value;
                                             },
                                           ),
                                           const SizedBox(height: 16),
                                           TextFormField(
+                                            style: TextStyle(color: Colors.white),
                                             initialValue:
                                                 controller.email.value,
                                             decoration: const InputDecoration(
-                                                labelText: 'Email'),
+                                                labelText: 'Email',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.white38)),
                                             onChanged: (value) {
                                               controller.email.value = value;
                                             },
                                           ),
                                           const SizedBox(height: 32),
                                           ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(0xFF117aca),
+                                              foregroundColor: Colors.white,
+                                            ),
                                             onPressed: () async {
                                               if (await registerController
                                                   .checkUsernameExists(
@@ -638,7 +647,7 @@ class EditProfilePage extends GetView<EditProfileController> {
                               .push(const UploadAcademicQualificationsRoute());
                         },
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(height: 10),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF117aca),

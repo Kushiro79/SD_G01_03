@@ -43,6 +43,7 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                           crossAxisAlignment: CrossAxisAlignment.stretch, // Align children to the edges of the box
                           children: [
                             TextFormField(
+                              style: const TextStyle(color: Colors.white),
                               controller: controller.name,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -54,10 +55,12 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                                 labelStyle: TextStyle(color: Colors.white),
                                 labelText: 'Name',
                                 hintText: 'Jane Doe',
+                                hintStyle: TextStyle(color: Colors.white),
                               ),
                             ),
                             const SizedBox(height: 20),
                             TextFormField(
+                              style: const TextStyle(color: Colors.white),
                               controller: controller.education,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -69,10 +72,12 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                                 labelStyle: TextStyle(color: Colors.white),
                                 labelText: 'Level Of Education', 
                                 hintText: 'PhD',
+                                hintStyle: TextStyle(color: Colors.white),
                               ),
                             ),
                             const SizedBox(height: 20),
                             TextFormField(
+                              style: const TextStyle(color: Colors.white),
                               controller: controller.fieldOfStudy,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -83,11 +88,13 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                               decoration: const InputDecoration(
                                 labelStyle: TextStyle(color: Colors.white),
                                 labelText: 'Field of Study',
-                                hintText: 'LearnSpherology',
+                                hintText: 'Computer Science',
+                                hintStyle: TextStyle(color: Colors.white),
                               ),
                             ),
                             const SizedBox(height: 20),
                             TextFormField(
+                              style: const TextStyle(color: Colors.white),
                               controller: controller.institution,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -98,7 +105,8 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                               decoration: const InputDecoration(
                                 labelStyle: TextStyle(color: Colors.white),
                                 labelText: 'Institution Name',
-                                hintText: 'University of LearnSphere',
+                                hintText: 'University of Technology',
+                                hintStyle: TextStyle(color: Colors.white),
                               ),
                             ),
                           ],
@@ -157,13 +165,16 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6), // Reduced border radius
+                                  borderRadius: BorderRadius.circular(8), // Reduced border radius
                                 ),
+                                backgroundColor: Color(0xFF117aca),
+                                foregroundColor: Colors.white,
+                                
                               ),
                               child: const Text('Upload Certificate'),
                             );
                           }),
-                          const SizedBox(width: 10),
+                          const SizedBox(height: 10),
                           Obx(() {
                             return ElevatedButton(
                               onPressed: controller.isUploading.value || controller.certificateUrl.isEmpty
@@ -173,8 +184,10 @@ class UploadAcademicQualificationsPage extends GetView<UploadAcademicQualificati
                                     },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6), // Reduced border radius
+                                  borderRadius: BorderRadius.circular(8), // Reduced border radius
                                 ),
+                                backgroundColor: Color(0xFF117aca),
+                                foregroundColor: Colors.white,
                               ),
                               child: const Text('Submit'),
                             );

@@ -95,6 +95,12 @@ class _NavigationMenuState extends State<_NavigationMenu> {
                 text: 'User & Staff Management',
               ),
               _MenuItem(
+                iconPath: ProjectAssets.infoCircle1.path,
+                isSelected: currentUrl == '/main-page/view-report',
+                onTap: () => _onTabTap(ViewReportRoute()),
+                text: 'Reports',
+              ),
+              _MenuItem(
                 iconPath: ProjectAssets.icons.setting2.path,
                 isSelected: currentUrl == '/main-page/settings',
                 onTap: () => _onTabTap(SettingsRoute()),

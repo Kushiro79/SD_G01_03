@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../config/app_color.dart';
 import '../../theme/gen/fonts.gen.dart';
 import 'discover_page_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 @RoutePage()
 class DiscoverPage extends GetView<DiscoverController> {
@@ -144,13 +145,14 @@ usersLists(RxList<DocumentSnapshot> usersList) {
               children: [
                 usersList[index]['username'] != null
                     ? Text('@' + usersList[index]['username'],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                           color : Colors.white,
                         ))
                     : const Text('Unknown User'),
 
+                    MediaQuery.of(context).size.width > 850 ?
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -190,6 +192,49 @@ usersLists(RxList<DocumentSnapshot> usersList) {
                 ),
                 child: const Text('Report'),
               ),
+                      ],
+                    )
+                    :
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Obx(() => ElevatedButton(
+                      onPressed: () async {
+                        if (isFollowingMap[userId]!) {
+                          await controller.unfollowUser(userId);
+                          isFollowingMap[userId] = false; // Update state to unfollowed
+                        } else {
+                          await controller.followUser(userId);
+                          isFollowingMap[userId] = true; // Update state to followed
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF117aca), // Change button background color here
+                        foregroundColor: Colors.white, // Change text color here
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
+                        ),
+                      ),
+                      child: Icon(isFollowingMap[userId]! ? Icons.check : Icons.person_add_alt_rounded),
+                    )),
+                     const SizedBox(width: 5), // Add space between buttons
+                    ElevatedButton(
+                    onPressed: () async {
+                    // Call the reportUser method in your controller
+                    controller.reportUser(context, userId);
+                  },
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE57373), // Change button background color here for reporting
+                  foregroundColor: Colors.white, // Change text color here
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjust padding for button size
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Adjust this value for less rounded corners
+                  ),
+                ),
+                child: const Icon(Icons.report_rounded),
+              ),
+
                       ],
                     )
 

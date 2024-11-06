@@ -170,6 +170,7 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
               ),
               const SizedBox(height: 16),
               TextField(
+                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Search by username',
                   labelStyle: TextStyle(color: Colors.white),
@@ -263,6 +264,8 @@ class ViewAndUserManagementState extends State<ViewAndManageUsersPage> {
     ],
   ),
   floatingActionButton: FloatingActionButton(
+    backgroundColor: const Color(0xFF117aca),
+    foregroundColor: Colors.white,
     onPressed: _addStaff,
     tooltip: 'Add Staff',
     child: const Icon(Icons.add),
@@ -291,6 +294,7 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
 }
 
   return PopupMenuButton<String>(
+    iconColor: Colors.white,
     onSelected: (String value) {
       switch (value) {
         case 'View Details':
@@ -394,21 +398,22 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
       context: context,
       builder: (context){
         return AlertDialog(
-          title: const Text('Details'),
+          backgroundColor: Colors.black.withOpacity(0.8),
+          title: const Text('Details', style: TextStyle(color: Colors.white),),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Text('Username: ${user['username']}'),
-                Text('Email: ${user['email']}'),
-                Text('Role: ${user['role']}'),
-                Text('UID: ${user['uid']}'),
+                Text('Username: ${user['username']}', style: TextStyle(color: Colors.white),),
+                Text('Email: ${user['email']}', style: TextStyle(color: Colors.white),),
+                Text('Role: ${user['role']}', style: TextStyle(color: Colors.white),),
+                Text('UID: ${user['uid']}', style: TextStyle(color: Colors.white),),
               ],
             ),
           ),
           actions: [
             TextButton(
               onPressed:() => Navigator.pop(context), 
-              child: const Text('Close'),
+              child: const Text('Close', style: TextStyle(color: Color(0xFF117aca)),),
             ),
           ],
         );
@@ -426,18 +431,21 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text('Edit Profile'),
+        backgroundColor: Colors.black.withOpacity(0.8),
+        title: const Text('Edit Profile', style: TextStyle(color: Colors.white),),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
+              style: const TextStyle(color: Colors.white),
               controller: TextEditingController(text: user['username']),
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Username',),
               onChanged: (value) {
                 updatedUsername = value;
               },
             ),
             TextField(
+              style: const TextStyle(color: Colors.white),
               controller: TextEditingController(text: user['email']),
               decoration: const InputDecoration(labelText: 'Email'),
               onChanged: (value) {
@@ -449,7 +457,7 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: Color(0xFF117aca)),),
           ),
           TextButton(
             onPressed: () async {
@@ -469,7 +477,7 @@ Widget _buildActionDropdown(BuildContext context, DocumentSnapshot userDoc) {
                 );
               }
             },
-            child: const Text('Save'),
+            child: const Text('Save', style: TextStyle(color: Color(0xFF117aca)),),
           ),
         ],
       );

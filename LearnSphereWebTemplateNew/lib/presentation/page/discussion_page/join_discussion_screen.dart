@@ -198,6 +198,7 @@ class _JoinDiscussionScreenState extends State<JoinDiscussionScreen> {
                 children: [
                   Expanded(
                     child: TextField(
+                      style: TextStyle(color: Colors.white),
                       controller: _messageController,
                       decoration: const InputDecoration(
                           hintText: 'Enter your message',

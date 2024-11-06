@@ -561,3 +561,22 @@ class ViewOtherUsersRouteArgs {
     return 'ViewOtherUsersRouteArgs{key: $key}';
   }
 }
+
+/// generated route for
+/// [ViewReportPage]
+class ViewReportRoute extends PageRouteInfo<void> {
+  const ViewReportRoute({List<PageRouteInfo>? children})
+      : super(
+          ViewReportRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ViewReportRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ViewReportPage();
+    },
+  );
+}

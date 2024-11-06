@@ -72,12 +72,13 @@ class GiveFeedbackPage extends StatelessWidget {
 
             // Feedback input field
             TextField(
+              style: const TextStyle(color: Colors.white),
               controller: _feedbackController,
               maxLines: 5,
-              decoration:  InputDecoration(
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                border:  OutlineInputBorder(),
                 hintText: 'Enter your feedback here...',
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
+                hintStyle: TextStyle(color: Colors.white54),
               ),
             ),
             const SizedBox(height: 16.0),

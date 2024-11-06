@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+@RoutePage()
 class ViewReportPage extends StatefulWidget {
   const ViewReportPage({Key? key}) : super(key: key);
 
@@ -26,21 +27,27 @@ class _ViewReportPageState extends State<ViewReportPage> {
   Future<void> fetchReportedPosts() async {
     final snapshot = await firestore.collection('report_post').get();
     setState(() {
-      reportedPosts = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      reportedPosts = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     });
   }
 
   Future<void> fetchReportedDiscussions() async {
     final snapshot = await firestore.collection('report_discussion').get();
     setState(() {
-      reportedDiscussions = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      reportedDiscussions = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     });
   }
 
   Future<void> fetchReportedUsers() async {
     final snapshot = await firestore.collection('report_user').get();
     setState(() {
-      reportedUsers = snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      reportedUsers = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     });
   }
 
@@ -53,57 +60,100 @@ class _ViewReportPageState extends State<ViewReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('View Report'),
-      ),
+      backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                'View Report',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
               _buildSectionTitle(context, 'Reported Users'),
-              _buildReportHeaders(['Username', 'Reason', 'Date Reported', 'Status']),
-              if (reportedUsers.isEmpty)
-                const Text('No reported users found.'),
-              ...reportedUsers.map((user) {
-                return _buildReportRow(
-                  user['username'] ?? 'Unknown User',
-                  user['reason'] ?? 'N/A',
-                  user['reportedAt']?.toDate().toString() ?? 'N/A',
-                  'Pending',
-                );
-              }).toList(),
-
+              reportedUsers.isEmpty
+                  ? const Text('No reported users found.',
+                      style: TextStyle(color: Colors.white))
+                  : _buildDataTable(
+                      headers: [
+                        'Reported By',
+                        'Username',
+                        'Reason',
+                        'Date Reported',
+                      ],
+                      rows: reportedUsers.map((user) {
+                        return DataRow(cells: [
+                          DataCell(Text(user['reporterUid'] ?? 'Unknown User',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(user['uid'] ?? 'Unknown User',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(user['reason'] ?? 'N/A',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(
+                              user['reportedAt']?.toDate().toString() ?? 'N/A',
+                              style: TextStyle(color: Colors.white))),
+                        ]);
+                      }).toList(),
+                    ),
               const Divider(height: 30, thickness: 1),
-
               _buildSectionTitle(context, 'Reported Posts'),
-              _buildReportHeaders(['Post Title', 'Reported By', 'Date Reported', 'Status']),
-              if (reportedPosts.isEmpty)
-                const Text('No reported posts found.'),
-              ...reportedPosts.map((post) {
-                return _buildReportRow(
-                  post['postTitle'] ?? 'Unknown Post',
-                  post['userId'] ?? 'Unknown User',
-                  post['timestamp']?.toDate().toString() ?? 'N/A',
-                  'Pending',
-                );
-              }).toList(),
-
+              reportedPosts.isEmpty
+                  ? const Text('No reported posts found.',
+                      style: TextStyle(color: Colors.white))
+                  : _buildDataTable(
+                      headers: [
+                        'Reported By',
+                        'Post ID',
+                        'Reason',
+                        'Date Reported',
+                      ],
+                      rows: reportedPosts.map((post) {
+                        return DataRow(cells: [
+                          DataCell(Text(post['userId'] ?? 'Unknown User',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(post['postId'] ?? 'Unknown Post',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(post['reason'] ?? 'N/A',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(
+                              post['timestamp']?.toDate().toString() ?? 'N/A',
+                              style: TextStyle(color: Colors.white))),
+                        ]);
+                      }).toList(),
+                    ),
               const Divider(height: 30, thickness: 1),
-
               _buildSectionTitle(context, 'Reported Discussions'),
-              _buildReportHeaders(['Discussion Topic', 'Reported By', 'Date Reported', 'Status']),
-              if (reportedDiscussions.isEmpty)
-                const Text('No reported discussions found.'),
-              ...reportedDiscussions.map((discussion) {
-                return _buildReportRow(
-                  discussion['messageId'] ?? 'Unknown Discussion',
-                  discussion['username'] ?? 'Unknown User',
-                  discussion['reportedAt']?.toDate().toString() ?? 'N/A',
-                  'Pending',
-                );
-              }).toList(),
+              reportedDiscussions.isEmpty
+                  ? const Text('No reported discussions found.',
+                      style: TextStyle(color: Colors.white))
+                  : _buildDataTable(
+                      headers: [
+                        'Discussion ID',
+                        'Reported By',
+                        'Reason',
+                        'Date Reported',
+                      ],
+                      rows: reportedDiscussions.map((discussion) {
+                        return DataRow(cells: [
+                          DataCell(Text(
+                              discussion['messageId'] ?? 'Unknown Discussion',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(
+                              discussion['username'] ?? 'Unknown User',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(discussion['reason'] ?? 'N/A',
+                              style: TextStyle(color: Colors.white))),
+                          DataCell(Text(
+                              discussion['reportedAt']?.toDate().toString() ??
+                                  'N/A',
+                              style: TextStyle(color: Colors.white))),
+                        ]);
+                      }).toList(),
+                    ),
             ],
           ),
         ),
@@ -117,39 +167,42 @@ class _ViewReportPageState extends State<ViewReportPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 18, color: Colors.white),
       ),
     );
   }
 
-  // Flexible headers with custom titles
-  Widget _buildReportHeaders(List<String> headers) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: headers
-          .map((title) => Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ))
-          .toList(),
-    );
-  }
-
-  // Row builder for each report entry
-  Widget _buildReportRow(String title1, String title2, String title3, String title4) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(child: Text(title1, textAlign: TextAlign.center)),
-          Expanded(child: Text(title2, textAlign: TextAlign.center)),
-          Expanded(child: Text(title3, textAlign: TextAlign.center)),
-          Expanded(child: Text(title4, textAlign: TextAlign.center)),
-        ],
+  // DataTable builder function for report entries
+  Widget _buildDataTable(
+      {required List<String> headers, required List<DataRow> rows}) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth:MediaQuery.of(context).size.width * 0.8,
+),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          padding: const EdgeInsets.all(16.0), // Consistent padding
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.13),
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: DataTable(
+            columns: headers
+                .map((header) => DataColumn(
+                    label: Text(header,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold))))
+                .toList(),
+            rows: rows,
+            // Make background transparent
+            dataRowColor: WidgetStateColor.resolveWith(
+                (states) => Colors.transparent),
+            headingRowColor: WidgetStateColor.resolveWith(
+                (states) => Colors.transparent),
+            horizontalMargin: 8,
+            dividerThickness: 0, // Remove row dividers
+          ),
+        ),
       ),
     );
   }
