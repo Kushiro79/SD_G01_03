@@ -16,7 +16,7 @@ LearnSphere is a dynamic social media app built with Flutter, designed to connec
       <a href="#screenshots">Screenshots<a/>
       <ul>
         <li><a href="#mobile-screenshots">Mobile Screenshots</a></li>
-        <li><a href="#web-screensshots">Web Screenshots</a></li>
+        <li><a href="#web-screenshots">Web Screenshots</a></li>
       </ul>
     </li>
     <li>
@@ -58,7 +58,7 @@ LearnSphere is a dynamic social media app built with Flutter, designed to connec
   </tr>
 </table>
 
-### Web Screensshots
+### Web Screenshots
 
 <table>
   <tr>
@@ -98,25 +98,39 @@ LearnSphere is a dynamic social media app built with Flutter, designed to connec
 To get started with LearnSphere on your local machine, follow the steps below:
 
 ### Prerequisites:
-- Install Flutter (ensure Flutter is set up correctly by running `flutter doctor` in your terminal).
-- Install Android Studio for development and android emulator
-- Install VS Code for development (Optional)
+- **Install Flutter**: Follow [Flutter's official guide](https://docs.flutter.dev/get-started/install) and verify setup by running `flutter doctor` in your terminal.
+- **Install Android Studio**: Required for Android development and emulator setup.
+- **Install Node.js**: Download from [Node.js](https://nodejs.org/en).
+- **Install Firebase CLI**: Follow the [Firebase CLI Documentation](https://firebase.google.com/docs/cli).
+  - After installation, initialize Firebase by running:
+    ```bash
+    firebase login
+    firebase init
+    ```
+- **Install VS Code** (Optional): For development.
+  - If using VS Code, install the **Flutter Extension** from the VS Code Marketplace.
+
 
 ### Installation:
 1. Clone the repository:
     ```bash
     git clone https://github.com/Kushiro79/SD_G01_03_LearnSphere_Educational_Social_Media.git
-    
-2. Navigate to the project directory:
-   ```bash
-   cd learnsphere
 
-3. Install dependencies:
+2. Create a Firebase Project
+   * Go to the Firebase Console and set up a new Firebase project.
+   * For Android : Download the `google-services.json` file and place it in the `android/app` directory.
+   * For Web : Add the Firebase configuration code to `web/index.html` inside the `<head>` tag.
+    
+3. Navigate to the project directory:
+   ```bash
+   cd SD_G01_03_LearnSphere_Educational_Social_Media
+
+4. Install dependencies:
    Run the following command to get all the required packages:
    ```bash
    flutter pub get
 
-4. Run the app:
+5. Run the app:
    To run the app in development mode, use either of the following commands depending on your platform:
    - For Android:
      ```bash
@@ -124,11 +138,6 @@ To get started with LearnSphere on your local machine, follow the steps below:
    - For Web:
      ```bash
      flutter run -d chrome
-
-   
-5. Optional - Connect Firebase (if using Firebase for backend services):
-   - Set up a Firebase project in the Firebase Console (https://console.firebase.google.com/).
-   - Follow the instructions to add Firebase to your Flutter app (authentication, Firestore and Storage).
 
 ## Contribution:
 Thank you for the team that have contributed to the development of this app!
