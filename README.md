@@ -1,7 +1,7 @@
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/Kushiro79/SD_G01_03_LearnSphere_Educational_Social_Media">
+    <img src="images/logo.png" alt="Logo" width="100" height="100">
   </a>
 
 # LearnSphere - Social Media App
@@ -13,9 +13,16 @@ LearnSphere is a dynamic social media app built with Flutter, designed to connec
   <summary>Table of Contents</summary>
   <ol>
     <li>
+      <a href="#screenshots">Screenshots<a/>
+      <ul>
+        <li><a href="#mobile-screenshots">Mobile Screenshots</a></li>
+        <li><a href="#web-screensshots">Web Screenshots</a></li>
+      </ul>
+    </li>
+    <li>
       <a href="#features">Features</a>
     </li>
-    <li><a href="#Technologies Used">Technologies Used</a></li>
+    <li><a href="#technologies-used">Technologies Used</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -23,13 +30,54 @@ LearnSphere is a dynamic social media app built with Flutter, designed to connec
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contribution">Contribution</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
-## Demo:
+## Screenshots:
+
+### Mobile Screenshots
+
+<table>
+  <tr>
+    <td align="center"><strong>Sign In</strong></td>
+    <td align="center"><strong>Home</strong></td>
+  </tr>
+  <tr>
+    <td><img src="images/signin-mobile.jpg" alt="Mobile - SignIn" width="200"></td>
+    <td><img src="images/homepage-mobile.jpg" alt="Mobile - Home" width="200"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Profile</strong></td>
+    <td align="center"><strong>Admin</strong></td>
+  </tr>
+  <tr>
+    <td><img src="images/profile-mobile.jpg" alt="Mobile - Profile" width="200"></td>
+    <td><img src="images/admin-mobile.jpg" alt="Mobile - Admin" width="200"></td>
+  </tr>
+</table>
+
+### Web Screensshots
+
+<table>
+  <tr>
+    <td align="center"><strong>Sign In</strong></td>
+    <td align="center"><strong>Home</strong></td>
+  </tr>
+  <tr>
+    <td><img src="images/signin-web.png" alt="Web - SignIn" width="300"></td>
+    <td><img src="images/homepage-web.png" alt="Web - Home" width="300"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Profile</strong></td>
+    <td align="center"><strong>Admin</strong></td>
+  </tr>
+  <tr>
+    <td><img src="images/profile-web.png" alt="Web - Profile" width="300"></td>
+    <td><img src="images/admin-web.png" alt="Web - Admin" width="300"></td>
+  </tr>
+</table>
 
 
 ## Features:
@@ -54,7 +102,7 @@ To get started with LearnSphere on your local machine, follow the steps below:
 - Install Android Studio for development and android emulator
 - Install VS Code for development (Optional)
 
-### Steps:
+### Installation:
 1. Clone the repository:
     ```bash
     git clone https://github.com/Kushiro79/SD_G01_03_LearnSphere_Educational_Social_Media.git
@@ -82,7 +130,7 @@ To get started with LearnSphere on your local machine, follow the steps below:
    - Set up a Firebase project in the Firebase Console (https://console.firebase.google.com/).
    - Follow the instructions to add Firebase to your Flutter app (authentication, Firestore and Storage).
 
-## Contribution :
+## Contribution:
 Thank you for the team that have contributed to the development of this app!
 
 <a href="https://github.com/Kushiro79/SD_G01_03_LearnSphere_Educational_Social_Media/graphs/contributors">
