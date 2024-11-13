@@ -86,7 +86,7 @@ LearnSphere is a dynamic social media app built with Flutter, designed to connec
 - Posts: Users can create, edit, and delete posts with text, images, or videos.
 - Follow System: Users can follow other users to see their updates and interact with their content.
 - Likes & Comments: Users can like and comment on posts to engage with content.
-- Notifications: Users receive real-time notifications for interactions like comments and likes on their posts.
+- Notifications: Users receive real-time notifications for interactions like comments on their posts.
 
 ## Technologies Used:
 * Flutter [Installation Guide](https://docs.flutter.dev/get-started/install)
